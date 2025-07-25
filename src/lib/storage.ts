@@ -72,11 +72,23 @@ const localStorageHelpers = {
       if (!saved) return [];
       
       const parsed = JSON.parse(saved);
-      return parsed.map((link: any) => ({
+      const migratedLinks = parsed.map((link: any) => ({
         ...link,
+        // Migrate old data: add missing fields
+        isRead: link.isRead !== undefined ? link.isRead : false,
+        readAt: link.readAt ? new Date(link.readAt) : undefined,
         createdAt: new Date(link.createdAt),
         updatedAt: new Date(link.updatedAt)
       }));
+      
+      // Save migrated data back to localStorage if there were changes
+      const hasChanges = parsed.some((link: any) => link.isRead === undefined);
+      if (hasChanges) {
+        console.log('Migrating localStorage data to include read status fields');
+        localStorageHelpers.setLinks(migratedLinks);
+      }
+      
+      return migratedLinks;
     } catch (error) {
       console.error('Error loading links from localStorage:', error);
       return [];
@@ -409,5 +421,85 @@ export const storage = {
     // Fallback to localStorage
     const links = localStorageHelpers.getLinks();
     return links.filter(link => link.tags.includes(tag));
+  },
+
+  // Toggle read status
+  async toggleReadStatus(linkId: string): Promise<CategorizedLink> {
+    if (isSupabaseConfigured()) {
+      try {
+        return await database.links.toggleReadStatus(linkId);
+      } catch (error) {
+        console.error('Database error, falling back to localStorage:', error);
+      }
+    }
+    
+    // Fallback to localStorage
+    const links = localStorageHelpers.getLinks();
+    const linkIndex = links.findIndex(l => l.id === linkId);
+    if (linkIndex === -1) {
+      console.error('Available link IDs:', links.map(l => l.id));
+      console.error('Requested link ID:', linkId);
+      throw new Error(`Link not found with ID: ${linkId}`);
+    }
+
+    const link = links[linkIndex];
+    const newReadStatus = !link.isRead;
+    const updatedLink: CategorizedLink = {
+      ...link,
+      isRead: newReadStatus,
+      readAt: newReadStatus ? new Date() : undefined,
+      updatedAt: new Date()
+    };
+
+    // Update the specific link in the array
+    links[linkIndex] = updatedLink;
+    localStorageHelpers.setLinks(links);
+    
+    return updatedLink;
+  },
+
+  // Get read links by date
+  async getReadLinksByDate(date: Date): Promise<CategorizedLink[]> {
+    if (isSupabaseConfigured()) {
+      try {
+        return await database.links.getReadLinksByDate(date);
+      } catch (error) {
+        console.error('Database error, falling back to localStorage:', error);
+      }
+    }
+    
+    // Fallback to localStorage
+    const links = localStorageHelpers.getLinks();
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    return links.filter(link => 
+      link.isRead && 
+      link.readAt && 
+      link.readAt >= startOfDay && 
+      link.readAt <= endOfDay
+    );
+  },
+
+  // Get read links by date range
+  async getReadLinksByDateRange(startDate: Date, endDate: Date): Promise<CategorizedLink[]> {
+    if (isSupabaseConfigured()) {
+      try {
+        return await database.links.getReadLinksByDateRange(startDate, endDate);
+      } catch (error) {
+        console.error('Database error, falling back to localStorage:', error);
+      }
+    }
+    
+    // Fallback to localStorage
+    const links = localStorageHelpers.getLinks();
+    return links.filter(link => 
+      link.isRead && 
+      link.readAt && 
+      link.readAt >= startDate && 
+      link.readAt <= endDate
+    );
   }
 }; 

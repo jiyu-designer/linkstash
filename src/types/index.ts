@@ -24,6 +24,8 @@ export interface CategorizedLink {
   category: string; // Category name
   tags: string[]; // Array of tag names
   memo?: string; // User's personal memo
+  isRead: boolean; // Whether the link has been read
+  readAt?: Date; // When the link was read
   createdAt: Date;
   updatedAt: Date;
 }

@@ -71,6 +71,8 @@ export interface Database {
           category: string;
           tags: string[];
           memo: string | null;
+          is_read: boolean;
+          read_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -82,6 +84,8 @@ export interface Database {
           category: string;
           tags?: string[];
           memo?: string | null;
+          is_read?: boolean;
+          read_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -93,6 +97,8 @@ export interface Database {
           category?: string;
           tags?: string[];
           memo?: string | null;
+          is_read?: boolean;
+          read_at?: string | null;
           updated_at?: string;
         };
       };
@@ -112,5 +118,4 @@ export interface Database {
   };
 }
 
-// Create the Supabase client
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey); 

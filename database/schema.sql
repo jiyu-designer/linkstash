@@ -30,6 +30,8 @@ CREATE TABLE links (
     category VARCHAR(255) NOT NULL,
     tags TEXT[] DEFAULT '{}',
     memo TEXT,
+    is_read BOOLEAN DEFAULT FALSE,
+    read_at TIMESTAMP WITH TIME ZONE NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -40,6 +42,8 @@ CREATE INDEX idx_tags_name ON tags(name);
 CREATE INDEX idx_links_category ON links(category);
 CREATE INDEX idx_links_tags ON links USING GIN(tags);
 CREATE INDEX idx_links_created_at ON links(created_at DESC);
+CREATE INDEX idx_links_is_read ON links(is_read);
+CREATE INDEX idx_links_read_at ON links(read_at DESC);
 
 -- RLS (Row Level Security) policies
 ALTER TABLE categories ENABLE ROW LEVEL SECURITY;

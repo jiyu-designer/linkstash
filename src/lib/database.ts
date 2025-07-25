@@ -30,6 +30,8 @@ const dbToLink = (row: any): CategorizedLink => ({
   category: row.category,
   tags: row.tags || [],
   memo: row.memo || undefined,
+  isRead: row.is_read || false,
+  readAt: row.read_at ? new Date(row.read_at) : undefined,
   createdAt: new Date(row.created_at),
   updatedAt: new Date(row.updated_at)
 });
@@ -230,7 +232,9 @@ export const database = {
           description: link.description || null,
           category: link.category,
           tags: link.tags || [],
-          memo: link.memo || null
+          memo: link.memo || null,
+          is_read: link.isRead || false,
+          read_at: link.readAt || null
         })
         .select()
         .single();
@@ -252,6 +256,8 @@ export const database = {
       if (updates.category !== undefined) updateData.category = updates.category;
       if (updates.tags !== undefined) updateData.tags = updates.tags;
       if (updates.memo !== undefined) updateData.memo = updates.memo || null;
+      if (updates.isRead !== undefined) updateData.is_read = updates.isRead;
+      if (updates.readAt !== undefined) updateData.read_at = updates.readAt;
       
       const { data, error } = await supabase
         .from('links')
@@ -308,6 +314,67 @@ export const database = {
       }
       
       return data.map(dbToLink);
+    },
+
+    async toggleReadStatus(id: string): Promise<CategorizedLink> {
+      // First get the current link to check its read status
+      const { data: currentLink, error: fetchError } = await supabase
+        .from('links')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (fetchError) {
+        console.error('Error fetching link:', fetchError);
+        throw new Error('Failed to fetch link');
+      }
+
+      const newReadStatus = !currentLink.is_read;
+      const updateData: any = {
+        is_read: newReadStatus,
+        read_at: newReadStatus ? new Date().toISOString() : null
+      };
+
+      const { data, error } = await supabase
+        .from('links')
+        .update(updateData)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error toggling read status:', error);
+        throw new Error('Failed to toggle read status');
+      }
+
+      return dbToLink(data);
+    },
+
+    async getReadLinksByDateRange(startDate: Date, endDate: Date): Promise<CategorizedLink[]> {
+      const { data, error } = await supabase
+        .from('links')
+        .select('*')
+        .eq('is_read', true)
+        .gte('read_at', startDate.toISOString())
+        .lte('read_at', endDate.toISOString())
+        .order('read_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching read links by date range:', error);
+        throw new Error('Failed to fetch read links by date range');
+      }
+
+      return data.map(dbToLink);
+    },
+
+    async getReadLinksByDate(date: Date): Promise<CategorizedLink[]> {
+      const startOfDay = new Date(date);
+      startOfDay.setHours(0, 0, 0, 0);
+      
+      const endOfDay = new Date(date);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      return this.getReadLinksByDateRange(startOfDay, endOfDay);
     }
   },
 
