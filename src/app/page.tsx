@@ -632,7 +632,7 @@ export default function Home() {
                 LinkStash
               </h1>
               <p className="text-sm sds-text-secondary">
-                AI-powered link management tool
+                Save smartly. Learn deeply
               </p>
             </div>
           </div>
