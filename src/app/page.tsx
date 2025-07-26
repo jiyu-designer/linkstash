@@ -669,18 +669,18 @@ export default function Home() {
         )}
 
         {/* Header with Auth Button */}
-        <header className="flex items-center justify-between mb-12">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 glass-card rounded-xl flex items-center justify-center backdrop-blur-20 bg-white/10 border border-white/20">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+        <header className="flex items-center justify-between mb-16">
+          <div className="flex items-center space-x-5">
+            <div className="w-14 h-14 glass-card rounded-2xl flex items-center justify-center">
+              <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
               </svg>
             </div>
             <div>
-              <h1 className="text-xl font-semibold text-white tracking-tight">
+              <h1 className="text-2xl font-semibold text-white tracking-tight leading-tight">
                 LinkStash
               </h1>
-              <p className="text-base text-gray-300 font-medium">
+              <p className="text-sm text-gray-400 font-normal tracking-wide mt-0.5">
                 Save smartly. Learn deeply
               </p>
             </div>
@@ -688,17 +688,17 @@ export default function Home() {
           {isSupabaseConfigured() && <AuthButton />}
         </header>
 
-        {/* URL Input Form - 미니멀 버전 */}
-        <div className="section-container p-5 lg:p-6 mb-[60px]">
+        {/* URL Input Form - Premium Design */}
+        <div className="section-container p-8 mb-[60px]">
           <form onSubmit={handleSubmit}>
-                          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="flex flex-col lg:flex-row gap-5">
               <div className="flex-1">
                 <Input
                   type="text"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="Enter URL address"
-                  className="flex-1"
+                  className="w-full h-12 px-4 glass-input text-sm font-normal"
                   disabled={isLoading}
                 />
               </div>
@@ -709,7 +709,7 @@ export default function Home() {
                   value={memo}
                   onChange={(e) => setMemo(e.target.value)}
                   placeholder="Personal memo (optional)"
-                  className="flex-1"
+                  className="w-full h-12 px-4 glass-input text-sm font-normal"
                   disabled={isLoading}
                 />
               </div>
@@ -717,19 +717,19 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="glass-button px-6 py-2 rounded-lg text-white font-medium disabled:opacity-50 transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20"
+                className="glass-button h-12 px-8 rounded-xl text-white font-medium disabled:opacity-50 transition-all duration-200 lg:w-auto w-full"
                 style={{ 
-                  lineHeight: 1,
-                  background: 'radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%)'
+                  background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(236, 72, 153, 0.15) 100%)',
+                  border: '1px solid rgba(59, 130, 246, 0.3)'
                 }}
               >
                 {isLoading ? (
-                  <span className="flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-slate-300 border-t-white mr-2"></div>
-                    Analyzing
+                  <span className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white mr-3"></div>
+                    <span className="text-sm font-medium">Analyzing</span>
                   </span>
                 ) : (
-                  'SmartSort'
+                  <span className="text-sm font-medium tracking-wide">SmartSort</span>
                 )}
               </button>
             </div>
@@ -748,21 +748,21 @@ export default function Home() {
           {/* All Links Section */}
           <div className="section-container p-6 lg:p-8">
                 {/* Filters with Add button */}
-                <div className="mb-4 rounded-lg">
-                  <div className="flex items-end justify-between gap-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 flex-1">
+                <div className="mb-8">
+                  <div className="flex items-end justify-between gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 flex-1">
                     {/* Category Filter */}
                     <div>
-                      <label className="flex items-center text-sm font-medium text-gray-300 mb-3">
+                      <label className="flex items-center text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
                         Category
                         {selectedCategory !== 'all' && (
-                          <div className="w-2 h-2 bg-blue-500 rounded-full ml-2"></div>
+                          <div className="w-2 h-2 bg-blue-400 rounded-full ml-3 shadow-sm"></div>
                         )}
                       </label>
                       <select
                         value={selectedCategory}
                         onChange={(e) => setSelectedCategory(e.target.value)}
-                        className="w-full px-3 py-2 pr-8 glass-input rounded-md text-sm focus:outline-none appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K')] bg-no-repeat bg-[position:calc(100%-16px)_center]"
+                        className="w-full h-11 px-4 pr-10 glass-input rounded-xl text-sm font-normal focus:outline-none appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K')] bg-no-repeat bg-[position:calc(100%-16px)_center] transition-all duration-200"
                       >
                         <option value="all">All Categories</option>
                         {categories.map((category) => (
@@ -775,16 +775,16 @@ export default function Home() {
 
                     {/* Tag Filter */}
                     <div>
-                      <label className="flex items-center text-sm font-medium text-gray-300 mb-3">
+                      <label className="flex items-center text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
                         Tag
                         {selectedTag !== 'all' && (
-                          <div className="w-2 h-2 bg-blue-500 rounded-full ml-2"></div>
+                          <div className="w-2 h-2 bg-green-400 rounded-full ml-3 shadow-sm"></div>
                         )}
                       </label>
                       <select
                         value={selectedTag}
                         onChange={(e) => setSelectedTag(e.target.value)}
-                        className="w-full px-3 py-2 pr-8 glass-input rounded-md text-sm focus:outline-none appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K')] bg-no-repeat bg-[position:calc(100%-16px)_center]"
+                        className="w-full h-11 px-4 pr-10 glass-input rounded-xl text-sm font-normal focus:outline-none appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K')] bg-no-repeat bg-[position:calc(100%-16px)_center] transition-all duration-200"
                       >
                         <option value="all">All Tags</option>
                         {tags.map((tag) => (
@@ -797,16 +797,16 @@ export default function Home() {
 
                     {/* Read Status Filter */}
                     <div>
-                      <label className="flex items-center text-sm font-medium text-gray-300 mb-3">
+                      <label className="flex items-center text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
                         Read Status
                         {readFilter !== 'all' && (
-                          <div className="w-2 h-2 bg-blue-500 rounded-full ml-2"></div>
+                          <div className="w-2 h-2 bg-purple-400 rounded-full ml-3 shadow-sm"></div>
                         )}
                       </label>
                       <select
                         value={readFilter}
                         onChange={(e) => setReadFilter(e.target.value)}
-                        className="glass-input w-full px-3 py-2 pr-8 rounded-md text-sm focus:outline-none appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K')] bg-no-repeat bg-[position:calc(100%-16px)_center]"
+                        className="w-full h-11 px-4 pr-10 glass-input rounded-xl text-sm font-normal focus:outline-none appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K')] bg-no-repeat bg-[position:calc(100%-16px)_center] transition-all duration-200"
                       >
                         <option value="all">All</option>
                         <option value="read">Read Only</option>
@@ -816,16 +816,16 @@ export default function Home() {
 
                     {/* Sort By */}
                     <div>
-                      <label className="flex items-center text-sm font-medium text-gray-300 mb-3">
+                      <label className="flex items-center text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
                         Sort By
                         {sortBy !== 'newest-added' && (
-                          <div className="w-2 h-2 bg-blue-500 rounded-full ml-2"></div>
+                          <div className="w-2 h-2 bg-amber-400 rounded-full ml-3 shadow-sm"></div>
                         )}
                       </label>
                       <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
-                        className="glass-input w-full px-3 py-2 pr-8 rounded-md text-sm focus:outline-none appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K')] bg-no-repeat bg-[position:calc(100%-16px)_center]"
+                        className="w-full h-11 px-4 pr-10 glass-input rounded-xl text-sm font-normal focus:outline-none appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K')] bg-no-repeat bg-[position:calc(100%-16px)_center] transition-all duration-200"
                       >
                         <option value="newest-added">Newest Added</option>
                         <option value="oldest-added">Oldest Added</option>
@@ -841,12 +841,12 @@ export default function Home() {
                     <div className="flex items-end">
                       <button
                         onClick={() => window.location.href = '/manage'}
-                        className="px-4 py-3 text-gray-400 hover:text-white transition-colors rounded-lg"
-                        title="Manage"
+                        className="h-11 w-11 glass-card rounded-xl flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200 hover:scale-105"
+                        title="Manage Settings"
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                       </button>
                     </div>
@@ -868,36 +868,37 @@ export default function Home() {
                         const paginatedResults = filteredResults.slice(startIndex, endIndex);
                         
                         return paginatedResults.map((result) => (
-                          <tr key={result.id} className={`py-4 hover:px-8 hover:rounded-2xl transition-all duration-200 ${result.isRead ? '' : ''}`}>
-                          <td className="pr-4 py-4 w-8">
-                            <input
-                              type="checkbox"
-                              checked={result.isRead}
-                              onChange={() => handleToggleReadStatus(result.id)}
-                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 cursor-pointer border border-white/30 bg-transparent checked:bg-blue-500 checked:border-blue-500 rounded-full"
-                              title={!result.isRead ? 'Read' : ''}
-                            />
+                          <tr key={result.id} className="sds-table-row group">
+                          <td className="sds-table-cell w-12">
+                            <div className="flex items-center justify-center">
+                              <input
+                                type="checkbox"
+                                checked={result.isRead}
+                                onChange={() => handleToggleReadStatus(result.id)}
+                                className="h-4 w-4 text-blue-500 focus:ring-2 focus:ring-blue-500/20 cursor-pointer border border-white/20 bg-white/5 checked:bg-blue-500 checked:border-blue-500 rounded transition-all duration-200 hover:border-white/40"
+                                title={!result.isRead ? 'Mark as read' : 'Mark as unread'}
+                              />
+                            </div>
                           </td>
-                          <td className="py-4 w-full">
-                            <div>
+                          <td className="sds-table-cell">
+                            <div className="space-y-3">
                               {/* Title */}
-                              <div className="mb-1">
+                              <div>
                                 <a
                                   href={result.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-white font-medium text-base line-clamp-2 hover:text-blue-300 transition-colors"
+                                  className="text-white font-medium text-base leading-relaxed line-clamp-2 hover:text-blue-300 transition-colors duration-200 group-hover:underline decoration-1 underline-offset-2"
                                 >
                                   {result.title}
                                 </a>
                               </div>
                               
                               {/* Category + Tags */}
-                              <div className="flex flex-wrap gap-1.5 mb-2">
+                              <div className="flex flex-wrap gap-2">
                                 <span 
                                   onClick={() => setSelectedCategory(result.category)}
-                                  className="sds-chip sds-chip-category px-1.5 py-0.5 rounded-md text-xs font-medium bg-blue-500/20 text-blue-300 border border-blue-500/30 cursor-pointer hover:bg-blue-500/30 transition-colors" 
-                                  style={{ fontSize: '10px' }}
+                                  className="sds-chip sds-chip-category cursor-pointer"
                                 >
                                   {result.category}
                                 </span>
@@ -905,8 +906,7 @@ export default function Home() {
                                   <span 
                                     key={index} 
                                     onClick={() => setSelectedTag(tag)}
-                                    className="sds-chip sds-chip-tag px-1.5 py-0.5 rounded-md text-xs font-medium bg-purple-500/20 text-purple-300 border border-purple-500/30 cursor-pointer hover:bg-purple-500/30 transition-colors" 
-                                    style={{ fontSize: '10px' }}
+                                    className="sds-chip sds-chip-tag cursor-pointer"
                                   >
                                     #{tag}
                                   </span>
@@ -915,30 +915,39 @@ export default function Home() {
                               
                               {/* Memo */}
                               {result.memo && (
-                                <div className="text-gray-300 text-xs line-clamp-2 mt-2">
+                                <div className="text-gray-400 text-sm leading-relaxed line-clamp-2 italic">
                                   {result.memo}
                                 </div>
                               )}
+                              
+                              {/* Date */}
+                              <div className="text-xs text-gray-500 font-normal">
+                                {new Date(result.createdAt).toLocaleDateString('en-US', {
+                                  year: 'numeric',
+                                  month: 'short',
+                                  day: 'numeric'
+                                })}
+                              </div>
                             </div>
                           </td>
-                          <td className="py-4 w-auto pl-4">
-                            <div className="flex items-center space-x-2">
+                          <td className="sds-table-cell w-24">
+                            <div className="flex items-center justify-end space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                               <button
                                 onClick={() => handleEditLink(result)}
-                                className="inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-white transition-colors rounded-md hover:bg-white/10"
-                                title="Edit"
+                                className="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-white transition-all duration-200 rounded-lg hover:bg-white/10 hover:scale-110"
+                                title="Edit link"
                               >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                                 </svg>
                               </button>
                               <button
                                 onClick={() => handleDeleteLink(result.id)}
-                                className="inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-red-400 transition-colors rounded-md hover:bg-white/10"
-                                title="Delete"
+                                className="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-red-400 transition-all duration-200 rounded-lg hover:bg-red-500/10 hover:scale-110"
+                                title="Delete link"
                               >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                                 </svg>
                               </button>
                             </div>
@@ -949,17 +958,17 @@ export default function Home() {
                     </tbody>
                     </table>
 
-                    {/* Pagination */}
+                    {/* Premium Pagination */}
                     {filteredResults.length > itemsPerPage && (
-                      <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/10">
-                        <div className="text-sm text-gray-300">
-                          Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredResults.length)} of {filteredResults.length} results
+                      <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/8">
+                        <div className="text-sm text-gray-400 font-normal">
+                          Showing <span className="font-medium text-gray-300">{((currentPage - 1) * itemsPerPage) + 1}</span> to <span className="font-medium text-gray-300">{Math.min(currentPage * itemsPerPage, filteredResults.length)}</span> of <span className="font-medium text-gray-300">{filteredResults.length}</span> results
                         </div>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-1">
                           <button
                             onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                             disabled={currentPage === 1}
-                            className="px-3 py-1 glass-button border border-white/20 rounded-md text-sm text-white hover:bg-white/15 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="h-9 px-4 glass-card rounded-lg text-sm text-white hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 font-medium"
                           >
                             Previous
                           </button>
@@ -976,10 +985,10 @@ export default function Home() {
                                 <button
                                   key={i}
                                   onClick={() => setCurrentPage(i)}
-                                  className={`px-3 py-1 rounded-md text-sm transition-colors ${
+                                  className={`h-9 w-9 rounded-lg text-sm font-medium transition-all duration-200 ${
                                     i === currentPage
-                                      ? 'bg-blue-500 text-white'
-                                      : 'glass-button border border-white/20 text-white hover:bg-white/15'
+                                      ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
+                                      : 'glass-card text-gray-300 hover:text-white hover:bg-white/10'
                                   }`}
                                 >
                                   {i}
