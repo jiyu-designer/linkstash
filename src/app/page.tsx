@@ -658,7 +658,7 @@ export default function Home() {
                                   <Button
                     onPress={() => setShowAddModal(true)}
                     variant="primary"
-                    size="small"
+                    size="medium"
                   >
                     Add
                   </Button>
