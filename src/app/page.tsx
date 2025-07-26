@@ -601,7 +601,7 @@ export default function Home() {
     <>
       <AntiExtension />
       <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-6 py-8">
+      <div className="mx-auto px-6 py-8">
         {/* localStorage Mode Notice */}
         {!isSupabaseConfigured() && (
           <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-2xl">
@@ -690,11 +690,11 @@ export default function Home() {
           </form>
         </div>
 
-        {/* Main Content Grid: Saved Links (5) + Reading Calendar (1) */}
-        <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 mb-12">
+        {/* Main Content Grid: Saved Links (3) + Reading Calendar (1) */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-12">
           
-          {/* Saved Links Section - 5/6 width */}
-          <div className="lg:col-span-5">
+          {/* Saved Links Section - 3/4 width */}
+          <div className="lg:col-span-3">
             <div className="section-container rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-4">
