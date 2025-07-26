@@ -667,7 +667,7 @@ export default function Home() {
 
             {/* 카테고리 및 태그 요약 */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-              <div className="sds-bg-surface-secondary rounded-2xl border sds-border-secondary p-6">
+              <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold sds-text-primary">Categories</h3>
                   <Button
@@ -683,12 +683,7 @@ export default function Home() {
                     <Link
                       key={category.id}
                       href={`/categories/${encodeURIComponent(category.name)}`}
-                      className="flex items-center px-3 py-1 rounded-full text-sm hover:scale-105 transition-transform"
-                      style={{ 
-                        backgroundColor: category.color + '20',
-                        color: category.color,
-                        border: `1px solid ${category.color}40`
-                      }}
+                      className="sds-chip sds-chip-category"
                     >
                       <div 
                         className="w-2 h-2 rounded-full mr-2"
@@ -708,7 +703,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="sds-bg-surface-secondary rounded-2xl border sds-border-secondary p-6">
+              <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold sds-text-primary">Tags</h3>
                   <Button
@@ -724,12 +719,7 @@ export default function Home() {
                     <Link
                       key={tag.id}
                       href={`/tags/${encodeURIComponent(tag.name)}`}
-                      className="flex items-center px-2 py-1 rounded-full text-sm hover:scale-105 transition-transform"
-                      style={{ 
-                        backgroundColor: tag.color + '20',
-                        color: tag.color,
-                        border: `1px solid ${tag.color}40`
-                      }}
+                      className="sds-chip sds-chip-tag"
                     >
                       #{tag.name}
                     </Link>
@@ -792,7 +782,7 @@ export default function Home() {
                           <td className="sds-table-cell whitespace-nowrap">
                             <Link 
                               href={`/categories/${encodeURIComponent(result.category)}`}
-                              className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors cursor-pointer"
+                              className="sds-chip sds-chip-category"
                             >
                               {result.category}
                             </Link>
@@ -809,7 +799,7 @@ export default function Home() {
                                       <Link
                                         key={tagIndex}
                                         href={`/tags/${encodeURIComponent(tag)}`}
-                                        className="inline-flex px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition-colors cursor-pointer"
+                                        className="sds-chip sds-chip-tag"
                                       >
                                         #{tag}
                                       </Link>

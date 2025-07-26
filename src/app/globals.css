@@ -118,7 +118,6 @@ body {
 }
 
 .sds-table-header {
-  background-color: var(--sds-color-background-default-secondary);
   border-bottom: var(--sds-size-stroke-border) solid var(--sds-color-border-default-default);
 }
 
@@ -133,7 +132,7 @@ body {
 }
 
 .sds-table-body {
-  background-color: var(--sds-color-background-default-default);
+  /* No background color */
 }
 
 .sds-table-row {
@@ -142,11 +141,11 @@ body {
 }
 
 .sds-table-row:hover {
-  background-color: var(--sds-color-background-default-secondary-hover);
+  background-color: var(--sds-color-background-neutral-tertiary);
 }
 
 .sds-table-row.sds-table-row-selected {
-  background-color: var(--sds-color-background-default-tertiary);
+  /* No background for selected state */
 }
 
 .sds-table-cell {
@@ -165,6 +164,42 @@ body {
 .sds-table-cell-tertiary {
   color: var(--sds-color-text-default-tertiary);
   font-size: var(--sds-typography-body-size-small);
+}
+
+/* SDS Chip System */
+.sds-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--sds-size-space-100) var(--sds-size-space-200);
+  border-radius: var(--sds-size-radius-200);
+  font-size: var(--sds-typography-body-size-small);
+  font-weight: var(--sds-typography-body-font-weight-medium);
+  line-height: var(--sds-typography-body-line-height-small);
+  transition: all 0.15s ease;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.sds-chip-category {
+  background-color: var(--sds-color-background-neutral-tertiary);
+  color: var(--sds-color-text-neutral-default);
+  border: var(--sds-size-stroke-border) solid var(--sds-color-border-neutral-tertiary);
+}
+
+.sds-chip-category:hover {
+  background-color: var(--sds-color-background-neutral-tertiary-hover);
+  border-color: var(--sds-color-border-neutral-secondary);
+}
+
+.sds-chip-tag {
+  background-color: var(--sds-color-background-brand-secondary);
+  color: var(--sds-color-text-brand-default);
+  border: var(--sds-size-stroke-border) solid var(--sds-color-border-brand-secondary);
+}
+
+.sds-chip-tag:hover {
+  background-color: var(--sds-color-background-brand-secondary-hover);
+  border-color: var(--sds-color-border-brand-default);
 }
 
 /* Focus states */
