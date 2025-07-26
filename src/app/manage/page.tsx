@@ -128,28 +128,28 @@ export default function ManagePage() {
                   <p className="text-gray-500">No categories found</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="flex flex-wrap gap-2">
                   {categories.map((category) => (
                     <div
                       key={category.id}
-                      className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                      className="sds-chip sds-chip-category relative group cursor-pointer"
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <div
-                            className="w-4 h-4 rounded-full mr-3"
-                            style={{ backgroundColor: category.color }}
-                          ></div>
-                          <span className="font-medium text-gray-900">{category.name}</span>
-                        </div>
-                        <ButtonDanger
-                          onPress={() => handleDeleteCategory(category.id)}
-                          variant="danger-subtle"
-                          size="small"
-                        >
-                          Delete
-                        </ButtonDanger>
+                      <div className="flex items-center">
+                        <div
+                          className="w-2 h-2 rounded-full mr-2"
+                          style={{ backgroundColor: category.color }}
+                        ></div>
+                        <span>{category.name}</span>
                       </div>
+                      
+                      {/* Delete button - only visible on hover */}
+                      <button
+                        onClick={() => handleDeleteCategory(category.id)}
+                        className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center hover:bg-red-600"
+                        title="Delete category"
+                      >
+                        ×
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -167,22 +167,22 @@ export default function ManagePage() {
                   <p className="text-gray-500">No tags found</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="flex flex-wrap gap-2">
                   {tags.map((tag) => (
                     <div
                       key={tag.id}
-                      className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                      className="sds-chip sds-chip-tag relative group cursor-pointer"
                     >
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-gray-900">#{tag.name}</span>
-                        <ButtonDanger
-                          onPress={() => handleDeleteTag(tag.id)}
-                          variant="danger-subtle"
-                          size="small"
-                        >
-                          Delete
-                        </ButtonDanger>
-                      </div>
+                      <span>#{tag.name}</span>
+                      
+                      {/* Delete button - only visible on hover */}
+                      <button
+                        onClick={() => handleDeleteTag(tag.id)}
+                        className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center hover:bg-red-600"
+                        title="Delete tag"
+                      >
+                        ×
+                      </button>
                     </div>
                   ))}
                 </div>
