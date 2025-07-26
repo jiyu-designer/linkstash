@@ -162,7 +162,7 @@ export default function ReadingCalendar() {
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
-    <div className="grid grid-cols-1 gap-6">
+    <div className="grid grid-cols-[1fr_1fr] gap-4">
       {/* Calendar */}
       <div>
                       <div className="rounded-2xl overflow-hidden">
@@ -270,7 +270,7 @@ export default function ReadingCalendar() {
         </div>
       </div>
 
-      {/* Selected Date Details */}
+      {/* Selected Date Content */}
       <div>
         
             {/* Content List */}
