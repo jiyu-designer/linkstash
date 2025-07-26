@@ -650,10 +650,10 @@ export default function Home() {
     <>
       <AntiExtension />
       <div className="min-h-screen bg-black">
-      <div className="main-container mx-auto px-10 lg:px-[120px] py-8">
+      <div className="mx-auto px-10 lg:px-[120px] py-8">
         {/* localStorage Mode Notice */}
         {!isSupabaseConfigured() && (
-          <div className="section-spacing mb-6 p-4 bg-blue-50 border border-blue-200 rounded-2xl">
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-2xl">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center">
                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -669,7 +669,7 @@ export default function Home() {
         )}
 
         {/* Header with Auth Button */}
-        <header className="header-stack flex items-center justify-between mb-12">
+        <header className="flex items-center justify-between mb-12">
           <div className="flex items-center space-x-4">
             <div className="w-12 h-12 glass-card rounded-xl flex items-center justify-center backdrop-blur-20 bg-white/10 border border-white/20">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -678,27 +678,27 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-xl font-semibold text-white tracking-tight">
-                Linkstash
+                LinkStash
               </h1>
-              <p className="text-sm text-gray-400">Save smartly. Learn deeply</p>
+              <p className="text-base text-gray-300 font-medium">
+                Save smartly. Learn deeply
+              </p>
             </div>
           </div>
-          <div className="auth-button-mobile">
-            <AuthButton />
-          </div>
+          {isSupabaseConfigured() && <AuthButton />}
         </header>
 
         {/* URL Input Form - 미니멀 버전 */}
-        <div className="section-container section-spacing p-5 lg:p-6 mb-12">
+        <div className="section-container p-5 lg:p-6 mb-12">
           <form onSubmit={handleSubmit}>
-                          <div className="form-stack flex flex-col lg:flex-row gap-4">
+                          <div className="flex flex-col lg:flex-row gap-4">
               <div className="flex-1">
                 <Input
                   type="text"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="Enter URL address"
-                  className="flex-1 input-mobile"
+                  className="flex-1"
                   disabled={isLoading}
                 />
               </div>
@@ -709,7 +709,7 @@ export default function Home() {
                   value={memo}
                   onChange={(e) => setMemo(e.target.value)}
                   placeholder="Personal memo (optional)"
-                  className="flex-1 input-mobile"
+                  className="flex-1"
                   disabled={isLoading}
                 />
               </div>
@@ -717,7 +717,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="btn-mobile glass-button px-6 py-2 rounded-lg text-white font-medium disabled:opacity-50 transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20"
+                className="glass-button px-6 py-2 rounded-lg text-white font-medium disabled:opacity-50 transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20"
                 style={{ 
                   lineHeight: 1,
                   background: 'radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%)'
@@ -725,7 +725,7 @@ export default function Home() {
               >
                 {isLoading ? (
                   <span className="flex items-center">
-                    <div className="loading-spinner animate-spin rounded-full h-4 w-4 border-2 border-slate-300 border-t-white mr-2"></div>
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-slate-300 border-t-white mr-2"></div>
                     Analyzing
                   </span>
                 ) : (
