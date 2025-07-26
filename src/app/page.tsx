@@ -812,7 +812,9 @@ export default function Home() {
                               type="checkbox"
                               checked={result.isRead}
                               onChange={() => handleToggleReadStatus(result.id)}
-                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded cursor-pointer"
+                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 cursor-pointer"
+                              style={{ borderRadius: '2px' }}
+                              title={!result.isRead ? 'Read' : ''}
                             />
                           </td>
                           <td className="py-3 w-full">
