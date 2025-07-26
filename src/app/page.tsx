@@ -628,7 +628,7 @@ export default function Home() {
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl font-semibold text-white tracking-tight">
+              <h1 className="text-xl font-semibold text-white tracking-tight">
                 LinkStash
               </h1>
               <p className="text-base text-gray-300 font-medium">
@@ -668,7 +668,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="glass-button px-6 py-3 rounded-lg text-white font-medium disabled:opacity-50 transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20 bg-gradient-to-r from-blue-500/30 to-purple-500/30 hover:from-blue-500/40 hover:to-purple-500/40"
+                className="glass-button px-6 py-[12px] rounded-lg text-white font-medium disabled:opacity-50 transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20 bg-gradient-to-r from-blue-500/30 to-purple-500/30 hover:from-blue-500/40 hover:to-purple-500/40"
               >
                 {isLoading ? (
                   <span className="flex items-center">
@@ -794,25 +794,25 @@ export default function Home() {
                 </div>
                 
                 {/* Divider Line */}
-                <div className="border-t border-white/20 my-6"></div>
+                <div className="border-t border-white/20 mt-8 mb-6"></div>
                 
                 {results.length > 0 && (
                   <div className="overflow-x-auto">
                     <table className="w-full">
                     <tbody>
                       {filteredResults.map((result) => (
-                        <tr key={result.id} className={`py-3 hover:bg-white/5 hover:px-8 hover:rounded-2xl transition-all duration-200 ${result.isRead ? '' : ''}`}>
-                          <td className="pr-5 py-3 w-8">
+                        <tr key={result.id} className={`py-6 hover:bg-white/5 hover:px-8 hover:rounded-2xl transition-all duration-200 ${result.isRead ? '' : ''}`}>
+                          <td className="pr-5 py-6 w-8">
                             <input
                               type="checkbox"
                               checked={result.isRead}
                               onChange={() => handleToggleReadStatus(result.id)}
                               className="h-4 w-4 text-blue-600 focus:ring-blue-500 cursor-pointer border-white/30 bg-transparent checked:bg-blue-500 checked:border-blue-500"
-                              style={{ borderRadius: '8px' }}
+                              style={{ borderRadius: '50%' }}
                               title={!result.isRead ? 'Read' : ''}
                             />
                           </td>
-                          <td className="py-3 w-full">
+                          <td className="py-6 w-full">
                             <div>
                               {/* Title */}
                               <div className="mb-2">
@@ -849,13 +849,13 @@ export default function Home() {
                               
                               {/* Memo */}
                               {result.memo && (
-                                <div className="text-gray-300 text-base max-w-md mt-2">
+                                <div className="text-gray-300 text-base max-w-md mt-4">
                                   {result.memo}
                                 </div>
                               )}
                             </div>
                           </td>
-                          <td className="py-3 pl-3 whitespace-nowrap">
+                          <td className="py-6 pl-3 whitespace-nowrap">
                             <div className="flex space-x-2">
                               <button
                                 onClick={() => handleEditLink(result)}
