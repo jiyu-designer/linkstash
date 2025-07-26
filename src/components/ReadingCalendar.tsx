@@ -125,59 +125,56 @@ export default function ReadingCalendar() {
 
   return (
     <div className="grid grid-cols-1 gap-6">
-      {/* Statistics */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-bold text-slate-900">
-            {monthNames[currentDate.getMonth()]} Statistics
-          </h3>
-          {isLoading && (
-            <div className="animate-spin rounded-full h-4 w-4 border-2 border-slate-300 border-t-slate-600"></div>
-          )}
-        </div>
-        
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-white rounded-xl p-3 text-center">
-            <div className="text-xl font-bold text-slate-900">{monthReadLinks.size}</div>
-            <div className="text-sm text-slate-600">Active Days</div>
-          </div>
-          <div className="bg-green-50 rounded-xl p-3 text-center">
-            <div className="text-xl font-bold text-green-700">
-              {Array.from(monthReadLinks.values()).reduce((total, links) => total + links.length, 0)}
-            </div>
-            <div className="text-sm text-slate-600">Content Read</div>
-          </div>
-        </div>
-      </div>
-
       {/* Calendar */}
       <div>
         <div className="bg-slate-50 rounded-2xl overflow-hidden">
-          {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 bg-white">
-            <button
-              onClick={goToPreviousMonth}
-              className="p-1 hover:bg-slate-200 rounded-lg transition-colors"
-              disabled={isLoading}
-            >
-              <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            
-            <h2 className="text-lg font-bold text-slate-900">
-              {currentDate.getFullYear()} {monthNames[currentDate.getMonth()]}
-            </h2>
-            
-            <button
-              onClick={goToNextMonth}
-              className="p-1 hover:bg-slate-200 rounded-lg transition-colors"
-              disabled={isLoading}
-            >
-              <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+          {/* Header with Navigation and Statistics */}
+          <div className="px-4 py-3 bg-white">
+            {/* Month Navigation */}
+            <div className="flex items-center justify-between mb-4">
+              <button
+                onClick={goToPreviousMonth}
+                className="p-1 hover:bg-slate-200 rounded-lg transition-colors"
+                disabled={isLoading}
+              >
+                <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              
+              <div className="text-center">
+                <h2 className="text-lg font-bold text-slate-900">
+                  {currentDate.getFullYear()} {monthNames[currentDate.getMonth()]}
+                </h2>
+                {isLoading && (
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-slate-300 border-t-slate-600 mx-auto mt-1"></div>
+                )}
+              </div>
+              
+              <button
+                onClick={goToNextMonth}
+                className="p-1 hover:bg-slate-200 rounded-lg transition-colors"
+                disabled={isLoading}
+              >
+                <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Statistics under month title */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-white rounded-xl p-3 text-center border border-slate-200">
+                <div className="text-xl font-bold text-slate-900">{monthReadLinks.size}</div>
+                <div className="text-sm text-slate-600">Active Days</div>
+              </div>
+              <div className="bg-green-50 rounded-xl p-3 text-center border border-green-200">
+                <div className="text-xl font-bold text-green-700">
+                  {Array.from(monthReadLinks.values()).reduce((total, links) => total + links.length, 0)}
+                </div>
+                <div className="text-sm text-slate-600">Content Read</div>
+              </div>
+            </div>
           </div>
 
           {/* Calendar Grid */}
