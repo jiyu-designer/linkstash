@@ -33,20 +33,36 @@ export default function Home() {
     
     // Handle OAuth callback from URL
     const handleOAuthCallback = () => {
+      const currentURL = window.location.href;
       const hashParams = new URLSearchParams(window.location.hash.slice(1));
-      const accessToken = hashParams.get('access_token');
-      const error = hashParams.get('error');
+      const searchParams = new URLSearchParams(window.location.search);
+      
+      console.log('🔍 OAuth 콜백 확인:', {
+        url: currentURL,
+        hash: window.location.hash,
+        search: window.location.search,
+        hashParams: Object.fromEntries(hashParams),
+        searchParams: Object.fromEntries(searchParams)
+      });
+      
+      const accessToken = hashParams.get('access_token') || searchParams.get('access_token');
+      const error = hashParams.get('error') || searchParams.get('error');
+      const code = searchParams.get('code');
       
       if (error) {
-        console.log('인증 오류 감지 - 세션 정리 중...', error);
+        console.error('❌ 인증 오류 감지:', error);
         clearAuthData();
         return;
       }
       
       if (accessToken) {
-        console.log('OAuth 토큰 감지 - 로그인 처리 중...');
+        console.log('✅ OAuth 토큰 감지 - 로그인 처리 중...', accessToken.substring(0, 20) + '...');
         // Clear URL hash after processing
         window.history.replaceState(null, '', window.location.pathname);
+      }
+      
+      if (code) {
+        console.log('🔑 OAuth 코드 감지:', code.substring(0, 20) + '...');
       }
     };
     
@@ -77,16 +93,19 @@ export default function Home() {
     }
     
     // Get current user on mount (only if Supabase is configured)
+    console.log('🚀 초기 사용자 세션 확인 시작...');
     getCurrentUser().then((currentUser) => {
+      console.log('👤 사용자 세션 결과:', currentUser ? `로그인됨: ${currentUser.email}` : '로그인되지 않음');
       setUser(currentUser);
       setAuthLoading(false);
       
       // Only load data if user is authenticated
       if (currentUser) {
+        console.log('📊 사용자 데이터 로딩 시작...');
         loadData();
       }
     }).catch((error) => {
-      console.error('초기 사용자 로드 오류:', error);
+      console.error('❌ 초기 사용자 로드 오류:', error);
       setAuthLoading(false);
       setUser(null);
       // Clear corrupted auth data
@@ -140,10 +159,18 @@ export default function Home() {
   // Handle Google Sign In
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithGoogle();
+      console.log('🔐 Google 로그인 시작...');
+      setAuthLoading(true);
+      setError('');
+      
+      const result = await signInWithGoogle();
+      console.log('🔐 Google 로그인 응답:', result);
+      
+      // Note: 실제 로그인 상태는 onAuthStateChange에서 처리됨
     } catch (error) {
-      console.error('Google 로그인 실패:', error);
+      console.error('❌ Google 로그인 실패:', error);
       setError('Google 로그인에 실패했습니다. 다시 시도해주세요.');
+      setAuthLoading(false);
     }
   };
 

@@ -52,6 +52,9 @@ export const signInWithEmail = async (email: string, password: string) => {
  * Sign in with Google OAuth
  */
 export const signInWithGoogle = async () => {
+  console.log('🔐 Supabase Google OAuth 요청 시작...');
+  console.log('📍 Redirect URL:', window.location.origin);
+  
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
@@ -64,9 +67,11 @@ export const signInWithGoogle = async () => {
   });
 
   if (error) {
-    console.error('Google 로그인 오류:', error);
+    console.error('❌ Supabase OAuth 오류:', error);
     throw error;
   }
+
+  console.log('✅ Supabase OAuth 응답:', data);
 
   return data;
 };
