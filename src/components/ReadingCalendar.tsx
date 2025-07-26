@@ -181,7 +181,7 @@ export default function ReadingCalendar() {
               </button>
               
               <div className="text-center">
-                <h2 className="text-xl font-semibold text-slate-900 tracking-tight">
+                <h2 className="text-xl font-semibold text-white tracking-tight">
                   {currentDate.getFullYear()} {monthNames[currentDate.getMonth()]}
                 </h2>
                 {isLoading && (
@@ -202,11 +202,11 @@ export default function ReadingCalendar() {
 
             {/* Statistics under month title */}
             <div className="grid grid-cols-1 gap-3">
-              <div className="bg-white rounded-xl p-3 text-center border border-slate-200">
-                <div className="text-2xl font-semibold text-slate-900">
+              <div className="glass-card rounded-xl p-3 text-center">
+                <div className="text-2xl font-semibold text-white">
                   {new Set([...monthReadLinks.keys(), ...monthSavedLinks.keys()]).size}
                 </div>
-                <div className="text-base text-slate-600 font-medium">Active Days</div>
+                <div className="text-base text-gray-300 font-medium">Active Days</div>
               </div>
             </div>
           </div>
@@ -216,7 +216,7 @@ export default function ReadingCalendar() {
             {/* Week Days Header */}
             <div className="grid grid-cols-7 gap-1 mb-2">
               {weekDays.map((day, index) => (
-                <div key={day} className={`text-center text-xs font-medium py-1 ${index === 0 || index === 6 ? 'text-red-500' : 'text-slate-600'}`}>
+                <div key={day} className={`text-center text-xs font-medium py-1 ${index === 0 || index === 6 ? 'text-red-400' : 'text-gray-300'}`}>
                   {day}
                 </div>
               ))}
@@ -279,21 +279,21 @@ export default function ReadingCalendar() {
                 {readLinksForDate.map((link) => (
                   <div
                     key={link.id}
-                    className="bg-white rounded-lg p-2 hover:bg-slate-50 transition-colors"
+                    className="glass-card rounded-lg p-2 hover:bg-white/10 transition-colors"
                   >
-                    <h4 className="font-medium text-slate-900 text-base line-clamp-2 mb-1">
+                    <h4 className="font-medium text-white text-base line-clamp-2 mb-1">
                       <a
                         href={link.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-blue-600 transition-colors"
+                        className="hover:text-blue-300 transition-colors"
                       >
                         {link.title}
                       </a>
                     </h4>
 
                     {link.memo && (
-                      <p className="text-sm text-slate-500 line-clamp-1">
+                      <p className="text-sm text-gray-300 line-clamp-1">
                         {link.memo}
                       </p>
                     )}
@@ -302,12 +302,12 @@ export default function ReadingCalendar() {
               </div>
             ) : (
               <div className="text-center py-12">
-                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-16 h-16 glass-card rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <p className="text-slate-500 text-sm text-center">
+                <p className="text-gray-300 text-sm text-center">
                   No reads yet. Ready to explore something new?
                 </p>
               </div>

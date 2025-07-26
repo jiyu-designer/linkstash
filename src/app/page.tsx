@@ -600,7 +600,7 @@ export default function Home() {
   return (
     <>
       <AntiExtension />
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-black">
       <div className="mx-auto px-[120px] py-8">
         {/* localStorage Mode Notice */}
         {!isSupabaseConfigured() && (
@@ -628,10 +628,10 @@ export default function Home() {
               </svg>
             </div>
             <div>
-              <h1 className="text-3xl font-semibold sds-text-primary tracking-tight">
+              <h1 className="text-3xl font-semibold text-white tracking-tight">
                 LinkStash
               </h1>
-              <p className="text-base sds-text-secondary font-medium">
+              <p className="text-base text-gray-300 font-medium">
                 Save smartly. Learn deeply
               </p>
             </div>
