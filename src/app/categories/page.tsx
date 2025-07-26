@@ -15,6 +15,7 @@ export default function CategoriesPage() {
   const [links, setLinks] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [mounted, setMounted] = useState(false);
   const [formData, setFormData] = useState<CategoryFormData>({
     name: '',
     color: DEFAULT_COLORS[0],
@@ -23,6 +24,7 @@ export default function CategoriesPage() {
 
   // Load categories and links from storage on component mount
   useEffect(() => {
+    setMounted(true);
     const loadData = async () => {
       try {
         const [categories, links] = await Promise.all([
@@ -56,6 +58,11 @@ export default function CategoriesPage() {
     };
   }, []);
 
+  // Prevent hydration mismatch
+  if (!mounted) {
+    return null;
+  }
+
   // Note: Storage is now handled by the storage utility
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -74,6 +81,7 @@ export default function CategoriesPage() {
         const newCategory: Category = {
           id: crypto.randomUUID(),
           ...formData,
+          userId: 'temp-user', // This will be replaced by storage layer
           createdAt: now,
           updatedAt: now
         };

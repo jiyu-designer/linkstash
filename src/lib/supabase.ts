@@ -1,23 +1,53 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Supabase URL and Key should be set in environment variables
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://localhost:3000';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy-key-for-development';
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
-}
+// Check if we have valid Supabase configuration
+export const isSupabaseConfigured = () => {
+  return !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+};
 
 // Database types
 export interface Database {
   public: {
     Tables: {
+      users: {
+        Row: {
+          id: string;
+          email: string;
+          full_name: string | null;
+          avatar_url: string | null;
+          preferences: any;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          email: string;
+          full_name?: string | null;
+          avatar_url?: string | null;
+          preferences?: any;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          email?: string;
+          full_name?: string | null;
+          avatar_url?: string | null;
+          preferences?: any;
+          updated_at?: string;
+        };
+      };
       categories: {
         Row: {
           id: string;
           name: string;
           color: string;
           description: string | null;
+          user_id: string;
           created_at: string;
           updated_at: string;
         };
@@ -26,6 +56,7 @@ export interface Database {
           name: string;
           color: string;
           description?: string | null;
+          user_id: string;
           created_at?: string;
           updated_at?: string;
         };
@@ -34,6 +65,7 @@ export interface Database {
           name?: string;
           color?: string;
           description?: string | null;
+          user_id?: string;
           updated_at?: string;
         };
       };
@@ -43,6 +75,7 @@ export interface Database {
           name: string;
           color: string;
           description: string | null;
+          user_id: string;
           created_at: string;
           updated_at: string;
         };
@@ -51,6 +84,7 @@ export interface Database {
           name: string;
           color: string;
           description?: string | null;
+          user_id: string;
           created_at?: string;
           updated_at?: string;
         };
@@ -59,6 +93,7 @@ export interface Database {
           name?: string;
           color?: string;
           description?: string | null;
+          user_id?: string;
           updated_at?: string;
         };
       };
@@ -73,6 +108,7 @@ export interface Database {
           memo: string | null;
           is_read: boolean;
           read_at: string | null;
+          user_id: string;
           created_at: string;
           updated_at: string;
         };
@@ -86,6 +122,7 @@ export interface Database {
           memo?: string | null;
           is_read?: boolean;
           read_at?: string | null;
+          user_id: string;
           created_at?: string;
           updated_at?: string;
         };
@@ -99,6 +136,7 @@ export interface Database {
           memo?: string | null;
           is_read?: boolean;
           read_at?: string | null;
+          user_id?: string;
           updated_at?: string;
         };
       };
@@ -118,4 +156,11 @@ export interface Database {
   };
 }
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey); 
+// Create Supabase client with fallback values and custom options
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,  // Enable automatic token refresh
+    persistSession: true,    // Persist session in storage
+    detectSessionInUrl: true // Enable detection of session from URL
+  }
+}); 

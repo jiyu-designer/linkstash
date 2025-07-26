@@ -1,0 +1,22 @@
+# ================================
+# LinkStash - Supabase 환경 변수 백업
+# 생성일: 2025-01-26
+# ================================
+
+# 🚀 Supabase 프로젝트 설정
+NEXT_PUBLIC_SUPABASE_URL=https://ifoaupbxyrwtuluaayfz.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlmb2F1cGJ4eXJ3dHVsdWFheWZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM0Mzc1MTQsImV4cCI6MjA2OTAxMzUxNH0.qJW_N2ClFJej0-5qAnzv5xhAW8ihSOFssyx
+
+# 🔑 OAuth 설정 (선택사항)
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_oauth_client_id_here
+NEXT_PUBLIC_KAKAO_CLIENT_ID=your_kakao_rest_api_key_here
+
+# 🤖 AI 설정 (선택사항)
+GOOGLE_API_KEY=your_google_gemini_api_key_here
+
+# ================================
+# 사용법:
+# 1. 위 내용을 .env.local에 복사
+# 2. npm run dev 재시작
+# 3. 로그인 기능 활성화 확인
+# ================================ 

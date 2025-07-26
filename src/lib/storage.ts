@@ -1,16 +1,12 @@
 import { Category, Tag, CategorizedLink } from '@/types';
 import { database } from './database';
+import { isSupabaseConfigured } from './supabase';
 
 const STORAGE_KEYS = {
   CATEGORIES: 'linkstash-categories',
   TAGS: 'linkstash-tags',
   LINKS: 'linkstash-links'
 } as const;
-
-// Check if Supabase is configured
-const isSupabaseConfigured = () => {
-  return !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-};
 
 // Local storage helpers
 const localStorageHelpers = {
@@ -369,6 +365,7 @@ export const storage = {
         id: crypto.randomUUID(),
         name: categoryName,
         color: '#3B82F6',
+        userId: 'local-user',
         createdAt: now,
         updatedAt: now
       };
@@ -384,6 +381,7 @@ export const storage = {
       id: crypto.randomUUID(),
       name: tagName,
       color: '#10B981',
+      userId: 'local-user',
       createdAt: now,
       updatedAt: now
     }));

@@ -1,5 +1,17 @@
 import { supabase } from './supabase';
-import { Category, Tag, CategorizedLink } from '@/types';
+import { getCurrentUserId } from './auth';
+import { Category, Tag, CategorizedLink, User, UserStats, UserProfile } from '@/types';
+
+// Helper function to convert database row to User
+const dbToUser = (row: any): User => ({
+  id: row.id,
+  email: row.email,
+  fullName: row.full_name || undefined,
+  avatarUrl: row.avatar_url || undefined,
+  preferences: row.preferences || {},
+  createdAt: new Date(row.created_at),
+  updatedAt: new Date(row.updated_at)
+});
 
 // Helper function to convert database row to Category
 const dbToCategory = (row: any): Category => ({
@@ -7,6 +19,7 @@ const dbToCategory = (row: any): Category => ({
   name: row.name,
   color: row.color,
   description: row.description || undefined,
+  userId: row.user_id,
   createdAt: new Date(row.created_at),
   updatedAt: new Date(row.updated_at)
 });
@@ -17,6 +30,7 @@ const dbToTag = (row: any): Tag => ({
   name: row.name,
   color: row.color,
   description: row.description || undefined,
+  userId: row.user_id,
   createdAt: new Date(row.created_at),
   updatedAt: new Date(row.updated_at)
 });
@@ -32,6 +46,7 @@ const dbToLink = (row: any): CategorizedLink => ({
   memo: row.memo || undefined,
   isRead: row.is_read || false,
   readAt: row.read_at ? new Date(row.read_at) : undefined,
+  userId: row.user_id,
   createdAt: new Date(row.created_at),
   updatedAt: new Date(row.updated_at)
 });
@@ -40,9 +55,16 @@ export const database = {
   // Categories
   categories: {
     async getAll(): Promise<Category[]> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        console.warn('No authenticated user, returning empty categories');
+        return [];
+      }
+
       const { data, error } = await supabase
         .from('categories')
         .select('*')
+        .eq('user_id', userId)
         .order('created_at', { ascending: false });
       
       if (error) {
@@ -54,12 +76,18 @@ export const database = {
     },
 
     async create(category: Omit<Category, 'id' | 'createdAt' | 'updatedAt'>): Promise<Category> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        throw new Error('User must be authenticated to create categories');
+      }
+
       const { data, error } = await supabase
         .from('categories')
         .insert({
           name: category.name,
           color: category.color,
-          description: category.description || null
+          description: category.description || null,
+          user_id: userId
         })
         .select()
         .single();
@@ -73,6 +101,11 @@ export const database = {
     },
 
     async update(id: string, updates: Partial<Category>): Promise<Category> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        throw new Error('User must be authenticated to update categories');
+      }
+
       const updateData: any = {};
       if (updates.name !== undefined) updateData.name = updates.name;
       if (updates.color !== undefined) updateData.color = updates.color;
@@ -82,6 +115,7 @@ export const database = {
         .from('categories')
         .update(updateData)
         .eq('id', id)
+        .eq('user_id', userId)
         .select()
         .single();
       
@@ -106,10 +140,16 @@ export const database = {
     },
 
     async findByName(name: string): Promise<Category | null> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        return null; // No user, no category can be found
+      }
+
       const { data, error } = await supabase
         .from('categories')
         .select('*')
         .eq('name', name)
+        .eq('user_id', userId)
         .single();
       
       if (error) {
@@ -125,9 +165,16 @@ export const database = {
   // Tags
   tags: {
     async getAll(): Promise<Tag[]> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        console.warn('No authenticated user, returning empty tags');
+        return [];
+      }
+
       const { data, error } = await supabase
         .from('tags')
         .select('*')
+        .eq('user_id', userId)
         .order('created_at', { ascending: false });
       
       if (error) {
@@ -139,12 +186,18 @@ export const database = {
     },
 
     async create(tag: Omit<Tag, 'id' | 'createdAt' | 'updatedAt'>): Promise<Tag> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        throw new Error('User must be authenticated to create tags');
+      }
+
       const { data, error } = await supabase
         .from('tags')
         .insert({
           name: tag.name,
           color: tag.color,
-          description: tag.description || null
+          description: tag.description || null,
+          user_id: userId
         })
         .select()
         .single();
@@ -158,6 +211,11 @@ export const database = {
     },
 
     async update(id: string, updates: Partial<Tag>): Promise<Tag> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        throw new Error('User must be authenticated to update tags');
+      }
+
       const updateData: any = {};
       if (updates.name !== undefined) updateData.name = updates.name;
       if (updates.color !== undefined) updateData.color = updates.color;
@@ -167,6 +225,7 @@ export const database = {
         .from('tags')
         .update(updateData)
         .eq('id', id)
+        .eq('user_id', userId)
         .select()
         .single();
       
@@ -191,10 +250,16 @@ export const database = {
     },
 
     async findByName(name: string): Promise<Tag | null> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        return null; // No user, no tag can be found
+      }
+
       const { data, error } = await supabase
         .from('tags')
         .select('*')
         .eq('name', name)
+        .eq('user_id', userId)
         .single();
       
       if (error) {
@@ -210,9 +275,16 @@ export const database = {
   // Links
   links: {
     async getAll(): Promise<CategorizedLink[]> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        console.warn('No authenticated user, returning empty links');
+        return [];
+      }
+
       const { data, error } = await supabase
         .from('links')
         .select('*')
+        .eq('user_id', userId)
         .order('created_at', { ascending: false });
       
       if (error) {
@@ -224,6 +296,11 @@ export const database = {
     },
 
     async create(link: Omit<CategorizedLink, 'id' | 'createdAt' | 'updatedAt'>): Promise<CategorizedLink> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        throw new Error('User must be authenticated to create links');
+      }
+
       const { data, error } = await supabase
         .from('links')
         .insert({
@@ -234,7 +311,8 @@ export const database = {
           tags: link.tags || [],
           memo: link.memo || null,
           is_read: link.isRead || false,
-          read_at: link.readAt || null
+          read_at: link.readAt || null,
+          user_id: userId
         })
         .select()
         .single();
@@ -248,6 +326,11 @@ export const database = {
     },
 
     async update(id: string, updates: Partial<CategorizedLink>): Promise<CategorizedLink> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        throw new Error('User must be authenticated to update links');
+      }
+
       const updateData: any = {};
       
       if (updates.url !== undefined) updateData.url = updates.url;
@@ -263,6 +346,7 @@ export const database = {
         .from('links')
         .update(updateData)
         .eq('id', id)
+        .eq('user_id', userId)
         .select()
         .single();
       
@@ -275,10 +359,16 @@ export const database = {
     },
 
     async delete(id: string): Promise<void> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        throw new Error('User must be authenticated to delete links');
+      }
+
       const { error } = await supabase
         .from('links')
         .delete()
-        .eq('id', id);
+        .eq('id', id)
+        .eq('user_id', userId);
       
       if (error) {
         console.error('Error deleting link:', error);
@@ -287,10 +377,17 @@ export const database = {
     },
 
     async getByCategory(category: string): Promise<CategorizedLink[]> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        console.warn('No authenticated user, returning empty links');
+        return [];
+      }
+
       const { data, error } = await supabase
         .from('links')
         .select('*')
         .eq('category', category)
+        .eq('user_id', userId)
         .order('created_at', { ascending: false });
       
       if (error) {
@@ -302,10 +399,17 @@ export const database = {
     },
 
     async getByTag(tag: string): Promise<CategorizedLink[]> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        console.warn('No authenticated user, returning empty links');
+        return [];
+      }
+
       const { data, error } = await supabase
         .from('links')
         .select('*')
         .contains('tags', [tag])
+        .eq('user_id', userId)
         .order('created_at', { ascending: false });
       
       if (error) {
@@ -317,11 +421,17 @@ export const database = {
     },
 
     async toggleReadStatus(id: string): Promise<CategorizedLink> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        throw new Error('User must be authenticated to toggle read status');
+      }
+
       // First get the current link to check its read status
       const { data: currentLink, error: fetchError } = await supabase
         .from('links')
         .select('*')
         .eq('id', id)
+        .eq('user_id', userId)
         .single();
 
       if (fetchError) {
@@ -339,6 +449,7 @@ export const database = {
         .from('links')
         .update(updateData)
         .eq('id', id)
+        .eq('user_id', userId)
         .select()
         .single();
 
@@ -351,10 +462,17 @@ export const database = {
     },
 
     async getReadLinksByDateRange(startDate: Date, endDate: Date): Promise<CategorizedLink[]> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        console.warn('No authenticated user, returning empty links');
+        return [];
+      }
+
       const { data, error } = await supabase
         .from('links')
         .select('*')
         .eq('is_read', true)
+        .eq('user_id', userId)
         .gte('read_at', startDate.toISOString())
         .lte('read_at', endDate.toISOString())
         .order('read_at', { ascending: false });
@@ -381,12 +499,19 @@ export const database = {
   // Auto-create categories and tags
   async autoCreateCategoryAndTags(categoryName: string, tagNames: string[]): Promise<void> {
     try {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        console.warn('Cannot auto-create categories/tags: user not authenticated');
+        return;
+      }
+
       // Check and create category if it doesn't exist
       const existingCategory = await this.categories.findByName(categoryName);
       if (!existingCategory) {
         await this.categories.create({
           name: categoryName,
-          color: '#3B82F6'
+          color: '#3B82F6',
+          userId
         });
       }
 
@@ -396,13 +521,103 @@ export const database = {
         if (!existingTag) {
           await this.tags.create({
             name: tagName,
-            color: '#10B981'
+            color: '#10B981',
+            userId
           });
         }
       }
     } catch (error) {
       console.error('Error auto-creating category and tags:', error);
       // Don't throw here, as this is a secondary operation
+    }
+  },
+
+  // Users management
+  users: {
+    async getProfile(userId?: string): Promise<UserProfile | null> {
+      const targetUserId = userId || await getCurrentUserId();
+      if (!targetUserId) {
+        return null;
+      }
+
+      const { data, error } = await supabase
+        .rpc('get_user_profile', { user_uuid: targetUserId });
+
+      if (error) {
+        console.error('Error getting user profile:', error);
+        throw new Error('Failed to get user profile');
+      }
+
+      if (!data) {
+        return null;
+      }
+
+      return {
+        id: data.id,
+        email: data.email,
+        fullName: data.full_name,
+        avatarUrl: data.avatar_url,
+        preferences: data.preferences,
+        createdAt: new Date(data.created_at),
+        updatedAt: new Date(data.updated_at),
+        stats: {
+          totalLinks: data.stats.total_links,
+          readLinks: data.stats.read_links,
+          unreadLinks: data.stats.unread_links,
+          totalCategories: data.stats.total_categories,
+          totalTags: data.stats.total_tags,
+          readingStreakDays: data.stats.reading_streak_days
+        }
+      };
+    },
+
+    async updateProfile(updates: Partial<User>): Promise<User> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        throw new Error('User must be authenticated to update profile');
+      }
+
+      const updateData: any = {};
+      if (updates.fullName !== undefined) updateData.full_name = updates.fullName;
+      if (updates.preferences !== undefined) updateData.preferences = updates.preferences;
+
+      const { data, error } = await supabase
+        .from('users')
+        .update(updateData)
+        .eq('id', userId)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error updating user profile:', error);
+        throw new Error('Failed to update user profile');
+      }
+
+      return dbToUser(data);
+    },
+
+    async getStats(userId?: string): Promise<UserStats> {
+      const targetUserId = userId || await getCurrentUserId();
+      if (!targetUserId) {
+        throw new Error('User ID required for stats');
+      }
+
+      const { data, error } = await supabase
+        .rpc('get_user_stats', { user_uuid: targetUserId });
+
+      if (error) {
+        console.error('Error getting user stats:', error);
+        throw new Error('Failed to get user stats');
+      }
+
+      return {
+        totalLinks: data.total_links,
+        readLinks: data.read_links,
+        unreadLinks: data.unread_links,
+        totalCategories: data.total_categories,
+        totalTags: data.total_tags,
+        readingStreakDays: data.reading_streak_days
+      };
     }
   }
 }; 
