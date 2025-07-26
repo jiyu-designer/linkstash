@@ -10,3 +10,18 @@ calendar의 배경컬러 규칙을 변경할게
 selected 상태일때는 white boarder를 적용해줘
 date 위의 숫자 뱃지는 없애줘
 Active Days 섹션은 아예 가장 아래에 새로운 cahllenges 섹션으로 만들고 그쪽으로 옮겨줘, 여러가지 상태와 뱃지를 표기하기 위한 섹션이야
+
+
+
+Tired of organizing bookmarks? This page was built with LinkStash. Find out more. 이 영역을 없애줘
+링크모음에 있는 설정 버튼의 백그라운드 컬러는 없애줘, add와 같은 사이즈로 맞춰줘
+모든 필터에는 dorpdown을 암시하는 arrow를 필터 영역 안에 잘 배치해줘
+smart sort, add button을 좀 더 glassy한 버튼으로 바꿔줘
+
+
+아직도 로그인 정보가 있는 프로필 영역 텍스트를 darktheme으로 바꾸고 로그아웃은 텍스트 버튼 으로 바꾸고 dark theme을 적용해
+Challenges 영역도 위의 섹션과 똑같이 좌우 패딩을 유지해줘
+Summary로 바꾸고 설명은 삭제해줘
+섹션간의 패딩을 일정하게 유지해줘
+
+

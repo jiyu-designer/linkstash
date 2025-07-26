@@ -665,11 +665,10 @@ export default function Home() {
                 />
               </div>
               
-              <Button
+              <button
                 type="submit"
-                isDisabled={isLoading}
-                variant="primary"
-                size="medium"
+                disabled={isLoading}
+                className="glass-button px-6 py-2.5 rounded-lg text-white font-medium disabled:opacity-50 transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20"
               >
                 {isLoading ? (
                   <span className="flex items-center">
@@ -677,9 +676,9 @@ export default function Home() {
                     Analyzing
                   </span>
                 ) : (
-                                          'SmartSort'
+                  'SmartSort'
                 )}
-              </Button>
+              </button>
             </div>
               
             {error && (
@@ -774,16 +773,15 @@ export default function Home() {
                     
                     {/* Add and Manage Buttons */}
                     <div className="flex items-end gap-2">
-                      <Button
-                        onPress={() => setShowAddModal(true)}
-                        variant="primary"
-                        size="medium"
+                      <button
+                        onClick={() => setShowAddModal(true)}
+                        className="glass-button px-6 py-2.5 rounded-lg text-white font-medium transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20"
                       >
                         Add
-                      </Button>
+                      </button>
                       <button
                         onClick={() => window.location.href = '/manage'}
-                        className="glass-button p-2 rounded-lg border border-white/20 hover:bg-white/10 transition-all"
+                        className="px-4 py-2 text-white hover:bg-white/10 transition-all rounded-lg border border-white/20"
                         title="Manage"
                       >
                         <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1182,19 +1180,7 @@ export default function Home() {
           </div>
         )}
 
-        <footer className="mt-16 text-center px-6">
-          <p className="text-sm sds-text-tertiary">
-            Tired of organizing bookmarks?{' '}
-            <a
-              href="#"
-              className="sds-text-secondary hover:sds-text-primary underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              This page was built with LinkStash. Find out more.
-            </a>
-          </p>
-        </footer>
+
 
         {/* Fixed Debug Button - 개발 중에만 표시 */}
         {process.env.NODE_ENV === 'development' && (
