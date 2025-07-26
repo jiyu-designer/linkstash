@@ -36,6 +36,10 @@ export default function Home() {
   const [readFilter, setReadFilter] = useState<string>('all'); // 'all', 'read', 'unread'
   const [sortBy, setSortBy] = useState<string>('newest-added'); // 'newest-added', 'oldest-added', 'newest', 'oldest', 'title'
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 10;
+
   // Toast notification state
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
@@ -123,6 +127,11 @@ export default function Home() {
   };
 
   const filteredResults = getFilteredAndSortedResults();
+
+  // Reset pagination when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, selectedTag, readFilter, sortBy]);
 
   // Check authentication state and load data
   useEffect(() => {
@@ -711,7 +720,7 @@ export default function Home() {
                 className="glass-button px-6 py-2 rounded-lg text-white font-medium disabled:opacity-50 transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20"
                 style={{ 
                   lineHeight: 1,
-                  background: 'radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, rgba(147, 51, 234, 0.2) 50%, rgba(236, 72, 153, 0.2) 100%)'
+                  background: 'radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%)'
                 }}
               >
                 {isLoading ? (
@@ -733,8 +742,8 @@ export default function Home() {
           </form>
         </div>
 
-        {/* Main Content: All Links, Reading Calendar, Summary (Vertical Stack) */}
-        <div className="space-y-8">
+        {/* Main Content: All Links, Summary, Reading Calendar (Vertical Stack) */}
+        <div className="space-y-[60px]">
           
           {/* All Links Section */}
           <div className="section-container p-6 lg:p-8">
@@ -836,8 +845,8 @@ export default function Home() {
                         title="Manage"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <circle cx="12" cy="12" r="2" strokeWidth={1.5}/>
-                          <circle cx="12" cy="12" r="8" strokeWidth={1} strokeDasharray="2 6"/>
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                       </button>
                     </div>
@@ -850,11 +859,15 @@ export default function Home() {
                 
                 {/* Links List */}
                 {results.length > 0 && (
-                  <div className="relative">
-                    <div className="max-h-[600px] overflow-y-auto scrollbar-hide">
-                      <table className="w-full">
-                      <tbody>
-                        {filteredResults.slice(0, 10).map((result) => (
+                  <>
+                    <table className="w-full">
+                    <tbody>
+                      {(() => {
+                        const startIndex = (currentPage - 1) * itemsPerPage;
+                        const endIndex = startIndex + itemsPerPage;
+                        const paginatedResults = filteredResults.slice(startIndex, endIndex);
+                        
+                        return paginatedResults.map((result) => (
                           <tr key={result.id} className={`py-4 hover:px-8 hover:rounded-2xl transition-all duration-200 ${result.isRead ? '' : ''}`}>
                           <td className="pr-4 py-4 w-8">
                             <input
@@ -881,11 +894,20 @@ export default function Home() {
                               
                               {/* Category + Tags */}
                               <div className="flex flex-wrap gap-1.5 mb-2">
-                                <span className="sds-chip sds-chip-category px-1.5 py-0.5 rounded-md text-xs font-medium bg-blue-500/20 text-blue-300 border border-blue-500/30" style={{ fontSize: '10px' }}>
+                                <span 
+                                  onClick={() => setSelectedCategory(result.category)}
+                                  className="sds-chip sds-chip-category px-1.5 py-0.5 rounded-md text-xs font-medium bg-blue-500/20 text-blue-300 border border-blue-500/30 cursor-pointer hover:bg-blue-500/30 transition-colors" 
+                                  style={{ fontSize: '10px' }}
+                                >
                                   {result.category}
                                 </span>
                                 {result.tags.map((tag, index) => (
-                                  <span key={index} className="sds-chip sds-chip-tag px-1.5 py-0.5 rounded-md text-xs font-medium bg-purple-500/20 text-purple-300 border border-purple-500/30" style={{ fontSize: '10px' }}>
+                                  <span 
+                                    key={index} 
+                                    onClick={() => setSelectedTag(tag)}
+                                    className="sds-chip sds-chip-tag px-1.5 py-0.5 rounded-md text-xs font-medium bg-purple-500/20 text-purple-300 border border-purple-500/30 cursor-pointer hover:bg-purple-500/30 transition-colors" 
+                                    style={{ fontSize: '10px' }}
+                                  >
                                     #{tag}
                                   </span>
                                 ))}
@@ -922,13 +944,62 @@ export default function Home() {
                             </div>
                           </td>
                         </tr>
-                      ))}
+                        ));
+                      })()}
                     </tbody>
                     </table>
-                  </div>
-                    {/* Scroll affordance gradient */}
-                    <div className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none bg-gradient-to-t from-black to-transparent"></div>
-                  </div>
+
+                    {/* Pagination */}
+                    {filteredResults.length > itemsPerPage && (
+                      <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/10">
+                        <div className="text-sm text-gray-300">
+                          Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredResults.length)} of {filteredResults.length} results
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                            disabled={currentPage === 1}
+                            className="px-3 py-1 glass-button border border-white/20 rounded-md text-sm text-white hover:bg-white/15 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            Previous
+                          </button>
+                          
+                          {/* Page numbers */}
+                          {(() => {
+                            const totalPages = Math.ceil(filteredResults.length / itemsPerPage);
+                            const pages = [];
+                            const startPage = Math.max(1, currentPage - 2);
+                            const endPage = Math.min(totalPages, currentPage + 2);
+                            
+                            for (let i = startPage; i <= endPage; i++) {
+                              pages.push(
+                                <button
+                                  key={i}
+                                  onClick={() => setCurrentPage(i)}
+                                  className={`px-3 py-1 rounded-md text-sm transition-colors ${
+                                    i === currentPage
+                                      ? 'bg-blue-500 text-white'
+                                      : 'glass-button border border-white/20 text-white hover:bg-white/15'
+                                  }`}
+                                >
+                                  {i}
+                                </button>
+                              );
+                            }
+                            return pages;
+                          })()}
+                          
+                          <button
+                            onClick={() => setCurrentPage(Math.min(Math.ceil(filteredResults.length / itemsPerPage), currentPage + 1))}
+                            disabled={currentPage === Math.ceil(filteredResults.length / itemsPerPage)}
+                            className="px-3 py-1 glass-button border border-white/20 rounded-md text-sm text-white hover:bg-white/15 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            Next
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
 
                 {/* No results message */}
@@ -949,14 +1020,6 @@ export default function Home() {
                 )}
               </div>
             </div>
-
-          {/* Reading Calendar Section */}
-          <div className="section-container p-6 lg:p-8">
-            <div className="mb-4">
-              <h2 className="text-xl font-semibold text-white tracking-tight">Reading Calendar</h2>
-            </div>
-            <ReadingCalendar />
-          </div>
 
           {/* Summary Section */}
           <div className="section-container p-6 lg:p-8">
@@ -1015,6 +1078,14 @@ export default function Home() {
                 <div className="text-xs text-gray-300 mt-1">Completion</div>
               </div>
             </div>
+          </div>
+
+          {/* Reading Calendar Section */}
+          <div className="section-container p-6 lg:p-8">
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold text-white tracking-tight">Reading Calendar</h2>
+            </div>
+            <ReadingCalendar />
           </div>
 
         </div>

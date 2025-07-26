@@ -296,7 +296,12 @@ export default function ReadingCalendar() {
                 </div>
                 {/* Scroll affordance gradient - only show if content exceeds container height */}
                 {readLinksForDate.length > 4 && (
-                  <div className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none bg-gradient-to-t from-black to-transparent"></div>
+                  <div 
+                    className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none" 
+                    style={{
+                      background: 'linear-gradient(to top, rgba(255, 255, 255, 0.08), transparent)'
+                    }}
+                  ></div>
                 )}
               </div>
             ) : (
