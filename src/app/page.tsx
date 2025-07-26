@@ -640,7 +640,7 @@ export default function Home() {
         </header>
 
         {/* URL Input Form - 미니멀 버전 */}
-        <div className="section-container rounded-2xl p-6 lg:p-8 mb-8 lg:mb-12">
+        <div className="section-container p-6 lg:p-8 mb-8 lg:mb-12">
           <form onSubmit={handleSubmit}>
                           <div className="flex flex-col lg:flex-row gap-4">
               <div className="flex-1">
@@ -695,7 +695,7 @@ export default function Home() {
           
           {/* Saved Links Section - 2.5fr width */}
           <div>
-            <div className="section-container rounded-2xl p-6 lg:p-8">
+            <div className="section-container p-6 lg:p-8">
                 {/* Filters with Add button */}
                 <div className="mb-4 rounded-lg">
                   <div className="flex items-end justify-between gap-4">
@@ -902,7 +902,7 @@ export default function Home() {
 
           {/* Reading Calendar Section - calc(1.5fr - 60px) width */}
           <div>
-            <div className="section-container rounded-2xl p-6 lg:p-8">
+            <div className="section-container p-6 lg:p-8">
               <div className="mb-4">
                 <h2 className="text-xl font-semibold text-white tracking-tight">Reading Calendar</h2>
               </div>
