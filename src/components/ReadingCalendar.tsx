@@ -148,141 +148,203 @@ export default function ReadingCalendar() {
         </div>
       </div>
 
-      {/* Compact Calendar */}
-      <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-slate-200/60 shadow-lg overflow-hidden">
-        {/* Simple Header */}
-        <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
-          <button
-            onClick={goToPreviousMonth}
-            className="p-1 hover:bg-slate-200 rounded-lg transition-colors"
-            disabled={isLoading}
-          >
-            <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          
-          <h2 className="text-lg font-bold text-slate-900">
-            {currentDate.getFullYear()} {monthNames[currentDate.getMonth()]}
-          </h2>
-          
-          <button
-            onClick={goToNextMonth}
-            className="p-1 hover:bg-slate-200 rounded-lg transition-colors"
-            disabled={isLoading}
-          >
-            <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+      {/* Calendar and Selected Date Details - 같은 열에 배치 */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        {/* Compact Calendar */}
+        <div className="xl:col-span-2">
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-slate-200/60 shadow-lg overflow-hidden">
+            {/* Simple Header */}
+            <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
+              <button
+                onClick={goToPreviousMonth}
+                className="p-1 hover:bg-slate-200 rounded-lg transition-colors"
+                disabled={isLoading}
+              >
+                <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              
+              <h2 className="text-lg font-bold text-slate-900">
+                {currentDate.getFullYear()} {monthNames[currentDate.getMonth()]}
+              </h2>
+              
+              <button
+                onClick={goToNextMonth}
+                className="p-1 hover:bg-slate-200 rounded-lg transition-colors"
+                disabled={isLoading}
+              >
+                <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Compact Calendar Grid */}
+            <div className="p-4">
+              {/* Week Days Header */}
+              <div className="grid grid-cols-7 gap-1 mb-2">
+                {weekDays.map((day, index) => (
+                  <div key={day} className={`text-center text-xs font-medium py-1 ${index === 0 || index === 6 ? 'text-red-500' : 'text-slate-600'}`}>
+                    {day}
+                  </div>
+                ))}
+              </div>
+
+              {/* Calendar Days - 더 작은 크기 */}
+              <div className="grid grid-cols-7 gap-1">
+                {generateCalendarDays().map((dayData, index) => (
+                  <button
+                    key={index}
+                    className={`
+                      h-10 text-xs rounded-lg transition-all duration-200 border relative
+                      ${dayData ? 'hover:bg-slate-100' : ''}
+                      ${dayData?.isToday ? 'bg-slate-800 text-white border-slate-800' : 'border-slate-200'}
+                      ${dayData?.isSelected ? 'bg-blue-600 text-white border-blue-600' : ''}
+                      ${dayData?.hasReadLinks && !dayData?.isSelected && !dayData?.isToday ? 'bg-green-100 text-green-800 border-green-200' : ''}
+                      ${!dayData?.hasReadLinks && !dayData?.isSelected && !dayData?.isToday ? 'bg-white hover:bg-slate-50' : ''}
+                    `}
+                    onClick={() => dayData && setSelectedDate(dayData.date)}
+                    disabled={!dayData}
+                  >
+                    {dayData && (
+                      <>
+                        <span className="font-medium">{dayData.day}</span>
+                        {dayData.hasReadLinks && (
+                          <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full text-[10px] flex items-center justify-center
+                            ${dayData.isSelected || dayData.isToday ? 'bg-white/20' : 'bg-green-600 text-white'}
+                          `}>
+                            {dayData.readCount}
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Compact Calendar Grid */}
-        <div className="p-4">
-          {/* Week Days Header */}
-          <div className="grid grid-cols-7 gap-1 mb-2">
-            {weekDays.map((day, index) => (
-              <div key={day} className={`text-center text-xs font-medium py-1 ${index === 0 || index === 6 ? 'text-red-500' : 'text-slate-600'}`}>
-                {day}
-              </div>
-            ))}
-          </div>
+        {/* Selected Date Details - 오른쪽 열에 배치 */}
+        <div className="xl:col-span-1">
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-slate-200/60 shadow-lg p-4 h-fit">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-bold text-slate-900">
+                📅 선택된 날짜
+              </h3>
+              {selectedDate && (
+                <span className="text-sm text-slate-600">
+                  {readLinksForDate.length}개
+                </span>
+              )}
+            </div>
+            
+            {selectedDate ? (
+              <>
+                {/* Date Info */}
+                <div className="mb-4 p-3 bg-slate-50 rounded-lg">
+                  <div className="font-medium text-slate-900 text-sm">
+                    {selectedDate.toLocaleDateString('ko-KR', { 
+                      year: 'numeric',
+                      month: 'long', 
+                      day: 'numeric',
+                      weekday: 'short' 
+                    })}
+                  </div>
+                  <div className="text-xs text-slate-600 mt-1">
+                    {readLinksForDate.length > 0 ? `${readLinksForDate.length}개의 콘텐츠를 읽었습니다` : '읽은 콘텐츠가 없습니다'}
+                  </div>
+                </div>
 
-          {/* Calendar Days - 더 작은 크기 */}
-          <div className="grid grid-cols-7 gap-1">
-            {generateCalendarDays().map((dayData, index) => (
-              <button
-                key={index}
-                className={`
-                  h-8 text-xs rounded-lg transition-all duration-200 border relative
-                  ${dayData ? 'hover:bg-slate-100' : ''}
-                  ${dayData?.isToday ? 'bg-slate-800 text-white border-slate-800' : 'border-slate-200'}
-                  ${dayData?.isSelected ? 'bg-blue-600 text-white border-blue-600' : ''}
-                  ${dayData?.hasReadLinks && !dayData?.isSelected && !dayData?.isToday ? 'bg-green-100 text-green-800 border-green-200' : ''}
-                  ${!dayData?.hasReadLinks && !dayData?.isSelected && !dayData?.isToday ? 'bg-white hover:bg-slate-50' : ''}
-                `}
-                onClick={() => dayData && setSelectedDate(dayData.date)}
-                disabled={!dayData}
-              >
-                {dayData && (
-                  <>
-                    <span className="font-medium">{dayData.day}</span>
-                    {dayData.hasReadLinks && (
-                      <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full text-[10px] flex items-center justify-center
-                        ${dayData.isSelected || dayData.isToday ? 'bg-white/20' : 'bg-green-600 text-white'}
-                      `}>
-                        {dayData.readCount}
+                {/* Content List */}
+                {readLinksForDate.length > 0 ? (
+                  <div className="space-y-3 max-h-80 overflow-y-auto">
+                    {readLinksForDate.map((link) => (
+                      <div
+                        key={link.id}
+                        className="bg-slate-50 border border-slate-200 rounded-lg p-3 hover:bg-slate-100 transition-colors"
+                      >
+                        <h4 className="font-medium text-slate-900 text-sm line-clamp-2 mb-2">
+                          <a
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-blue-600 transition-colors"
+                          >
+                            {link.title}
+                          </a>
+                        </h4>
+                        
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="inline-flex px-2 py-0.5 text-xs font-medium rounded bg-slate-800 text-white">
+                            {link.category}
+                          </span>
+                          {link.readAt && (
+                            <span className="text-xs text-slate-500">
+                              {link.readAt.toLocaleTimeString('ko-KR', { 
+                                hour: '2-digit', 
+                                minute: '2-digit' 
+                              })}
+                            </span>
+                          )}
+                        </div>
+
+                        {link.tags && link.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mb-2">
+                            {link.tags.slice(0, 3).map((tag, tagIndex) => (
+                              <span
+                                key={tagIndex}
+                                className="inline-flex px-1.5 py-0.5 text-xs rounded bg-green-100 text-green-700 font-medium"
+                              >
+                                #{tag}
+                              </span>
+                            ))}
+                            {link.tags.length > 3 && (
+                              <span className="text-xs text-slate-500">
+                                +{link.tags.length - 3}
+                              </span>
+                            )}
+                          </div>
+                        )}
+
+                        {link.memo && (
+                          <p className="text-xs text-slate-600 line-clamp-2 mt-2">
+                            {link.memo}
+                          </p>
+                        )}
                       </div>
-                    )}
-                  </>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                      <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <p className="text-slate-500 text-sm">
+                      이 날에는 읽은<br />콘텐츠가 없습니다
+                    </p>
+                  </div>
                 )}
-              </button>
-            ))}
+              </>
+            ) : (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <p className="text-slate-500 text-sm text-center">
+                  캘린더에서 날짜를 클릭하여<br />
+                  읽은 콘텐츠를 확인하세요
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
-
-      {/* Selected Date Details - 간소화 */}
-      {selectedDate && (
-        <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-slate-200/60 shadow-lg p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-lg font-bold text-slate-900">
-              📅 {selectedDate.toLocaleDateString('ko-KR', { 
-                month: 'long', 
-                day: 'numeric',
-                weekday: 'short' 
-              })}
-            </h3>
-            <span className="text-sm text-slate-600">
-              {readLinksForDate.length}개
-            </span>
-          </div>
-          
-          {readLinksForDate.length > 0 ? (
-            <div className="space-y-2 max-h-60 overflow-y-auto">
-              {readLinksForDate.map((link) => (
-                <div
-                  key={link.id}
-                  className="bg-slate-50 border border-slate-200 rounded-lg p-3 hover:bg-slate-100 transition-colors"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-slate-900 text-sm line-clamp-1 mb-1">
-                        <a
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-blue-600 transition-colors"
-                        >
-                          {link.title}
-                        </a>
-                      </h4>
-                      
-                      <div className="flex items-center gap-2">
-                        <span className="inline-flex px-2 py-0.5 text-xs font-medium rounded bg-slate-800 text-white">
-                          {link.category}
-                        </span>
-                        {link.readAt && (
-                          <span className="text-xs text-slate-500">
-                            {link.readAt.toLocaleTimeString('ko-KR', { 
-                              hour: '2-digit', 
-                              minute: '2-digit' 
-                            })}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-center text-slate-500 text-sm py-4">
-              이 날에는 읽은 콘텐츠가 없습니다
-            </p>
-          )}
-        </div>
-      )}
     </div>
   );
 } 
