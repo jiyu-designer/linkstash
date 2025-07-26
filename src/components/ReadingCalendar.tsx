@@ -239,19 +239,10 @@ export default function ReadingCalendar() {
                     ${
                       dayData && !dayData.isSelected && !dayData.isToday 
                         ? dayData.hasReadLinks && dayData.hasSavedLinks 
-                          ? 'text-green-800' // 둘 다 있는 날 - green 300
+                          ? 'bg-[#aff4c6] text-green-800' // 둘 다 있는 날 - green 300
                           : dayData.hasReadLinks || dayData.hasSavedLinks 
-                            ? 'text-green-700' // 저장 또는 읽은 날 - green 200
+                            ? 'bg-[#cff7d3] text-green-700' // 저장 또는 읽은 날 - green 200
                             : 'bg-white hover:bg-slate-100' // 아무것도 없는 날
-                        : ''
-                    }
-                    ${
-                      dayData && !dayData.isSelected && !dayData.isToday 
-                        ? dayData.hasReadLinks && dayData.hasSavedLinks 
-                          ? 'bg-[#aff4c6]' // green 300
-                          : dayData.hasReadLinks || dayData.hasSavedLinks 
-                            ? 'bg-[#cff7d3]' // green 200
-                            : ''
                         : ''
                     }
                   `}
