@@ -691,7 +691,7 @@ export default function Home() {
         </div>
 
         {/* Main Content Grid: Saved Links (2.5fr) + Reading Calendar (calc(1.5fr - 60px)) */}
-        <div className="grid grid-cols-1 lg:grid-cols-[2.5fr_calc(1.5fr-60px)] gap-[60px] mb-12">
+        <div className="grid grid-cols-[2.5fr_calc(1.5fr-60px)] gap-[60px] mb-12">
           
           {/* Saved Links Section - 2.5fr width */}
           <div>
