@@ -808,7 +808,7 @@ export default function Home() {
                       <tr>
                         <th>Read</th>
                         <th>Content</th>
-                        <th>URL</th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody className="sds-table-body">
@@ -825,8 +825,19 @@ export default function Home() {
                           <td className="sds-table-cell">
                             <div className="space-y-3">
                               {/* Title */}
-                              <div className="font-medium text-base">
-                                {result.title}
+                              <div className="font-medium text-base flex items-center gap-2">
+                                <span>{result.title}</span>
+                                <a
+                                  href={result.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center justify-center w-4 h-4 text-gray-400 hover:text-gray-600 transition-colors"
+                                  title="Open link"
+                                >
+                                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                  </svg>
+                                </a>
                               </div>
                               
                               {/* Category + Tags */}
@@ -860,17 +871,6 @@ export default function Home() {
                           </td>
                           <td className="sds-table-cell whitespace-nowrap">
                             <div className="flex space-x-2">
-                              <a
-                                href={result.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 transition-colors rounded-md hover:bg-gray-100"
-                                title="Open link"
-                              >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                </svg>
-                              </a>
                               <button
                                 onClick={() => handleEditLink(result)}
                                 className="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 transition-colors rounded-md hover:bg-gray-100"
