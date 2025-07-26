@@ -5,8 +5,9 @@ import { CategorizedLink } from '@/types';
 import { storage } from '@/lib/storage';
 
 export default function ReadingCalendar() {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const today = new Date();
+  const [currentDate, setCurrentDate] = useState(today);
+  const [selectedDate, setSelectedDate] = useState<Date>(today);
   const [readLinksForDate, setReadLinksForDate] = useState<CategorizedLink[]>([]);
   const [monthReadLinks, setMonthReadLinks] = useState<Map<string, CategorizedLink[]>>(new Map());
   const [isLoading, setIsLoading] = useState(false);
@@ -54,15 +55,11 @@ export default function ReadingCalendar() {
   // Load links for selected date
   useEffect(() => {
     const loadDateLinks = async () => {
-      if (selectedDate) {
-        try {
-          const links = await storage.getReadLinksByDate(selectedDate);
-          setReadLinksForDate(links);
-        } catch (error) {
-          console.error('Error loading date links:', error);
-          setReadLinksForDate([]);
-        }
-      } else {
+      try {
+        const links = await storage.getReadLinksByDate(selectedDate);
+        setReadLinksForDate(links);
+      } catch (error) {
+        console.error('Error loading date links:', error);
         setReadLinksForDate([]);
       }
     };
@@ -71,13 +68,15 @@ export default function ReadingCalendar() {
   }, [selectedDate]);
 
   const goToPreviousMonth = () => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
-    setSelectedDate(null);
+    const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+    setCurrentDate(newDate);
+    setSelectedDate(newDate);
   };
 
   const goToNextMonth = () => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
-    setSelectedDate(null);
+    const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+    setCurrentDate(newDate);
+    setSelectedDate(newDate);
   };
 
   // Generate calendar days
@@ -109,7 +108,7 @@ export default function ReadingCalendar() {
         hasReadLinks,
         readCount,
         isToday: date.toDateString() === new Date().toDateString(),
-        isSelected: selectedDate?.toDateString() === date.toDateString()
+        isSelected: selectedDate.toDateString() === date.toDateString()
       });
     }
 
@@ -225,33 +224,21 @@ export default function ReadingCalendar() {
 
       {/* Selected Date Details */}
       <div>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-bold text-slate-900">
-            Selected Date
-          </h3>
-          {selectedDate && (
-            <span className="text-sm text-slate-600">
-              {readLinksForDate.length} items
-            </span>
-          )}
-        </div>
         
-        {selectedDate ? (
-          <>
-            {/* Date Info */}
-            <div className="mb-4 p-3 bg-white rounded-lg">
-              <div className="font-medium text-slate-900 text-sm">
-                {selectedDate.toLocaleDateString('en-US', { 
-                  year: 'numeric',
-                  month: 'long', 
-                  day: 'numeric',
-                  weekday: 'short' 
-                })}
-              </div>
-              <div className="text-xs text-slate-600 mt-1">
-                {readLinksForDate.length > 0 ? `Read ${readLinksForDate.length} content items` : 'No content read'}
-              </div>
-            </div>
+        {/* Date Info */}
+        <div className="mb-4 p-3 bg-white rounded-lg">
+          <div className="font-medium text-slate-900 text-sm">
+            {selectedDate.toLocaleDateString('en-US', { 
+              year: 'numeric',
+              month: 'long', 
+              day: 'numeric',
+              weekday: 'short' 
+            })}
+          </div>
+          <div className="text-xs text-slate-600 mt-1">
+            {readLinksForDate.length > 0 ? `Read ${readLinksForDate.length} content items` : 'No reads yet. Ready to explore something new?'}
+          </div>
+        </div>
 
             {/* Content List */}
             {readLinksForDate.length > 0 ? (
@@ -325,20 +312,6 @@ export default function ReadingCalendar() {
                 </p>
               </div>
             )}
-          </>
-        ) : (
-          <div className="text-center py-12">
-            <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <p className="text-slate-500 text-sm text-center">
-              Click a date on the calendar<br />
-              to view read content
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );
