@@ -11,6 +11,7 @@ import ReadingCalendar from '@/components/ReadingCalendar';
 import AuthButton from '@/components/AuthButton';
 import EmailAuthForm from '@/components/EmailAuthForm';
 import AntiExtension from './anti-extension';
+import { Button, ButtonDanger, Input, InputField } from '@/components/sds';
 
 
 export default function Home() {
@@ -589,21 +590,21 @@ export default function Home() {
           <form onSubmit={handleSubmit}>
             <div className="flex gap-3">
               <div className="flex-1">
-                <input
+                <Input
                   type="text"
-                  id="url"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="Enter URL address"
-                  className="w-full px-4 py-3 rounded-xl border sds-border-default sds-focus-ring sds-bg-surface-primary transition-all duration-200 placeholder:sds-text-tertiary"
+                  className="flex-1"
                   disabled={isLoading}
                 />
               </div>
               
-              <button
+              <Button
                 type="submit"
-                disabled={isLoading}
-                className="px-6 py-3 sds-bg-brand sds-text-on-brand rounded-xl hover:sds-bg-brand-hover sds-focus-ring disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-all duration-200"
+                isDisabled={isLoading}
+                variant="primary"
+                size="medium"
               >
                 {isLoading ? (
                   <span className="flex items-center">
@@ -613,7 +614,7 @@ export default function Home() {
                 ) : (
                   'Auto Classify'
                 )}
-              </button>
+              </Button>
             </div>
               
             {error && (
@@ -654,12 +655,13 @@ export default function Home() {
                 <h2 className="text-xl font-bold sds-text-primary tracking-tight">Links</h2>
               </div>
               <div className="flex items-center gap-4">
-                <button
-                  onClick={() => setShowAddModal(true)}
-                  className="px-3 py-1.5 sds-bg-brand sds-text-on-brand rounded-xl hover:sds-bg-brand-hover transition-colors text-sm font-medium"
-                >
-                  Add
-                </button>
+                                  <Button
+                    onPress={() => setShowAddModal(true)}
+                    variant="primary"
+                    size="small"
+                  >
+                    Add
+                  </Button>
               </div>
             </div>
 
@@ -668,12 +670,13 @@ export default function Home() {
               <div className="sds-bg-surface-secondary rounded-2xl border sds-border-secondary p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold sds-text-primary">Categories</h3>
-                  <Link
+                  <Button
                     href="/categories"
-                    className="px-3 py-1.5 sds-text-secondary sds-hover-bg-secondary rounded-xl transition-colors text-sm font-medium border sds-border-default"
+                    variant="neutral"
+                    size="small"
                   >
                     Manage ({categories.length})
-                  </Link>
+                  </Button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {categories.slice(0, 6).map((category) => (
@@ -708,12 +711,13 @@ export default function Home() {
               <div className="sds-bg-surface-secondary rounded-2xl border sds-border-secondary p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold sds-text-primary">Tags</h3>
-                  <Link
+                  <Button
                     href="/tags"
-                    className="px-3 py-1.5 sds-text-secondary sds-hover-bg-secondary rounded-xl transition-colors text-sm font-medium border sds-border-default"
+                    variant="neutral"
+                    size="small"
                   >
                     Manage ({tags.length})
-                  </Link>
+                  </Button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {tags.slice(0, 8).map((tag) => (
@@ -859,25 +863,27 @@ export default function Home() {
                                 href={result.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center text-sm font-medium sds-text-secondary hover:sds-text-primary transition-colors"
+                                className="inline-flex items-center text-sm font-medium sds-text-secondary hover:sds-text-primary transition-colors px-2 py-1 rounded-md hover:bg-gray-50"
                               >
                                 Visit
                                 <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                 </svg>
                               </a>
-                              <button
-                                onClick={() => handleEditLink(result)}
-                                className="text-sm font-medium sds-text-secondary hover:sds-text-primary transition-colors"
+                              <Button
+                                onPress={() => handleEditLink(result)}
+                                variant="subtle"
+                                size="small"
                               >
                                 Edit
-                              </button>
-                              <button
-                                onClick={() => handleDeleteLink(result.id)}
-                                className="text-sm font-medium sds-text-secondary hover:sds-text-primary transition-colors"
+                              </Button>
+                              <ButtonDanger
+                                onPress={() => handleDeleteLink(result.id)}
+                                variant="danger-subtle"
+                                size="small"
                               >
                                 Delete
-                              </button>
+                              </ButtonDanger>
                             </div>
                           </td>
                         </tr>
@@ -909,12 +915,11 @@ export default function Home() {
                   <label htmlFor="edit-title" className="block text-sm font-medium text-gray-700 mb-2">
                     제목
                   </label>
-                  <input
+                  <Input
                     type="text"
-                    id="edit-title"
                     name="title"
                     defaultValue={editingLink.title}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full"
                     required
                   />
                 </div>
@@ -947,13 +952,12 @@ export default function Home() {
                   <label htmlFor="edit-tags" className="block text-sm font-medium text-gray-700 mb-2">
                     태그 (쉼표로 구분)
                   </label>
-                  <input
+                  <Input
                     type="text"
-                    id="edit-tags"
                     name="tags"
                     defaultValue={editingLink.tags.join(', ')}
                     placeholder="react, javascript, tutorial"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full"
                   />
                 </div>
                 
@@ -972,22 +976,24 @@ export default function Home() {
                 </div>
                 
                 <div className="flex justify-end space-x-3 pt-4">
-                  <button
+                  <Button
                     type="button"
-                    onClick={() => {
+                    onPress={() => {
                       setShowEditModal(false);
                       setEditingLink(null);
                     }}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                    variant="neutral"
+                    size="medium"
                   >
                     취소
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="submit"
-                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    variant="primary"
+                    size="medium"
                   >
                     저장
-                  </button>
+                  </Button>
                 </div>
               </form>
             </div>
@@ -1037,12 +1043,11 @@ export default function Home() {
                   <label htmlFor="modal-url" className="block text-sm font-medium text-gray-700 mb-2">
                     URL Address
                   </label>
-                  <input
+                  <Input
                     type="text"
-                    id="modal-url"
                     name="url"
                     placeholder="https://example.com/article"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full"
                     required
                   />
                 </div>
@@ -1061,19 +1066,21 @@ export default function Home() {
                 </div>
                 
                 <div className="flex justify-end space-x-3 pt-4">
-                  <button
+                  <Button
                     type="button"
-                    onClick={() => setShowAddModal(false)}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                    onPress={() => setShowAddModal(false)}
+                    variant="neutral"
+                    size="medium"
                   >
                     Cancel
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="submit"
-                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    variant="primary"
+                    size="medium"
                   >
                     Add
-                  </button>
+                  </Button>
                 </div>
               </form>
             </div>

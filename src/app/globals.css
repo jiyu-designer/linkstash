@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "../components/sds/theme.css";
+@import "../components/sds/Button/button.css";
+@import "../components/sds/Input/input.css";
 
 :root {
   --background: #ffffff;
