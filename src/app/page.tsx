@@ -654,6 +654,17 @@ export default function Home() {
                 />
               </div>
               
+              <div className="flex-1">
+                <Input
+                  type="text"
+                  value={memo}
+                  onChange={(e) => setMemo(e.target.value)}
+                  placeholder="Personal memo (optional)"
+                  className="flex-1"
+                  disabled={isLoading}
+                />
+              </div>
+              
               <Button
                 type="submit"
                 isDisabled={isLoading}
