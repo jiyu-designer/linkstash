@@ -10,6 +10,7 @@ export default function ReadingCalendar() {
   const [selectedDate, setSelectedDate] = useState<Date>(today);
   const [readLinksForDate, setReadLinksForDate] = useState<CategorizedLink[]>([]);
   const [monthReadLinks, setMonthReadLinks] = useState<Map<string, CategorizedLink[]>>(new Map());
+  const [totalSavedLinks, setTotalSavedLinks] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
 
   // Get the first and last day of the current month
@@ -20,6 +21,19 @@ export default function ReadingCalendar() {
     const lastDay = new Date(year, month + 1, 0);
     return { firstDay, lastDay };
   };
+
+  // Load total saved links count
+  useEffect(() => {
+    const loadTotalCount = async () => {
+      try {
+        const allLinks = await storage.getLinks();
+        setTotalSavedLinks(allLinks.length);
+      } catch (error) {
+        console.error('Error loading total links count:', error);
+      }
+    };
+    loadTotalCount();
+  }, []);
 
   // Load read links for the current month
   useEffect(() => {
@@ -162,10 +176,14 @@ export default function ReadingCalendar() {
             </div>
 
             {/* Statistics under month title */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               <div className="bg-white rounded-xl p-3 text-center border border-slate-200">
                 <div className="text-xl font-bold text-slate-900">{monthReadLinks.size}</div>
                 <div className="text-sm text-slate-600">Active Days</div>
+              </div>
+              <div className="bg-blue-50 rounded-xl p-3 text-center border border-blue-200">
+                <div className="text-xl font-bold text-blue-700">{totalSavedLinks}</div>
+                <div className="text-sm text-slate-600">Content Saved</div>
               </div>
               <div className="bg-green-50 rounded-xl p-3 text-center border border-green-200">
                 <div className="text-xl font-bold text-green-700">
