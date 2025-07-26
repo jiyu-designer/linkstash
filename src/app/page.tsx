@@ -11,7 +11,7 @@ import ReadingCalendar from '@/components/ReadingCalendar';
 import AuthButton from '@/components/AuthButton';
 import EmailAuthForm from '@/components/EmailAuthForm';
 import AntiExtension from './anti-extension';
-import { Button, ButtonDanger, Input, InputField } from '@/components/sds';
+import { Button, ButtonDanger, Input } from '@/components/sds';
 
 
 export default function Home() {
