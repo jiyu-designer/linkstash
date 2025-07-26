@@ -29,6 +29,60 @@ export default function Home() {
   const [editingLink, setEditingLink] = useState<CategorizedLink | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
+  
+  // Filter and sort states
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedTag, setSelectedTag] = useState<string>('all');
+  const [readFilter, setReadFilter] = useState<string>('all'); // 'all', 'read', 'unread'
+  const [sortBy, setSortBy] = useState<string>('newest'); // 'newest', 'oldest', 'title'
+
+  // Filter and sort results
+  const getFilteredAndSortedResults = () => {
+    let filtered = [...results];
+
+    // Filter by category
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(link => link.category === selectedCategory);
+    }
+
+    // Filter by tag
+    if (selectedTag !== 'all') {
+      filtered = filtered.filter(link => 
+        link.tags && link.tags.includes(selectedTag)
+      );
+    }
+
+    // Filter by read status
+    if (readFilter === 'read') {
+      filtered = filtered.filter(link => link.isRead);
+    } else if (readFilter === 'unread') {
+      filtered = filtered.filter(link => !link.isRead);
+    }
+
+    // Sort results
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'newest':
+          if (!a.readAt && !b.readAt) return 0;
+          if (!a.readAt) return 1;
+          if (!b.readAt) return -1;
+          return new Date(b.readAt).getTime() - new Date(a.readAt).getTime();
+        case 'oldest':
+          if (!a.readAt && !b.readAt) return 0;
+          if (!a.readAt) return 1;
+          if (!b.readAt) return -1;
+          return new Date(a.readAt).getTime() - new Date(b.readAt).getTime();
+        case 'title':
+          return a.title.localeCompare(b.title);
+        default:
+          return 0;
+      }
+    });
+
+    return filtered;
+  };
+
+  const filteredResults = getFilteredAndSortedResults();
 
   // Check authentication state and load data
   useEffect(() => {
@@ -735,7 +789,7 @@ export default function Home() {
                       Saved Links
                     </h3>
                     <div className="sds-text-secondary text-sm font-medium">
-                      {results.filter(link => link.isRead).length} / {results.length} Read
+                      {filteredResults.filter(link => link.isRead).length} / {filteredResults.length} Read
                     </div>
                   </div>
                   <Button
@@ -745,6 +799,81 @@ export default function Home() {
                   >
                     Add
                   </Button>
+                </div>
+
+                {/* Filters */}
+                <div className="mb-4 p-4 bg-gray-50 rounded-lg border">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    {/* Category Filter */}
+                    <div>
+                      <label className="block text-sm font-medium sds-text-secondary mb-2">
+                        Category
+                      </label>
+                      <select
+                        value={selectedCategory}
+                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      >
+                        <option value="all">All Categories</option>
+                        {categories.map((category) => (
+                          <option key={category.id} value={category.name}>
+                            {category.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Tag Filter */}
+                    <div>
+                      <label className="block text-sm font-medium sds-text-secondary mb-2">
+                        Tag
+                      </label>
+                      <select
+                        value={selectedTag}
+                        onChange={(e) => setSelectedTag(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      >
+                        <option value="all">All Tags</option>
+                        {tags.map((tag) => (
+                          <option key={tag.id} value={tag.name}>
+                            #{tag.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Read Status Filter */}
+                    <div>
+                      <label className="block text-sm font-medium sds-text-secondary mb-2">
+                        Read Status
+                      </label>
+                      <select
+                        value={readFilter}
+                        onChange={(e) => setReadFilter(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      >
+                        <option value="all">All</option>
+                        <option value="read">Read Only</option>
+                        <option value="unread">Unread Only</option>
+                      </select>
+                    </div>
+
+                    {/* Sort By */}
+                    <div>
+                      <label className="block text-sm font-medium sds-text-secondary mb-2">
+                        Sort By
+                      </label>
+                      <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      >
+                        <option value="newest">Newest Read</option>
+                        <option value="oldest">Oldest Read</option>
+                        <option value="title">Title A-Z</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="sds-table">
@@ -758,7 +887,7 @@ export default function Home() {
                       </tr>
                     </thead>
                     <tbody className="sds-table-body">
-                      {results.map((result) => (
+                      {filteredResults.map((result) => (
                         <tr key={result.id} className={`sds-table-row ${result.isRead ? 'sds-table-row-selected' : ''}`}>
                           <td className="sds-table-cell whitespace-nowrap">
                             <div className="flex items-center">
@@ -856,6 +985,15 @@ export default function Home() {
                     </tbody>
                   </table>
                 </div>
+
+                {/* No results message */}
+                {filteredResults.length === 0 && results.length > 0 && (
+                  <div className="text-center py-8">
+                    <div className="text-gray-500">
+                      No links match the current filters. Try adjusting your filter criteria.
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
