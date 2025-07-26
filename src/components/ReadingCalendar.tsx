@@ -258,7 +258,7 @@ export default function ReadingCalendar() {
                 {readLinksForDate.map((link) => (
                   <div
                     key={link.id}
-                    className="bg-white/5 rounded-lg px-4 py-2 hover:bg-white/10 transition-colors border border-white/10"
+                    className="bg-white/3 rounded-lg px-4 py-2 hover:bg-white/8 transition-colors border border-white/8"
                   >
                     <h4 className="font-medium text-white text-base line-clamp-2 mb-1">
                       <a

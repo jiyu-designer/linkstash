@@ -25,3 +25,26 @@ Summary로 바꾸고 설명은 삭제해줘
 섹션간의 패딩을 일정하게 유지해줘
 
 
+링크모음의 필터와 링크 테이블 사이에 현재 섹션의 boarder와 같은 얇은 Line을 하나 넣어줘. 
+링크 호버했을때 좌우 패딩을 조금 더 주고 roundness 16으로 적용해줘
+unchecked 일때 아이콘 배경 빈걸로 바꿔줘.
+unchecked, checked 아이콘 둘다 roundndess가 더 둥근걸로 바꿔줘
+Reading calendar의 콘텐츠 백그라운드가 너무 강해 backround 컬러의 명도를 조금더 낮춰줘
+selected date의 읽은 콘텐츠가 없을때 뜨는 'No reads yet. Ready to explore something new?' 이 문구를 상하 중앙정렬 해줘
+
+
+add button, 설정 아이콘 버튼은 옆에 있는 필터 드롭다운의 높이과 같게 사이즈를 조정해줘
+필터는 드롭다운처럼 down arrow를 추가해줘
+로그아웃 버튼에는 밑줄을 없애줘
+linkstash 왼쪽에있는 링크아이콘과 배경은 오른쪽 타이틀, 설명과 균형감을 고려해서 조금 더 키워줘
+smartsort가 있는 섹션의 상하좌우 패딩을 조금 더 컴팩트하게 수정하고, 텍스트 인풋과 버튼의 높이값을 일치하게 수정해줘
+links 아이템의 close 아이콘이 조금 더 큰걸로 교체해서 시각적인 균형을 이루게 해줘
+summary 영역이 나머지 모든 영역과 같은 좌우 패딩을 갖게 수정해줘
+그 내부에 있는 콘텐츠는 모두 1:1:1:1 비율로 갖게 해줘
+
+
+Reading calendar에 있는 Title, memo가 있는 아이템을 'calendar-contents'로 명명할게. 이 아이템의 백그라운드 컬러 명도를 조금 더 낮은 것으로 교체해줘
+링크 편집할때 모달에도 Dark theme을 적용해줘
+add modal, 링크편집 모달과 같은 스타일을 유지하고 하단에 있는 버튼의 크기는 같아야돼. 스타일도 glassy style을 적용하되 CTA 버튼과 보조버튼의 차이가 잘 드러나게 수정해줘
+add와 smartsort 버튼의 백그라운드에 그라디언트를 적용해서 조금 더 Fancy한 느낌이 나게해줘
+

@@ -668,7 +668,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="glass-button px-6 py-3 rounded-lg text-white font-medium disabled:opacity-50 transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20"
+                className="glass-button px-6 py-3 rounded-lg text-white font-medium disabled:opacity-50 transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20 bg-gradient-to-r from-blue-500/30 to-purple-500/30 hover:from-blue-500/40 hover:to-purple-500/40"
               >
                 {isLoading ? (
                   <span className="flex items-center">
@@ -775,7 +775,7 @@ export default function Home() {
                     <div className="flex items-end gap-2">
                       <button
                         onClick={() => setShowAddModal(true)}
-                        className="glass-button px-6 py-2 rounded-lg text-white font-medium transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20"
+                        className="glass-button px-6 py-2 rounded-lg text-white font-medium transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20 bg-gradient-to-r from-green-500/30 to-blue-500/30 hover:from-green-500/40 hover:to-blue-500/40"
                       >
                         Add
                       </button>
@@ -1000,14 +1000,14 @@ export default function Home() {
 
         {/* Edit Modal */}
         {showEditModal && editingLink && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg sds-shadow-500 max-w-md w-full max-h-[90vh] overflow-y-auto">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900">링크 편집</h3>
+          <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
+            <div className="section-container max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <div className="px-6 py-4 border-b border-white/20">
+                <h3 className="text-lg font-medium text-white">링크 편집</h3>
               </div>
               <form onSubmit={handleSaveEdit} className="p-6 space-y-4">
                 <div>
-                  <label htmlFor="edit-title" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="edit-title" className="block text-sm font-medium text-gray-300 mb-2">
                     제목
                   </label>
                   <Input
@@ -1020,14 +1020,14 @@ export default function Home() {
                 </div>
                 
                 <div>
-                  <label htmlFor="edit-category" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="edit-category" className="block text-sm font-medium text-gray-300 mb-2">
                     카테고리
                   </label>
                   <select
                     id="edit-category"
                     name="category"
                     defaultValue={editingLink.category}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="glass-input w-full px-3 py-2 rounded-md"
                     required
                   >
                     <option value="Technology">Technology</option>
@@ -1044,7 +1044,7 @@ export default function Home() {
                 </div>
                 
                 <div>
-                  <label htmlFor="edit-tags" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="edit-tags" className="block text-sm font-medium text-gray-300 mb-2">
                     태그 (쉼표로 구분)
                   </label>
                   <Input
@@ -1057,7 +1057,7 @@ export default function Home() {
                 </div>
                 
                 <div>
-                  <label htmlFor="edit-memo" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="edit-memo" className="block text-sm font-medium text-gray-300 mb-2">
                     메모
                   </label>
                   <textarea
@@ -1065,30 +1065,28 @@ export default function Home() {
                     name="memo"
                     defaultValue={editingLink.memo || ''}
                     rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    className="glass-input w-full px-3 py-2 rounded-md resize-none"
                     placeholder="개인적인 메모를 남겨보세요..."
                   />
                 </div>
                 
                 <div className="flex justify-end space-x-3 pt-4">
-                  <Button
+                  <button
                     type="button"
-                    onPress={() => {
+                    onClick={() => {
                       setShowEditModal(false);
                       setEditingLink(null);
                     }}
-                    variant="neutral"
-                    size="medium"
+                    className="px-4 py-2 text-gray-300 hover:text-white transition-all rounded-lg border border-white/20 hover:bg-white/10"
                   >
                     취소
-                  </Button>
-                  <Button
+                  </button>
+                  <button
                     type="submit"
-                    variant="primary"
-                    size="medium"
+                    className="glass-button px-6 py-2 rounded-lg text-white font-medium transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20 bg-gradient-to-r from-blue-500/20 to-purple-500/20"
                   >
                     저장
-                  </Button>
+                  </button>
                 </div>
               </form>
             </div>
@@ -1161,21 +1159,19 @@ export default function Home() {
                 </div>
                 
                 <div className="flex justify-end space-x-3 pt-4">
-                  <Button
+                  <button
                     type="button"
-                    onPress={() => setShowAddModal(false)}
-                    variant="neutral"
-                    size="medium"
+                    onClick={() => setShowAddModal(false)}
+                    className="px-4 py-2 text-gray-300 hover:text-white transition-all rounded-lg border border-white/20 hover:bg-white/10"
                   >
                     Cancel
-                  </Button>
-                  <Button
+                  </button>
+                  <button
                     type="submit"
-                    variant="primary"
-                    size="medium"
+                    className="glass-button px-6 py-2 rounded-lg text-white font-medium transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20 bg-gradient-to-r from-blue-500/20 to-purple-500/20"
                   >
                     Add
-                  </Button>
+                  </button>
                 </div>
               </form>
             </div>
