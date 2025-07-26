@@ -622,8 +622,8 @@ export default function Home() {
         {/* Header with Auth Button */}
         <header className="flex items-center justify-between mb-12">
           <div className="flex items-center space-x-4">
-            <div className="w-10 h-10 sds-bg-brand rounded-xl flex items-center justify-center">
-              <svg className="w-5 h-5 sds-text-on-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 sds-bg-brand rounded-xl flex items-center justify-center">
+              <svg className="w-6 h-6 sds-text-on-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
               </svg>
             </div>
@@ -640,7 +640,7 @@ export default function Home() {
         </header>
 
         {/* URL Input Form - 미니멀 버전 */}
-        <div className="section-container p-6 lg:p-8 mb-12">
+        <div className="section-container p-5 lg:p-6 mb-12">
           <form onSubmit={handleSubmit}>
                           <div className="flex flex-col lg:flex-row gap-4">
               <div className="flex-1">
@@ -668,7 +668,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="glass-button px-6 py-2.5 rounded-lg text-white font-medium disabled:opacity-50 transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20"
+                className="glass-button px-6 py-3 rounded-lg text-white font-medium disabled:opacity-50 transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20"
               >
                 {isLoading ? (
                   <span className="flex items-center">
@@ -775,7 +775,7 @@ export default function Home() {
                     <div className="flex items-end gap-2">
                       <button
                         onClick={() => setShowAddModal(true)}
-                        className="glass-button px-6 py-2.5 rounded-lg text-white font-medium transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20"
+                        className="glass-button px-6 py-2 rounded-lg text-white font-medium transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20"
                       >
                         Add
                       </button>
@@ -871,7 +871,7 @@ export default function Home() {
                                 className="inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-red-400 transition-colors rounded-md hover:bg-white/10"
                                 title="Delete"
                               >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                               </button>

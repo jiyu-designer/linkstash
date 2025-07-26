@@ -80,7 +80,7 @@ export default function AuthButton() {
         </Link>
         <button
           onClick={handleSignOut}
-          className="text-sm text-gray-300 hover:text-white transition-colors underline"
+          className="text-sm text-gray-300 hover:text-white transition-colors"
         >
           로그아웃
         </button>
