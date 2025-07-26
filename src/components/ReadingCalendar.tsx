@@ -283,21 +283,6 @@ export default function ReadingCalendar() {
       {/* Selected Date Details */}
       <div>
         
-        {/* Date Info */}
-        <div className="mb-4 p-3 bg-white rounded-lg">
-          <div className="font-medium text-slate-900 text-sm">
-            {selectedDate.toLocaleDateString('en-US', { 
-              year: 'numeric',
-              month: 'long', 
-              day: 'numeric',
-              weekday: 'short' 
-            })}
-          </div>
-          <div className="text-xs text-slate-600 mt-1">
-            {readLinksForDate.length > 0 ? `Read ${readLinksForDate.length} content items` : 'No reads yet. Ready to explore something new?'}
-          </div>
-        </div>
-
             {/* Content List */}
             {readLinksForDate.length > 0 ? (
               <div className="space-y-3 max-h-80 overflow-y-auto">
@@ -365,8 +350,7 @@ export default function ReadingCalendar() {
                   </svg>
                 </div>
                 <p className="text-slate-500 text-sm text-center">
-                  Click a date on the calendar<br />
-                  to view read content
+                  No reads yet. Ready to explore something new?
                 </p>
               </div>
             )}
