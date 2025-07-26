@@ -567,16 +567,16 @@ export default function Home() {
         {/* Header with Auth Button */}
         <header className="flex items-center justify-between mb-12">
           <div className="flex items-center space-x-4">
-            <div className="w-10 h-10 bg-gradient-to-br from-slate-800 to-slate-600 rounded-xl flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-10 h-10 sds-bg-brand rounded-xl flex items-center justify-center">
+              <svg className="w-5 h-5 sds-text-on-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+              <h1 className="text-2xl font-bold sds-text-primary tracking-tight">
                 LinkStash
               </h1>
-              <p className="text-sm text-slate-600">
+              <p className="text-sm sds-text-secondary">
                 AI-powered link management tool
               </p>
             </div>
@@ -595,7 +595,7 @@ export default function Home() {
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="Enter URL address"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-500 focus:border-slate-500 bg-white transition-all duration-200 placeholder:text-slate-400"
+                  className="w-full px-4 py-3 rounded-xl border sds-border-default sds-focus-ring sds-bg-surface-primary transition-all duration-200 placeholder:sds-text-tertiary"
                   disabled={isLoading}
                 />
               </div>
@@ -603,7 +603,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="px-6 py-3 bg-slate-800 text-white rounded-xl hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-all duration-200"
+                className="px-6 py-3 sds-bg-brand sds-text-on-brand rounded-xl hover:sds-bg-brand-hover sds-focus-ring disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-all duration-200"
               >
                 {isLoading ? (
                   <span className="flex items-center">
@@ -634,7 +634,7 @@ export default function Home() {
                 </svg>
               </div>
               <div>
-                <h2 className="text-lg font-bold text-slate-900 tracking-tight">Reading Calendar</h2>
+                <h2 className="text-lg font-bold sds-text-primary tracking-tight">Reading Calendar</h2>
               </div>
             </div>
             <ReadingCalendar />
@@ -651,12 +651,12 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                   </svg>
                 </div>
-                <h2 className="text-xl font-bold text-slate-900 tracking-tight">Links</h2>
+                <h2 className="text-xl font-bold sds-text-primary tracking-tight">Links</h2>
               </div>
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => setShowAddModal(true)}
-                  className="px-3 py-1.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700 transition-colors text-sm font-medium"
+                  className="px-3 py-1.5 sds-bg-brand sds-text-on-brand rounded-xl hover:sds-bg-brand-hover transition-colors text-sm font-medium"
                 >
                   Add
                 </button>
@@ -665,12 +665,12 @@ export default function Home() {
 
             {/* 카테고리 및 태그 요약 */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-              <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-2xl border border-slate-200/50 p-6">
+              <div className="sds-bg-surface-secondary rounded-2xl border sds-border-secondary p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-slate-900">Categories</h3>
+                  <h3 className="text-lg font-semibold sds-text-primary">Categories</h3>
                   <Link
                     href="/categories"
-                    className="px-3 py-1.5 text-slate-700 hover:bg-slate-100 rounded-xl transition-colors text-sm font-medium border border-slate-200"
+                    className="px-3 py-1.5 sds-text-secondary sds-hover-bg-secondary rounded-xl transition-colors text-sm font-medium border sds-border-default"
                   >
                     Manage ({categories.length})
                   </Link>
@@ -705,12 +705,12 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-2xl border border-slate-200/50 p-6">
+              <div className="sds-bg-surface-secondary rounded-2xl border sds-border-secondary p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-slate-900">Tags</h3>
+                  <h3 className="text-lg font-semibold sds-text-primary">Tags</h3>
                   <Link
                     href="/tags"
-                    className="px-3 py-1.5 text-slate-700 hover:bg-slate-100 rounded-xl transition-colors text-sm font-medium border border-slate-200"
+                    className="px-3 py-1.5 sds-text-secondary sds-hover-bg-secondary rounded-xl transition-colors text-sm font-medium border sds-border-default"
                   >
                     Manage ({tags.length})
                   </Link>
@@ -747,12 +747,12 @@ export default function Home() {
               <div className="mt-8">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-4">
-                    <h3 className="text-lg font-semibold text-slate-900">
-                      Saved Links
-                    </h3>
-                    <div className="text-slate-500 text-sm font-medium">
-                                              {results.filter(link => link.isRead).length} / {results.length} Read
-                    </div>
+                                      <h3 className="text-lg font-semibold sds-text-primary">
+                    Saved Links
+                  </h3>
+                  <div className="sds-text-secondary text-sm font-medium">
+                    {results.filter(link => link.isRead).length} / {results.length} Read
+                  </div>
                   </div>
                   <div className="flex items-center">
                     <input
@@ -774,31 +774,31 @@ export default function Home() {
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-slate-50">
+                    <thead className="sds-bg-surface-secondary">
                       <tr>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-medium sds-text-secondary uppercase tracking-wider">
                           Read
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-medium sds-text-secondary uppercase tracking-wider">
                           Category
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-medium sds-text-secondary uppercase tracking-wider">
                           Title
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-medium sds-text-secondary uppercase tracking-wider">
                           Tags
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-medium sds-text-secondary uppercase tracking-wider">
                           Memo
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-medium sds-text-secondary uppercase tracking-wider">
                           URL
                         </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200">
                       {results.map((result) => (
-                        <tr key={result.id} className={`hover:bg-slate-50 ${result.isRead ? 'bg-slate-50/50' : ''}`}>
+                        <tr key={result.id} className={`sds-hover-bg-tertiary ${result.isRead ? 'sds-bg-surface-tertiary' : ''}`}>
                           <td className="px-4 py-4 whitespace-nowrap">
                             <div className="flex items-center">
                               <input
@@ -808,7 +808,7 @@ export default function Home() {
                                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded cursor-pointer"
                               />
                               {result.readAt && (
-                                <span className="ml-2 text-xs text-slate-500">
+                                <span className="ml-2 text-xs sds-text-tertiary">
                                   {result.readAt.toLocaleDateString()}
                                 </span>
                               )}
@@ -823,7 +823,7 @@ export default function Home() {
                             </Link>
                           </td>
                           <td className="px-4 py-4">
-                            <div className="text-sm text-slate-900 font-medium">
+                            <div className="text-sm sds-text-primary font-medium">
                               {result.title}
                             </div>
                           </td>
@@ -846,11 +846,11 @@ export default function Home() {
                           </td>
                           <td className="px-4 py-4">
                             {result.memo ? (
-                              <div className="text-sm text-slate-600 max-w-xs">
+                              <div className="text-sm sds-text-secondary max-w-xs">
                                 {result.memo}
                               </div>
                             ) : (
-                              <span className="text-slate-400 text-sm">-</span>
+                              <span className="sds-text-tertiary text-sm">-</span>
                             )}
                           </td>
                           <td className="px-4 py-4 whitespace-nowrap">
@@ -859,7 +859,7 @@ export default function Home() {
                                 href={result.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+                                className="inline-flex items-center text-sm font-medium sds-text-secondary hover:sds-text-primary transition-colors"
                               >
                                 Visit
                                 <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -868,13 +868,13 @@ export default function Home() {
                               </a>
                               <button
                                 onClick={() => handleEditLink(result)}
-                                className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+                                className="text-sm font-medium sds-text-secondary hover:sds-text-primary transition-colors"
                               >
                                 Edit
                               </button>
                               <button
                                 onClick={() => handleDeleteLink(result.id)}
-                                className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+                                className="text-sm font-medium sds-text-secondary hover:sds-text-primary transition-colors"
                               >
                                 Delete
                               </button>
@@ -1081,11 +1081,11 @@ export default function Home() {
         )}
 
         <footer className="mt-16 text-center px-6">
-          <p className="text-sm text-slate-500">
+          <p className="text-sm sds-text-tertiary">
             Tired of organizing bookmarks?{' '}
             <a
               href="#"
-              className="text-slate-600 hover:text-slate-800 underline"
+              className="sds-text-secondary hover:sds-text-primary underline"
               target="_blank"
               rel="noopener noreferrer"
             >
