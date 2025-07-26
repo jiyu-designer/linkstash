@@ -251,6 +251,23 @@ export default function ReadingCalendar() {
 
       {/* Selected Date Content */}
       <div>
+        {/* Stats for selected date */}
+        {(() => {
+          const selectedDateKey = selectedDate.getDate().toString();
+          const savedLinksForDate = monthSavedLinks.get(selectedDateKey) || [];
+          const readLinksForDate = monthReadLinks.get(selectedDateKey) || [];
+          
+          if (savedLinksForDate.length > 0 || readLinksForDate.length > 0) {
+            return (
+              <div className="mb-4 text-center">
+                <p className="text-sm text-gray-300">
+                  {savedLinksForDate.length} Saved, {readLinksForDate.length} Read
+                </p>
+              </div>
+            );
+          }
+          return null;
+        })()}
         
             {/* Content List */}
             {readLinksForDate.length > 0 ? (
@@ -291,7 +308,7 @@ export default function ReadingCalendar() {
                   </svg>
                 </div>
                 <p className="text-gray-300 text-sm text-center">
-                  No reads yet. Ready to explore something new?
+                  Looks a little empty in here.
                 </p>
               </div>
             )}
