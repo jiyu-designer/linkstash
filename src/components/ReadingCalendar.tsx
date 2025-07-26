@@ -228,7 +228,7 @@ export default function ReadingCalendar() {
                 <button
                   key={index}
                   className={`
-                    h-10 text-xs rounded-lg transition-all duration-200 relative
+                    h-10 text-sm rounded-lg transition-all duration-200 relative
                     ${dayData ? 'hover:bg-slate-200' : ''}
                     ${dayData?.isSelected ? 'border-2 border-gray-500' : 'border border-transparent'}
                     ${
@@ -281,7 +281,7 @@ export default function ReadingCalendar() {
                     key={link.id}
                     className="bg-white rounded-lg p-2 hover:bg-slate-50 transition-colors"
                   >
-                    <h4 className="font-medium text-slate-900 text-sm line-clamp-2 mb-1">
+                    <h4 className="font-medium text-slate-900 text-base line-clamp-2 mb-1">
                       <a
                         href={link.url}
                         target="_blank"
@@ -293,7 +293,7 @@ export default function ReadingCalendar() {
                     </h4>
 
                     {link.memo && (
-                      <p className="text-xs text-slate-500 line-clamp-1">
+                      <p className="text-sm text-slate-500 line-clamp-1">
                         {link.memo}
                       </p>
                     )}
