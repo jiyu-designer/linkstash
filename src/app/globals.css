@@ -148,7 +148,7 @@ body {
 }
 
 .sds-table-cell {
-  padding: var(--sds-size-space-400);
+  padding: var(--sds-size-space-300) var(--sds-size-space-200);
   vertical-align: top;
   color: var(--sds-color-text-default-default);
   font-size: var(--sds-typography-body-size-medium);
@@ -169,11 +169,11 @@ body {
 .sds-chip {
   display: inline-flex;
   align-items: center;
-  padding: var(--sds-size-space-100) var(--sds-size-space-200);
+  padding: 2px 6px;
   border-radius: var(--sds-size-radius-200);
-  font-size: var(--sds-typography-body-size-small);
+  font-size: 11px;
   font-weight: var(--sds-typography-body-font-weight-medium);
-  line-height: var(--sds-typography-body-line-height-small);
+  line-height: 1.2;
   transition: all 0.15s ease;
   text-decoration: none;
   cursor: pointer;
