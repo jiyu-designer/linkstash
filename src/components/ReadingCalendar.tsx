@@ -123,11 +123,11 @@ export default function ReadingCalendar() {
 
   return (
     <div className="space-y-6">
-      {/* Statistics - 맨 위로 이동 */}
-      <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-slate-200/60 shadow-lg p-4">
+      {/* Statistics */}
+      <div className="bg-slate-50 rounded-2xl p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-lg font-bold text-slate-900">
-            📊 {monthNames[currentDate.getMonth()]} 통계
+            {monthNames[currentDate.getMonth()]} 통계
           </h3>
           {isLoading && (
             <div className="animate-spin rounded-full h-4 w-4 border-2 border-slate-300 border-t-slate-600"></div>
@@ -135,7 +135,7 @@ export default function ReadingCalendar() {
         </div>
         
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-slate-50 rounded-xl p-3 text-center">
+          <div className="bg-white rounded-xl p-3 text-center">
             <div className="text-xl font-bold text-slate-900">{monthReadLinks.size}</div>
             <div className="text-sm text-slate-600">활동 일수</div>
           </div>
@@ -148,13 +148,13 @@ export default function ReadingCalendar() {
         </div>
       </div>
 
-      {/* Calendar and Selected Date Details - 같은 열에 배치 */}
+      {/* Calendar and Selected Date Details */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Compact Calendar */}
         <div className="xl:col-span-2">
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-slate-200/60 shadow-lg overflow-hidden">
+          <div className="bg-slate-50 rounded-2xl overflow-hidden">
             {/* Simple Header */}
-            <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
+            <div className="flex items-center justify-between px-4 py-3 bg-white">
               <button
                 onClick={goToPreviousMonth}
                 className="p-1 hover:bg-slate-200 rounded-lg transition-colors"
@@ -191,18 +191,18 @@ export default function ReadingCalendar() {
                 ))}
               </div>
 
-              {/* Calendar Days - 더 작은 크기 */}
+              {/* Calendar Days */}
               <div className="grid grid-cols-7 gap-1">
                 {generateCalendarDays().map((dayData, index) => (
                   <button
                     key={index}
                     className={`
-                      h-10 text-xs rounded-lg transition-all duration-200 border relative
-                      ${dayData ? 'hover:bg-slate-100' : ''}
-                      ${dayData?.isToday ? 'bg-slate-800 text-white border-slate-800' : 'border-slate-200'}
-                      ${dayData?.isSelected ? 'bg-blue-600 text-white border-blue-600' : ''}
-                      ${dayData?.hasReadLinks && !dayData?.isSelected && !dayData?.isToday ? 'bg-green-100 text-green-800 border-green-200' : ''}
-                      ${!dayData?.hasReadLinks && !dayData?.isSelected && !dayData?.isToday ? 'bg-white hover:bg-slate-50' : ''}
+                      h-10 text-xs rounded-lg transition-all duration-200 relative
+                      ${dayData ? 'hover:bg-slate-200' : ''}
+                      ${dayData?.isToday ? 'bg-slate-800 text-white' : ''}
+                      ${dayData?.isSelected ? 'bg-blue-600 text-white' : ''}
+                      ${dayData?.hasReadLinks && !dayData?.isSelected && !dayData?.isToday ? 'bg-green-100 text-green-800' : ''}
+                      ${!dayData?.hasReadLinks && !dayData?.isSelected && !dayData?.isToday ? 'bg-white hover:bg-slate-100' : ''}
                     `}
                     onClick={() => dayData && setSelectedDate(dayData.date)}
                     disabled={!dayData}
@@ -226,12 +226,12 @@ export default function ReadingCalendar() {
           </div>
         </div>
 
-        {/* Selected Date Details - 오른쪽 열에 배치 */}
+        {/* Selected Date Details */}
         <div className="xl:col-span-1">
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-slate-200/60 shadow-lg p-4 h-fit">
+          <div className="bg-slate-50 rounded-2xl p-4 h-fit">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-bold text-slate-900">
-                📅 선택된 날짜
+                선택된 날짜
               </h3>
               {selectedDate && (
                 <span className="text-sm text-slate-600">
@@ -243,7 +243,7 @@ export default function ReadingCalendar() {
             {selectedDate ? (
               <>
                 {/* Date Info */}
-                <div className="mb-4 p-3 bg-slate-50 rounded-lg">
+                <div className="mb-4 p-3 bg-white rounded-lg">
                   <div className="font-medium text-slate-900 text-sm">
                     {selectedDate.toLocaleDateString('ko-KR', { 
                       year: 'numeric',
@@ -263,7 +263,7 @@ export default function ReadingCalendar() {
                     {readLinksForDate.map((link) => (
                       <div
                         key={link.id}
-                        className="bg-slate-50 border border-slate-200 rounded-lg p-3 hover:bg-slate-100 transition-colors"
+                        className="bg-white rounded-lg p-3 hover:bg-slate-100 transition-colors"
                       >
                         <h4 className="font-medium text-slate-900 text-sm line-clamp-2 mb-2">
                           <a
@@ -318,7 +318,7 @@ export default function ReadingCalendar() {
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mx-auto mb-3">
                       <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
@@ -331,7 +331,7 @@ export default function ReadingCalendar() {
               </>
             ) : (
               <div className="text-center py-12">
-                <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>

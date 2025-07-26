@@ -679,7 +679,7 @@ export default function Home() {
                 </svg>
               </div>
               <div>
-                <h2 className="text-lg font-bold text-slate-900 tracking-tight">📅 Reading Calendar</h2>
+                <h2 className="text-lg font-bold text-slate-900 tracking-tight">Reading Calendar</h2>
                 <p className="text-slate-600 text-xs">날짜별 읽기 통계 및 기록</p>
               </div>
             </div>
@@ -1060,7 +1060,7 @@ export default function Home() {
               className="px-3 py-2 bg-red-600 text-white rounded-full shadow-lg hover:bg-red-700 transition-colors text-sm font-medium"
               title="인증 세션 정리 및 새로고침"
             >
-              🔄 Reset Auth
+                              Reset Auth
             </button>
             
             {/* Debug Button */}

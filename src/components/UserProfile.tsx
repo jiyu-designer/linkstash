@@ -192,7 +192,7 @@ export default function UserProfileComponent({ userId }: UserProfileProps) {
 
       {/* Stats Dashboard */}
       <div className="p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-6">📊 통계 대시보드</h2>
+                        <h2 className="text-xl font-bold text-gray-900 mb-6">통계 대시보드</h2>
         
         {/* Main Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
