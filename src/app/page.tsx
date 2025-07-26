@@ -785,147 +785,148 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </div>
 
-          {results.length > 0 && (
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Categorized Links
-                </h3>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={results.length > 0 && results.every(result => result.isRead)}
-                    onChange={async (e) => {
-                      // 전체 읽음 상태 토글
-                      const targetStatus = e.target.checked;
-                      for (const result of results) {
-                        if (result.isRead !== targetStatus) {
-                          await handleToggleReadStatus(result.id);
+            {/* Categorized Links Table - Links 섹션 내부로 이동, 그림자와 배경색 제거 */}
+            {results.length > 0 && (
+              <div className="mt-8">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-slate-900">
+                    저장된 링크 목록
+                  </h3>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={results.length > 0 && results.every(result => result.isRead)}
+                      onChange={async (e) => {
+                        // 전체 읽음 상태 토글
+                        const targetStatus = e.target.checked;
+                        for (const result of results) {
+                          if (result.isRead !== targetStatus) {
+                            await handleToggleReadStatus(result.id);
+                          }
                         }
-                      }
-                    }}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer mr-2"
-                  />
-                  <span className="text-sm text-gray-600">모두 읽음으로 표시</span>
+                      }}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer mr-2"
+                    />
+                    <span className="text-sm text-slate-600">모두 읽음으로 표시</span>
+                  </div>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-slate-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                          읽음
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                          카테고리
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                          제목
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                          태그
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                          메모
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                          URL
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-200">
+                      {results.map((result) => (
+                        <tr key={result.id} className={`hover:bg-slate-50 ${result.isRead ? 'bg-slate-50/50' : ''}`}>
+                          <td className="px-4 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <input
+                                type="checkbox"
+                                checked={result.isRead}
+                                onChange={() => handleToggleReadStatus(result.id)}
+                                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded cursor-pointer"
+                              />
+                              {result.readAt && (
+                                <span className="ml-2 text-xs text-slate-500">
+                                  {result.readAt.toLocaleDateString()}
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-4 py-4 whitespace-nowrap">
+                            <Link 
+                              href={`/categories/${encodeURIComponent(result.category)}`}
+                              className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors cursor-pointer"
+                            >
+                              {result.category}
+                            </Link>
+                          </td>
+                          <td className="px-4 py-4">
+                            <div className="text-sm text-slate-900 font-medium">
+                              {result.title}
+                            </div>
+                          </td>
+                          <td className="px-4 py-4">
+                            {result.tags && result.tags.length > 0 ? (
+                              <div className="flex flex-wrap gap-1">
+                                {result.tags.map((tag, tagIndex) => (
+                                  <Link
+                                    key={tagIndex}
+                                    href={`/tags/${encodeURIComponent(tag)}`}
+                                    className="inline-flex px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition-colors cursor-pointer"
+                                  >
+                                    #{tag}
+                                  </Link>
+                                ))}
+                              </div>
+                            ) : (
+                              <span className="text-slate-400 text-sm">-</span>
+                            )}
+                          </td>
+                          <td className="px-4 py-4">
+                            {result.memo ? (
+                              <div className="text-sm text-slate-600 max-w-xs">
+                                {result.memo}
+                              </div>
+                            ) : (
+                              <span className="text-slate-400 text-sm">-</span>
+                            )}
+                          </td>
+                          <td className="px-4 py-4 whitespace-nowrap">
+                            <div className="flex space-x-3">
+                              <a
+                                href={result.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+                              >
+                                바로가기
+                                <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                              </a>
+                              <button
+                                onClick={() => handleEditLink(result)}
+                                className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+                              >
+                                편집
+                              </button>
+                              <button
+                                onClick={() => handleDeleteLink(result.id)}
+                                className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+                              >
+                                삭제
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        읽음
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        카테고리
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        제목
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        태그
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        메모
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        URL
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {results.map((result) => (
-                      <tr key={result.id} className={`hover:bg-gray-50 ${result.isRead ? 'bg-gray-50' : ''}`}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={result.isRead}
-                              onChange={() => handleToggleReadStatus(result.id)}
-                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
-                            />
-                            {result.readAt && (
-                              <span className="ml-2 text-xs text-gray-500">
-                                {result.readAt.toLocaleDateString()}
-                              </span>
-                            )}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <Link 
-                            href={`/categories/${encodeURIComponent(result.category)}`}
-                            className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors cursor-pointer"
-                          >
-                            {result.category}
-                          </Link>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="text-sm text-gray-900 font-medium">
-                            {result.title}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          {result.tags && result.tags.length > 0 ? (
-                            <div className="flex flex-wrap gap-1">
-                              {result.tags.map((tag, tagIndex) => (
-                                <Link
-                                  key={tagIndex}
-                                  href={`/tags/${encodeURIComponent(tag)}`}
-                                  className="inline-flex px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition-colors cursor-pointer"
-                                >
-                                  #{tag}
-                                </Link>
-                              ))}
-                            </div>
-                          ) : (
-                            <span className="text-gray-400 text-sm">-</span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4">
-                          {result.memo ? (
-                            <div className="text-sm text-gray-600 max-w-xs">
-                              {result.memo}
-                            </div>
-                          ) : (
-                            <span className="text-gray-400 text-sm">-</span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex space-x-3">
-                            <a
-                              href={result.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center text-sm font-medium transition-colors hover:text-gray-700"
-                            >
-                              바로가기
-                              <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                              </svg>
-                            </a>
-                            <button
-                              onClick={() => handleEditLink(result)}
-                              className="text-sm font-medium transition-colors hover:text-gray-700"
-                            >
-                              편집
-                            </button>
-                            <button
-                              onClick={() => handleDeleteLink(result.id)}
-                              className="text-sm font-medium transition-colors hover:text-gray-700"
-                            >
-                              삭제
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* Debug info - 개발 중에만 표시 */}
