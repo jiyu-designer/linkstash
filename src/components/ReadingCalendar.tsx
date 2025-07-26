@@ -200,15 +200,7 @@ export default function ReadingCalendar() {
               </button>
             </div>
 
-            {/* Statistics under month title */}
-            <div className="grid grid-cols-1 gap-3">
-              <div className="glass-card rounded-xl p-3 text-center">
-                <div className="text-2xl font-semibold text-white">
-                  {new Set([...monthReadLinks.keys(), ...monthSavedLinks.keys()]).size}
-                </div>
-                <div className="text-base text-gray-300 font-medium">Active Days</div>
-              </div>
-            </div>
+
           </div>
 
           {/* Calendar Grid */}
@@ -272,6 +264,15 @@ export default function ReadingCalendar() {
 
       {/* Selected Date Content */}
       <div>
+        {/* Active Days Statistics */}
+        <div className="mb-4">
+          <div className="glass-card rounded-xl p-3 text-center">
+            <div className="text-2xl font-semibold text-white">
+              {new Set([...monthReadLinks.keys(), ...monthSavedLinks.keys()]).size}
+            </div>
+            <div className="text-base text-gray-300 font-medium">Active Days</div>
+          </div>
+        </div>
         
             {/* Content List */}
             {readLinksForDate.length > 0 ? (
