@@ -690,25 +690,11 @@ export default function Home() {
           </form>
         </div>
 
-        {/* Reading Calendar Section */}
-        <div className="mb-8">
-          <div className="section-container rounded-2xl p-6">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-6 h-6 bg-gradient-to-br from-slate-600 to-slate-500 rounded-lg flex items-center justify-center">
-                <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <div>
-                <h2 className="text-lg font-bold sds-text-primary tracking-tight">Reading Calendar</h2>
-              </div>
-            </div>
-            <ReadingCalendar />
-          </div>
-        </div>
-
-        {/* Links Section */}
-        <div className="mb-12">
+        {/* Main Content Grid: Saved Links (3) + Reading Calendar (1) */}
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8 mb-12">
+          
+          {/* Saved Links Section - 3/4 width */}
+          <div className="xl:col-span-3">
 
             {/* Categorized Links Table - Links 섹션 내부로 이동, 그림자와 배경색 제거 */}
             {results.length > 0 && (
@@ -939,6 +925,25 @@ export default function Home() {
               </div>
             )}
           </div>
+          </div>
+
+          {/* Reading Calendar Section - 1/4 width */}
+          <div className="xl:col-span-1">
+            <div className="section-container rounded-2xl p-6">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-6 h-6 bg-gradient-to-br from-slate-600 to-slate-500 rounded-lg flex items-center justify-center">
+                  <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold sds-text-primary tracking-tight">Reading Calendar</h2>
+                </div>
+              </div>
+              <ReadingCalendar />
+            </div>
+          </div>
+
         </div>
 
         {/* Debug info - 개발 중에만 표시 */}
