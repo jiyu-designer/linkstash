@@ -10,6 +10,7 @@ export default function ReadingCalendar() {
   const [selectedDate, setSelectedDate] = useState<Date>(today);
   const [readLinksForDate, setReadLinksForDate] = useState<CategorizedLink[]>([]);
   const [monthReadLinks, setMonthReadLinks] = useState<Map<string, CategorizedLink[]>>(new Map());
+  const [monthSavedLinks, setMonthSavedLinks] = useState<Map<string, CategorizedLink[]>>(new Map());
   const [totalSavedLinks, setTotalSavedLinks] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -41,23 +42,43 @@ export default function ReadingCalendar() {
       setIsLoading(true);
       try {
         const { firstDay, lastDay } = getMonthBounds(currentDate);
-        const links = await storage.getReadLinksByDateRange(firstDay, lastDay);
         
-        // Group links by date
-        const linksByDate = new Map<string, CategorizedLink[]>();
-        links.forEach(link => {
+        // Load read links
+        const readLinks = await storage.getReadLinksByDateRange(firstDay, lastDay);
+        const readLinksByDate = new Map<string, CategorizedLink[]>();
+        readLinks.forEach(link => {
           if (link.readAt) {
             const dateKey = link.readAt.toDateString();
-            if (!linksByDate.has(dateKey)) {
-              linksByDate.set(dateKey, []);
+            if (!readLinksByDate.has(dateKey)) {
+              readLinksByDate.set(dateKey, []);
             }
-            linksByDate.get(dateKey)!.push(link);
+            readLinksByDate.get(dateKey)!.push(link);
           }
         });
+        setMonthReadLinks(readLinksByDate);
+
+        // Load all saved links and filter by month
+        const allLinks = await storage.getLinks();
+        const savedLinksByDate = new Map<string, CategorizedLink[]>();
+        allLinks.forEach(link => {
+          if (link.createdAt) {
+            const date = new Date(link.createdAt);
+            // Check if the date falls within the current month
+            if (date >= firstDay && date <= lastDay) {
+              const dateKey = date.toDateString();
+              if (!savedLinksByDate.has(dateKey)) {
+                savedLinksByDate.set(dateKey, []);
+              }
+              savedLinksByDate.get(dateKey)!.push(link);
+            }
+          }
+        });
+        setMonthSavedLinks(savedLinksByDate);
         
-        setMonthReadLinks(linksByDate);
       } catch (error) {
         console.error('Error loading month data:', error);
+        setMonthReadLinks(new Map());
+        setMonthSavedLinks(new Map());
       } finally {
         setIsLoading(false);
       }
@@ -114,13 +135,17 @@ export default function ReadingCalendar() {
       const date = new Date(year, month, day);
       const dateKey = date.toDateString();
       const hasReadLinks = monthReadLinks.has(dateKey);
+      const hasSavedLinks = monthSavedLinks.has(dateKey);
       const readCount = monthReadLinks.get(dateKey)?.length || 0;
+      const savedCount = monthSavedLinks.get(dateKey)?.length || 0;
       
       days.push({
         date,
         day,
         hasReadLinks,
+        hasSavedLinks,
         readCount,
+        savedCount,
         isToday: date.toDateString() === new Date().toDateString(),
         isSelected: selectedDate.toDateString() === date.toDateString()
       });
@@ -215,8 +240,15 @@ export default function ReadingCalendar() {
                     ${dayData ? 'hover:bg-slate-200' : ''}
                     ${dayData?.isToday ? 'bg-slate-800 text-white' : ''}
                     ${dayData?.isSelected ? 'bg-blue-600 text-white' : ''}
-                    ${dayData?.hasReadLinks && !dayData?.isSelected && !dayData?.isToday ? 'bg-green-100 text-green-800' : ''}
-                    ${!dayData?.hasReadLinks && !dayData?.isSelected && !dayData?.isToday ? 'bg-white hover:bg-slate-100' : ''}
+                    ${
+                      dayData && !dayData.isSelected && !dayData.isToday 
+                        ? dayData.hasReadLinks && dayData.hasSavedLinks 
+                          ? 'bg-green-500 text-white' // 둘 다 있는 날 - green 500
+                          : dayData.hasReadLinks || dayData.hasSavedLinks 
+                            ? 'bg-green-300 text-green-900' // 저장 또는 읽은 날 - green 300
+                            : 'bg-white hover:bg-slate-100' // 아무것도 없는 날
+                        : ''
+                    }
                   `}
                   onClick={() => dayData && setSelectedDate(dayData.date)}
                   disabled={!dayData}
@@ -224,11 +256,18 @@ export default function ReadingCalendar() {
                   {dayData && (
                     <>
                       <span className="font-medium">{dayData.day}</span>
-                      {dayData.hasReadLinks && (
-                        <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full text-[10px] flex items-center justify-center
-                          ${dayData.isSelected || dayData.isToday ? 'bg-white/20' : 'bg-green-600 text-white'}
+                      {(dayData.hasReadLinks || dayData.hasSavedLinks) && (
+                        <div className={`absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] flex items-center justify-center font-medium
+                          ${dayData.isSelected || dayData.isToday ? 'bg-white/20 text-white' 
+                            : dayData.hasReadLinks && dayData.hasSavedLinks 
+                              ? 'bg-white/90 text-green-700'
+                              : 'bg-white/80 text-green-700'}
                         `}>
-                          {dayData.readCount}
+                          {dayData.hasReadLinks && dayData.hasSavedLinks 
+                            ? `${dayData.savedCount}/${dayData.readCount}`
+                            : dayData.hasReadLinks 
+                              ? dayData.readCount
+                              : dayData.savedCount}
                         </div>
                       )}
                     </>
