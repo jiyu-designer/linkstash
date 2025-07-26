@@ -668,7 +668,8 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="glass-button px-6 py-[12px] rounded-lg text-white font-medium disabled:opacity-50 transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20 bg-gradient-to-r from-blue-500/30 to-purple-500/30 hover:from-blue-500/40 hover:to-purple-500/40"
+                className="glass-button px-6 py-2 rounded-lg text-white font-medium disabled:opacity-50 transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20 bg-gradient-to-r from-blue-500/30 to-purple-500/30 hover:from-blue-500/40 hover:to-purple-500/40"
+                style={{ lineHeight: 1 }}
               >
                 {isLoading ? (
                   <span className="flex items-center">
