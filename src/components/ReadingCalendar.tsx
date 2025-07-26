@@ -201,16 +201,10 @@ export default function ReadingCalendar() {
             </div>
 
             {/* Statistics under month title */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3">
               <div className="bg-white rounded-xl p-3 text-center border border-slate-200">
                 <div className="text-xl font-bold text-slate-900">{monthReadLinks.size}</div>
                 <div className="text-sm text-slate-600">Active Days</div>
-              </div>
-              <div className="bg-green-50 rounded-xl p-3 text-center border border-green-200">
-                <div className="text-xl font-bold text-green-700">
-                  {Array.from(monthReadLinks.values()).reduce((total, links) => total + links.length, 0)}
-                </div>
-                <div className="text-sm text-slate-600">Content Read</div>
               </div>
             </div>
           </div>
