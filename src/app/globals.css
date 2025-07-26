@@ -27,6 +27,7 @@ body {
 
 /* Custom section styles */
 .section-container {
-  background-color: white;
-  border: 1px solid #dfdfdf; /* updated gray-100 */
+  opacity: 0.6;
+  background: #FFF;
+  box-shadow: 0 0 4px 6px rgba(168, 168, 168, 0.10);
 }

@@ -577,7 +577,7 @@ export default function Home() {
                 LinkStash
               </h1>
               <p className="text-sm text-slate-600">
-                AI로 자동 분류하는 링크 관리 도구
+                AI-powered link management tool
               </p>
             </div>
           </div>
@@ -594,7 +594,7 @@ export default function Home() {
                   id="url"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  placeholder="URL 주소를 입력하세요"
+                  placeholder="Enter URL address"
                   className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-500 focus:border-slate-500 bg-white transition-all duration-200 placeholder:text-slate-400"
                   disabled={isLoading}
                 />
@@ -608,10 +608,10 @@ export default function Home() {
                 {isLoading ? (
                   <span className="flex items-center">
                     <div className="animate-spin rounded-full h-4 w-4 border-2 border-slate-300 border-t-white mr-2"></div>
-                    분석중
+                    Analyzing
                   </span>
                 ) : (
-                  '링크 자동 분류'
+                  'Auto Classify'
                 )}
               </button>
             </div>
@@ -667,12 +667,12 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
               <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-2xl border border-slate-200/50 p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-slate-900">카테고리</h3>
+                  <h3 className="text-lg font-semibold text-slate-900">Categories</h3>
                   <Link
                     href="/categories"
                     className="px-3 py-1.5 text-slate-700 hover:bg-slate-100 rounded-xl transition-colors text-sm font-medium border border-slate-200"
                   >
-                    관리 ({categories.length})
+                    Manage ({categories.length})
                   </Link>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -707,12 +707,12 @@ export default function Home() {
 
               <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-2xl border border-slate-200/50 p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-slate-900">태그</h3>
+                  <h3 className="text-lg font-semibold text-slate-900">Tags</h3>
                   <Link
                     href="/tags"
                     className="px-3 py-1.5 text-slate-700 hover:bg-slate-100 rounded-xl transition-colors text-sm font-medium border border-slate-200"
                   >
-                    관리 ({tags.length})
+                    Manage ({tags.length})
                   </Link>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -748,10 +748,10 @@ export default function Home() {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-4">
                     <h3 className="text-lg font-semibold text-slate-900">
-                      저장된 링크 목록
+                      Saved Links
                     </h3>
                     <div className="text-slate-500 text-sm font-medium">
-                      {results.filter(link => link.isRead).length} / {results.length} 읽음
+                                              {results.filter(link => link.isRead).length} / {results.length} Read
                     </div>
                   </div>
                   <div className="flex items-center">
@@ -777,19 +777,19 @@ export default function Home() {
                     <thead className="bg-slate-50">
                       <tr>
                         <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          읽음
+                          Read
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          카테고리
+                          Category
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          제목
+                          Title
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          태그
+                          Tags
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          메모
+                          Memo
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                           URL
@@ -861,7 +861,7 @@ export default function Home() {
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
                               >
-                                바로가기
+                                Visit
                                 <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                 </svg>
@@ -870,13 +870,13 @@ export default function Home() {
                                 onClick={() => handleEditLink(result)}
                                 className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
                               >
-                                편집
+                                Edit
                               </button>
                               <button
                                 onClick={() => handleDeleteLink(result.id)}
                                 className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
                               >
-                                삭제
+                                Delete
                               </button>
                             </div>
                           </td>
@@ -999,7 +999,7 @@ export default function Home() {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900">새 링크 추가</h3>
+                <h3 className="text-lg font-medium text-gray-900">Add New Link</h3>
               </div>
               <form onSubmit={(e) => {
                 e.preventDefault();
@@ -1035,7 +1035,7 @@ export default function Home() {
               }} className="p-6 space-y-4">
                 <div>
                   <label htmlFor="modal-url" className="block text-sm font-medium text-gray-700 mb-2">
-                    URL 주소
+                    URL Address
                   </label>
                   <input
                     type="text"
@@ -1049,14 +1049,14 @@ export default function Home() {
                 
                 <div>
                   <label htmlFor="modal-memo" className="block text-sm font-medium text-gray-700 mb-2">
-                    개인 메모 (선택사항)
+                    Personal Memo (Optional)
                   </label>
                   <textarea
                     id="modal-memo"
                     name="memo"
                     rows={3}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                    placeholder="이 링크에 대한 개인적인 메모를 남겨보세요..."
+                                          placeholder="Leave a personal note about this link..."
                   />
                 </div>
                 
@@ -1066,13 +1066,13 @@ export default function Home() {
                     onClick={() => setShowAddModal(false)}
                     className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                   >
-                    취소
+                    Cancel
                   </button>
                   <button
                     type="submit"
                     className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
-                    추가
+                    Add
                   </button>
                 </div>
               </form>
