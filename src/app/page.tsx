@@ -701,7 +701,7 @@ export default function Home() {
 
             {/* 카테고리 및 태그 요약 */}
             <div className="space-y-6 mb-8">
-              <div className="section-container p-6">
+              <div className="section-container rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-4">
                     <h3 className="text-lg font-semibold sds-text-primary">Categories</h3>
@@ -709,13 +709,6 @@ export default function Home() {
                       {categories.length} items
                     </div>
                   </div>
-                  <Button
-                    href="/categories"
-                    variant="subtle"
-                    size="small"
-                  >
-                    Manage
-                  </Button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {categories.slice(0, 6).map((category) => (
@@ -742,7 +735,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="section-container p-6">
+              <div className="section-container rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-4">
                     <h3 className="text-lg font-semibold sds-text-primary">Tags</h3>
@@ -750,13 +743,6 @@ export default function Home() {
                       {tags.length} items
                     </div>
                   </div>
-                  <Button
-                    href="/tags"
-                    variant="subtle"
-                    size="small"
-                  >
-                    Manage
-                  </Button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {tags.slice(0, 8).map((tag) => (
@@ -782,7 +768,7 @@ export default function Home() {
 
             {/* Categorized Links Table - Links 섹션 내부로 이동, 그림자와 배경색 제거 */}
             {results.length > 0 && (
-              <div className="section-container p-6 mt-8">
+              <div className="section-container rounded-2xl p-6 mt-8">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-4">
                     <h3 className="text-lg font-semibold sds-text-primary">
@@ -802,8 +788,8 @@ export default function Home() {
                 </div>
 
                 {/* Filters */}
-                <div className="mb-4 p-4 bg-gray-50 rounded-lg border">
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="mb-4 p-4 rounded-lg border">
+                  <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                     {/* Category Filter */}
                     <div>
                       <label className="block text-sm font-medium sds-text-secondary mb-2">
@@ -872,6 +858,18 @@ export default function Home() {
                         <option value="oldest">Oldest Read</option>
                         <option value="title">Title A-Z</option>
                       </select>
+                    </div>
+
+                    {/* Manage Button */}
+                    <div className="flex items-end">
+                      <Button
+                        href="/manage"
+                        variant="subtle"
+                        size="small"
+                        className="mb-0"
+                      >
+                        Manage
+                      </Button>
                     </div>
                   </div>
                 </div>
