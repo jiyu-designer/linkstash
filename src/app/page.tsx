@@ -689,7 +689,7 @@ export default function Home() {
         </header>
 
         {/* URL Input Form - 미니멀 버전 */}
-        <div className="section-container p-5 lg:p-6 mb-12">
+        <div className="section-container p-5 lg:p-6 mb-[60px]">
           <form onSubmit={handleSubmit}>
                           <div className="flex flex-col lg:flex-row gap-4">
               <div className="flex-1">
@@ -743,7 +743,7 @@ export default function Home() {
         </div>
 
         {/* Main Content: All Links, Summary, Reading Calendar (Vertical Stack) */}
-        <div className="space-y-[80px]">
+        <div className="space-y-[60px]">
           
           {/* All Links Section */}
           <div className="section-container p-6 lg:p-8">
