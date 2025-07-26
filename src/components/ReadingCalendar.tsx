@@ -162,7 +162,7 @@ export default function ReadingCalendar() {
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
-    <div className="grid grid-cols-[1fr_1fr] gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-4 lg:gap-4">
       {/* Calendar */}
       <div>
                       <div className="rounded-2xl overflow-hidden">
@@ -216,7 +216,7 @@ export default function ReadingCalendar() {
             {/* Week Days Header */}
             <div className="grid grid-cols-7 gap-1 mb-2">
               {weekDays.map((day, index) => (
-                <div key={day} className={`text-center text-xs font-medium py-1 ${index === 0 || index === 6 ? 'text-red-400' : 'text-gray-300'}`}>
+                <div key={day} className={`text-center text-xs md:text-sm font-medium py-1 ${index === 0 || index === 6 ? 'text-red-400' : 'text-gray-300'}`}>
                   {day}
                 </div>
               ))}
@@ -228,7 +228,7 @@ export default function ReadingCalendar() {
                 <button
                   key={index}
                   className={`
-                    h-10 text-sm rounded-lg transition-all duration-200 relative
+                    h-8 md:h-10 text-xs md:text-sm rounded-lg transition-all duration-200 relative
                     ${dayData ? 'hover:bg-slate-200' : ''}
                     ${dayData?.isSelected ? 'border-2 border-gray-500' : 'border border-transparent'}
                     ${

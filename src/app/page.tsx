@@ -601,7 +601,7 @@ export default function Home() {
     <>
       <AntiExtension />
       <div className="min-h-screen bg-black">
-      <div className="mx-auto px-[120px] py-8">
+      <div className="mx-auto px-10 lg:px-[120px] py-8">
         {/* localStorage Mode Notice */}
         {!isSupabaseConfigured() && (
           <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-2xl">
@@ -640,9 +640,9 @@ export default function Home() {
         </header>
 
         {/* URL Input Form - 미니멀 버전 */}
-        <div className="section-container rounded-2xl p-8 mb-12">
+        <div className="section-container rounded-2xl p-6 lg:p-8 mb-8 lg:mb-12">
           <form onSubmit={handleSubmit}>
-                          <div className="flex gap-4">
+                          <div className="flex flex-col lg:flex-row gap-4">
               <div className="flex-1">
                 <Input
                   type="text"
@@ -691,11 +691,11 @@ export default function Home() {
         </div>
 
         {/* Main Content Grid: Saved Links (2.5fr) + Reading Calendar (calc(1.5fr - 60px)) */}
-        <div className="grid grid-cols-[2.5fr_calc(1.5fr-60px)] gap-[60px] mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-[2.5fr_calc(1.5fr-60px)] gap-6 lg:gap-[60px] mb-12">
           
           {/* Saved Links Section - 2.5fr width */}
           <div>
-            <div className="section-container rounded-2xl p-8">
+            <div className="section-container rounded-2xl p-6 lg:p-8">
                 {/* Filters with Add button */}
                 <div className="mb-4 rounded-lg">
                   <div className="flex items-end justify-between gap-4 mb-4">
@@ -710,7 +710,7 @@ export default function Home() {
                       Add
                     </Button>
                   </div>
-                  <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                     {/* Category Filter */}
                     <div>
                       <label className="block text-base font-semibold text-gray-300 mb-3">
@@ -909,7 +909,7 @@ export default function Home() {
 
           {/* Reading Calendar Section - calc(1.5fr - 60px) width */}
           <div>
-            <div className="section-container rounded-2xl p-8">
+            <div className="section-container rounded-2xl p-6 lg:p-8">
               <div className="mb-4">
                 <h2 className="text-xl font-semibold sds-text-primary tracking-tight">Reading Calendar</h2>
               </div>
