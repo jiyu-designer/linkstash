@@ -746,7 +746,7 @@ export default function Home() {
                       <select
                         value={readFilter}
                         onChange={(e) => setReadFilter(e.target.value)}
-                        className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iIzZCNzI4MCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K')] bg-no-repeat bg-[position:calc(100%-12px)_center]"
+                        className="glass-input w-full px-3 py-2 pr-8 rounded-md text-sm focus:outline-none appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K')] bg-no-repeat bg-[position:calc(100%-12px)_center]"
                       >
                         <option value="all">All</option>
                         <option value="read">Read Only</option>
@@ -762,7 +762,7 @@ export default function Home() {
                       <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
-                        className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iIzZCNzI4MCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K')] bg-no-repeat bg-[position:calc(100%-12px)_center]"
+                        className="glass-input w-full px-3 py-2 pr-8 rounded-md text-sm focus:outline-none appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K')] bg-no-repeat bg-[position:calc(100%-12px)_center]"
                       >
                         <option value="newest">Newest Read</option>
                         <option value="oldest">Oldest Read</option>
@@ -781,13 +781,16 @@ export default function Home() {
                       >
                         Add
                       </Button>
-                      <Button
-                        href="/manage"
-                        variant="subtle"
-                        size="small"
+                      <button
+                        onClick={() => window.location.href = '/manage'}
+                        className="glass-button p-2 rounded-lg border border-white/20 hover:bg-white/10 transition-all"
+                        title="Manage"
                       >
-                        Manage
-                      </Button>
+                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -803,15 +806,15 @@ export default function Home() {
                               type="checkbox"
                               checked={result.isRead}
                               onChange={() => handleToggleReadStatus(result.id)}
-                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 cursor-pointer"
-                              style={{ borderRadius: '2px' }}
+                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 cursor-pointer rounded-sm border-white/30 bg-transparent checked:bg-blue-500 checked:border-blue-500"
+                              style={{ borderRadius: '4px' }}
                               title={!result.isRead ? 'Read' : ''}
                             />
                           </td>
                           <td className="py-3 w-full">
-                            <div className="space-y-2">
+                            <div>
                               {/* Title */}
-                              <div>
+                              <div className="mb-2">
                                 <a
                                   href={result.url}
                                   target="_blank"
@@ -823,7 +826,7 @@ export default function Home() {
                               </div>
                               
                               {/* Category + Tags */}
-                              <div className="flex flex-wrap gap-1">
+                              <div className="flex flex-wrap gap-1 mb-2">
                                 <Link 
                                   href={`/categories/${encodeURIComponent(result.category)}`}
                                   className="sds-chip sds-chip-category"
@@ -1019,9 +1022,9 @@ export default function Home() {
         {/* Add Modal */}
         {showAddModal && (
           <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg sds-shadow-500 max-w-md w-full">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900">Add New Link</h3>
+            <div className="section-container max-w-md w-full">
+              <div className="px-6 py-4 border-b border-white/20">
+                <h3 className="text-lg font-medium text-white">Add New Link</h3>
               </div>
               <form onSubmit={(e) => {
                 e.preventDefault();
@@ -1056,7 +1059,7 @@ export default function Home() {
                 handleSubmit(syntheticEvent);
               }} className="p-6 space-y-4">
                 <div>
-                  <label htmlFor="modal-url" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="modal-url" className="block text-sm font-medium text-gray-300 mb-2">
                     URL Address
                   </label>
                   <Input
@@ -1069,14 +1072,14 @@ export default function Home() {
                 </div>
                 
                 <div>
-                  <label htmlFor="modal-memo" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="modal-memo" className="block text-sm font-medium text-gray-300 mb-2">
                     Personal Memo (Optional)
                   </label>
                   <textarea
                     id="modal-memo"
                     name="memo"
                     rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    className="glass-input w-full px-3 py-2 rounded-md resize-none"
                                           placeholder="Leave a personal note about this link..."
                   />
                 </div>

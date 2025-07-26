@@ -167,7 +167,7 @@ export default function ReadingCalendar() {
       <div>
                       <div className="rounded-2xl overflow-hidden">
           {/* Header with Navigation and Statistics */}
-          <div className="px-4 py-3 glass-card">
+          <div className="px-4 py-3">
             {/* Month Navigation */}
             <div className="flex items-center justify-between mb-4">
               <button
@@ -239,20 +239,7 @@ export default function ReadingCalendar() {
                   {dayData && (
                     <>
                       <span className="font-medium">{dayData.day}</span>
-                      {(dayData.hasReadLinks || dayData.hasSavedLinks) && (
-                        <div className={`absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] flex items-center justify-center font-medium
-                          ${dayData.isSelected ? 'bg-gray-500 text-white'
-                            : dayData.hasReadLinks && dayData.hasSavedLinks 
-                              ? 'bg-white/90 text-green-700'
-                              : 'bg-white/80 text-green-700'}
-                        `}>
-                          {dayData.hasReadLinks && dayData.hasSavedLinks 
-                            ? `${dayData.savedCount}/${dayData.readCount}`
-                            : dayData.hasReadLinks 
-                              ? dayData.readCount
-                              : dayData.savedCount}
-                        </div>
-                      )}
+
                     </>
                   )}
                 </button>
@@ -280,7 +267,7 @@ export default function ReadingCalendar() {
                 {readLinksForDate.map((link) => (
                   <div
                     key={link.id}
-                    className="glass-card rounded-lg p-2 hover:bg-white/10 transition-colors"
+                    className="glass-card rounded-lg px-4 py-2 hover:bg-white/10 transition-colors"
                   >
                     <h4 className="font-medium text-white text-base line-clamp-2 mb-1">
                       <a
