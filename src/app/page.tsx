@@ -640,7 +640,7 @@ export default function Home() {
         </header>
 
         {/* URL Input Form - 미니멀 버전 */}
-        <div className="section-container p-6 lg:p-8 mb-8 lg:mb-12">
+        <div className="section-container p-6 lg:p-8 mb-12">
           <form onSubmit={handleSubmit}>
                           <div className="flex flex-col lg:flex-row gap-4">
               <div className="flex-1">
@@ -913,7 +913,7 @@ export default function Home() {
 
         </div>
 
-        {/* Challenges Section */}
+        {/* Summary Section */}
         <div className="section-container p-6 lg:p-8 mb-12">
           <div className="flex items-center space-x-3 mb-6">
             <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
@@ -922,8 +922,7 @@ export default function Home() {
               </svg>
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-white tracking-tight">Challenges</h2>
-              <p className="text-sm text-gray-400">Track your reading progress and achievements</p>
+              <h2 className="text-xl font-semibold text-white tracking-tight">Summary</h2>
             </div>
           </div>
           
