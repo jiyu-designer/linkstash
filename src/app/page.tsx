@@ -743,7 +743,7 @@ export default function Home() {
         </div>
 
         {/* Main Content: All Links, Summary, Reading Calendar (Vertical Stack) */}
-        <div className="space-y-[60px]">
+        <div className="space-y-[80px]">
           
           {/* All Links Section */}
           <div className="section-container p-6 lg:p-8">
