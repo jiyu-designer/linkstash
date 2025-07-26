@@ -628,10 +628,10 @@ export default function Home() {
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl font-bold sds-text-primary tracking-tight">
+              <h1 className="text-3xl font-semibold sds-text-primary tracking-tight">
                 LinkStash
               </h1>
-              <p className="text-sm sds-text-secondary">
+              <p className="text-base sds-text-secondary font-medium">
                 Save smartly. Learn deeply
               </p>
             </div>
@@ -640,9 +640,9 @@ export default function Home() {
         </header>
 
         {/* URL Input Form - 미니멀 버전 */}
-        <div className="section-container rounded-2xl p-6 mb-8">
+        <div className="section-container rounded-2xl p-8 mb-12">
           <form onSubmit={handleSubmit}>
-            <div className="flex gap-3">
+                          <div className="flex gap-4">
               <div className="flex-1">
                 <Input
                   type="text"
@@ -695,13 +695,13 @@ export default function Home() {
           
           {/* Saved Links Section - 2.5fr width */}
           <div>
-            <div className="section-container rounded-2xl p-6">
+            <div className="section-container rounded-2xl p-8">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-4">
-                    <h3 className="text-lg font-semibold sds-text-primary">
+                    <h3 className="text-xl font-semibold sds-text-primary tracking-tight">
                       Saved Links
                     </h3>
-                    <div className="sds-text-secondary text-sm font-medium">
+                    <div className="sds-text-secondary text-base font-medium">
                       {filteredResults.filter(link => link.isRead).length} / {filteredResults.length} Read
                     </div>
                   </div>
@@ -719,7 +719,7 @@ export default function Home() {
                   <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
                     {/* Category Filter */}
                     <div>
-                      <label className="block text-sm font-medium sds-text-secondary mb-2">
+                      <label className="block text-base font-semibold sds-text-secondary mb-3">
                         Category
                       </label>
                       <select
@@ -738,7 +738,7 @@ export default function Home() {
 
                     {/* Tag Filter */}
                     <div>
-                      <label className="block text-sm font-medium sds-text-secondary mb-2">
+                      <label className="block text-base font-semibold sds-text-secondary mb-3">
                         Tag
                       </label>
                       <select
@@ -757,7 +757,7 @@ export default function Home() {
 
                     {/* Read Status Filter */}
                     <div>
-                      <label className="block text-sm font-medium sds-text-secondary mb-2">
+                      <label className="block text-base font-semibold sds-text-secondary mb-3">
                         Read Status
                       </label>
                       <select
@@ -773,7 +773,7 @@ export default function Home() {
 
                     {/* Sort By */}
                     <div>
-                      <label className="block text-sm font-medium sds-text-secondary mb-2">
+                      <label className="block text-base font-semibold sds-text-secondary mb-3">
                         Sort By
                       </label>
                       <select
@@ -820,7 +820,7 @@ export default function Home() {
                           <td className="py-3 w-full">
                             <div className="space-y-3">
                               {/* Title */}
-                              <div className="font-medium text-base flex items-center gap-2">
+                              <div className="font-semibold text-lg flex items-center gap-2">
                                 <span>{result.title}</span>
                                 <a
                                   href={result.url}
@@ -858,7 +858,7 @@ export default function Home() {
                               
                               {/* Memo */}
                               {result.memo && (
-                                <div className="sds-table-cell-secondary text-sm max-w-md">
+                                <div className="sds-table-cell-secondary text-base max-w-md">
                                   {result.memo}
                                 </div>
                               )}
@@ -915,7 +915,7 @@ export default function Home() {
 
           {/* Reading Calendar Section - 1.5fr width */}
           <div>
-            <div className="section-container rounded-2xl p-6">
+            <div className="section-container rounded-2xl p-8">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-6 h-6 bg-gradient-to-br from-slate-600 to-slate-500 rounded-lg flex items-center justify-center">
                   <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -923,7 +923,7 @@ export default function Home() {
                   </svg>
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold sds-text-primary tracking-tight">Reading Calendar</h2>
+                  <h2 className="text-xl font-semibold sds-text-primary tracking-tight">Reading Calendar</h2>
                 </div>
               </div>
               <ReadingCalendar />

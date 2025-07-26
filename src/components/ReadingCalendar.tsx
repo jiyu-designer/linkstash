@@ -181,7 +181,7 @@ export default function ReadingCalendar() {
               </button>
               
               <div className="text-center">
-                <h2 className="text-lg font-bold text-slate-900">
+                <h2 className="text-xl font-semibold text-slate-900 tracking-tight">
                   {currentDate.getFullYear()} {monthNames[currentDate.getMonth()]}
                 </h2>
                 {isLoading && (
@@ -203,10 +203,10 @@ export default function ReadingCalendar() {
             {/* Statistics under month title */}
             <div className="grid grid-cols-1 gap-3">
               <div className="bg-white rounded-xl p-3 text-center border border-slate-200">
-                <div className="text-xl font-bold text-slate-900">
+                <div className="text-2xl font-semibold text-slate-900">
                   {new Set([...monthReadLinks.keys(), ...monthSavedLinks.keys()]).size}
                 </div>
-                <div className="text-sm text-slate-600">Active Days</div>
+                <div className="text-base text-slate-600 font-medium">Active Days</div>
               </div>
             </div>
           </div>
