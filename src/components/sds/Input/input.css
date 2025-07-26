@@ -1,10 +1,11 @@
 .input {
-  --input-background-color: var(--sds-color-background-default-default);
-  --input-text-color: var(--sds-color-text-default-default);
-  --input-border-color: var(--sds-color-border-default-default);
-  --input-placeholder-color: var(--sds-color-text-default-tertiary);
+  --input-background-color: rgba(255, 255, 255, 0.08);
+  --input-text-color: #ffffff;
+  --input-border-color: rgba(255, 255, 255, 0.15);
+  --input-placeholder-color: rgba(255, 255, 255, 0.6);
   align-items: center;
   background-color: var(--input-background-color);
+  backdrop-filter: blur(10px);
   box-shadow: inset 0 0 0 var(--sds-size-stroke-border)
     var(--input-border-color);
   border-radius: var(--sds-size-radius-200);
@@ -31,6 +32,7 @@
   }
 
   &[data-focus-visible] {
-    --input-border-color: var(--sds-color-border-brand-secondary);
+    --input-border-color: rgba(255, 255, 255, 0.3);
+    --input-background-color: rgba(255, 255, 255, 0.12);
   }
 }

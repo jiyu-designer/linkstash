@@ -167,15 +167,15 @@ export default function ReadingCalendar() {
       <div>
                       <div className="rounded-2xl overflow-hidden">
           {/* Header with Navigation and Statistics */}
-          <div className="px-4 py-3 bg-white">
+          <div className="px-4 py-3 glass-card">
             {/* Month Navigation */}
             <div className="flex items-center justify-between mb-4">
               <button
                 onClick={goToPreviousMonth}
-                className="p-1 hover:bg-slate-200 rounded-lg transition-colors"
+                className="p-1 hover:bg-white/20 rounded-lg transition-colors text-white"
                 disabled={isLoading}
               >
-                <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
@@ -191,10 +191,10 @@ export default function ReadingCalendar() {
               
               <button
                 onClick={goToNextMonth}
-                className="p-1 hover:bg-slate-200 rounded-lg transition-colors"
+                className="p-1 hover:bg-white/20 rounded-lg transition-colors text-white"
                 disabled={isLoading}
               >
-                <svg className="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
@@ -237,7 +237,7 @@ export default function ReadingCalendar() {
                           ? `bg-[#aff4c6] text-green-800 ${dayData.isToday ? 'font-bold' : ''}` // 둘 다 있는 날 - green 300
                           : dayData.hasReadLinks || dayData.hasSavedLinks 
                             ? `bg-[#cff7d3] text-green-700 ${dayData.isToday ? 'font-bold' : ''}` // 저장 또는 읽은 날 - green 200
-                            : `bg-white hover:bg-slate-100 ${dayData.isToday ? 'font-bold' : ''}` // 아무것도 없는 날
+                            : `bg-white/10 hover:bg-white/20 text-white ${dayData.isToday ? 'font-bold' : ''}` // 아무것도 없는 날
                         : ''
                     }
                   `}
