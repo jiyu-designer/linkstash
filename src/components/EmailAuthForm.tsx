@@ -33,12 +33,12 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
 
   const validateForm = () => {
     if (!formData.email) {
-      setError('이메일을 입력해주세요.');
+      setError('Please enter your email.');
       return false;
     }
 
     if (!formData.email.includes('@')) {
-      setError('올바른 이메일 형식을 입력해주세요.');
+      setError('Please enter a valid email format.');
       return false;
     }
 
@@ -47,23 +47,23 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
     }
 
     if (!formData.password) {
-      setError('패스워드를 입력해주세요.');
-      return false;
-    }
-
-    if (formData.password.length < 6) {
-      setError('패스워드는 최소 6자 이상이어야 합니다.');
+      setError('Please enter your password.');
       return false;
     }
 
     if (mode === 'signup') {
-      if (!formData.fullName.trim()) {
-        setError('이름을 입력해주세요.');
+      if (!formData.fullName) {
+        setError('Please enter your full name.');
+        return false;
+      }
+
+      if (formData.password.length < 6) {
+        setError('Password must be at least 6 characters long.');
         return false;
       }
 
       if (formData.password !== formData.confirmPassword) {
-        setError('패스워드가 일치하지 않습니다.');
+        setError('Passwords do not match.');
         return false;
       }
     }
@@ -149,54 +149,54 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
 
   const getTitle = () => {
     switch (mode) {
-      case 'signin': return '이메일로 로그인';
-      case 'signup': return '이메일로 회원가입';
-      case 'reset': return '패스워드 재설정';
-      case 'confirm': return '이메일 확인';
-      default: return '로그인';
+      case 'signin': return 'Sign In with Email';
+      case 'signup': return 'Sign Up with Email';
+      case 'reset': return 'Reset Password';
+      case 'confirm': return 'Verify Email';
+      default: return 'Sign In';
     }
   };
 
   const getButtonText = () => {
-    if (loading) return '처리 중...';
+    if (loading) return 'Processing...';
     
     switch (mode) {
-      case 'signin': return '로그인';
-      case 'signup': return '회원가입';
-      case 'reset': return '재설정 이메일 발송';
-      case 'confirm': return '확인 이메일 재발송';
-      default: return '확인';
+      case 'signin': return 'Sign In';
+      case 'signup': return 'Sign Up';
+      case 'reset': return 'Send Reset Email';
+      case 'confirm': return 'Resend Confirmation';
+      default: return 'Confirm';
     }
   };
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+      <div className="glass-card rounded-lg p-6 border border-white/20">
         {/* Header */}
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">{getTitle()}</h2>
+          <h2 className="text-2xl font-bold text-white mb-2">{getTitle()}</h2>
           {mode === 'confirm' ? (
-            <p className="text-sm text-gray-600">
-              {formData.email}로 확인 이메일을 발송했습니다.
+            <p className="text-sm text-gray-300">
+              A confirmation email has been sent to {formData.email}.
             </p>
           ) : (
-            <p className="text-sm text-gray-600">
-              계정 정보를 입력해주세요
+            <p className="text-sm text-gray-300">
+              Please enter your account information
             </p>
           )}
         </div>
 
         {/* Success Message */}
         {success && (
-          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-sm text-green-800">{success}</p>
+          <div className="mb-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
+            <p className="text-sm text-green-300">{success}</p>
           </div>
         )}
 
         {/* Error Message */}
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-800">{error}</p>
+          <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
+            <p className="text-sm text-red-300">{error}</p>
           </div>
         )}
 
@@ -204,8 +204,8 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Email */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              이메일
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
+              Email
             </label>
             <input
               type="email"
@@ -214,7 +214,7 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
               value={formData.email}
               onChange={handleInputChange}
               disabled={loading || mode === 'confirm'}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm disabled:bg-gray-50 disabled:text-gray-500"
+              className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
               placeholder="your.email@example.com"
               required
             />
@@ -223,8 +223,8 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
           {/* Full Name (Signup only) */}
           {mode === 'signup' && (
             <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
-                이름
+              <label htmlFor="fullName" className="block text-sm font-medium text-gray-300 mb-1">
+                Full Name
               </label>
               <input
                 type="text"
@@ -233,8 +233,8 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
                 value={formData.fullName}
                 onChange={handleInputChange}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm"
-                placeholder="홍길동"
+                className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Your full name"
                 required
               />
             </div>
@@ -243,8 +243,8 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
           {/* Password */}
           {mode !== 'reset' && mode !== 'confirm' && (
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                패스워드
+              <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1">
+                Password
               </label>
               <input
                 type="password"
@@ -253,8 +253,8 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
                 value={formData.password}
                 onChange={handleInputChange}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm"
-                placeholder="최소 6자 이상"
+                className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="At least 6 characters"
                 required
               />
             </div>
@@ -263,8 +263,8 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
           {/* Confirm Password (Signup only) */}
           {mode === 'signup' && (
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                패스워드 확인
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300 mb-1">
+                Confirm Password
               </label>
               <input
                 type="password"
@@ -273,8 +273,8 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 disabled={loading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm"
-                placeholder="패스워드를 다시 입력하세요"
+                className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Re-enter your password"
                 required
               />
             </div>
@@ -284,7 +284,7 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full flex justify-center py-2 px-4 glass-button border border-white/20 rounded-lg text-sm font-medium text-white hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {loading && (
               <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
@@ -304,19 +304,19 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
                 <button
                   type="button"
                   onClick={() => switchMode('reset')}
-                  className="text-sm text-blue-600 hover:text-blue-800 transition-colors"
+                  className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
                 >
-                  패스워드를 잊으셨나요?
+                  Forgot your password?
                 </button>
               </div>
               <div className="text-center">
-                <span className="text-sm text-gray-600">계정이 없으신가요? </span>
+                <span className="text-sm text-gray-400">Don&apos;t have an account? </span>
                 <button
                   type="button"
                   onClick={() => switchMode('signup')}
-                  className="text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                  className="text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors"
                 >
-                  회원가입
+                  Sign up
                 </button>
               </div>
             </>
@@ -324,13 +324,13 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
 
           {mode === 'signup' && (
             <div className="text-center">
-              <span className="text-sm text-gray-600">이미 계정이 있으신가요? </span>
+              <span className="text-sm text-gray-400">Already have an account? </span>
               <button
                 type="button"
                 onClick={() => switchMode('signin')}
-                className="text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                className="text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors"
               >
-                로그인
+                Sign in
               </button>
             </div>
           )}
@@ -340,9 +340,9 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
               <button
                 type="button"
                 onClick={() => switchMode('signin')}
-                className="text-sm text-blue-600 hover:text-blue-800 transition-colors"
+                className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
               >
-                ← 로그인으로 돌아가기
+                ← Back to sign in
               </button>
             </div>
           )}
@@ -353,9 +353,9 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
               <button
                 type="button"
                 onClick={onCancel}
-                className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                className="text-sm text-gray-500 hover:text-gray-300 transition-colors"
               >
-                취소
+                Cancel
               </button>
             </div>
           )}

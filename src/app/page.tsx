@@ -36,6 +36,36 @@ export default function Home() {
   const [readFilter, setReadFilter] = useState<string>('all'); // 'all', 'read', 'unread'
   const [sortBy, setSortBy] = useState<string>('newest-added'); // 'newest-added', 'oldest-added', 'newest', 'oldest', 'title'
 
+  // Toast notification state
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
+  // Daily usage tracking functions
+  const getDailyUsageKey = (userId: string) => `smartsort_usage_${userId}_${new Date().toDateString()}`;
+  
+  const getDailyUsage = (userId: string): number => {
+    if (typeof window === 'undefined') return 0;
+    const key = getDailyUsageKey(userId);
+    return parseInt(localStorage.getItem(key) || '0', 10);
+  };
+
+  const incrementDailyUsage = (userId: string): void => {
+    if (typeof window === 'undefined') return;
+    const key = getDailyUsageKey(userId);
+    const current = getDailyUsage(userId);
+    localStorage.setItem(key, (current + 1).toString());
+  };
+
+  const isExemptUser = (userEmail: string): boolean => {
+    return userEmail === 'jiyu0719@gmail.com';
+  };
+
+  const showToastNotification = (message: string) => {
+    setToastMessage(message);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
   // Filter and sort results
   const getFilteredAndSortedResults = () => {
     let filtered = [...results];
@@ -458,10 +488,10 @@ export default function Home() {
   // Show loading state while checking authentication
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="flex flex-col items-center space-y-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-2 border-slate-300 border-t-slate-600"></div>
-          <p className="text-sm text-slate-500 font-medium">로딩 중...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-600 border-t-white"></div>
+          <p className="text-sm text-gray-300 font-medium">Loading...</p>
         </div>
       </div>
     );
@@ -470,55 +500,55 @@ export default function Home() {
   // Show login page for unauthenticated users (only if Supabase is configured)
   if (!user && isSupabaseConfigured()) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 flex items-center justify-center py-12 px-4">
+      <div className="min-h-screen bg-black flex items-center justify-center py-12 px-4">
         <div className="max-w-md w-full">
           {/* Header */}
           <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-slate-800 to-slate-600 rounded-2xl mb-6 sds-shadow-300">
-              <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+            <div className="w-12 h-12 glass-card rounded-xl flex items-center justify-center backdrop-blur-20 bg-white/10 border border-white/20 mb-6">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
               </svg>
             </div>
-            <h1 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight">
+            <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">
               LinkStash
             </h1>
-            <p className="text-slate-600 text-lg font-medium">
-              AI로 자동 분류하는 링크 관리 도구
+            <p className="text-gray-300 text-lg font-medium">
+              Save smartly. Learn deeply
             </p>
           </div>
           
           {/* Login Card */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-slate-200/60 sds-shadow-400 p-8">
+          <div className="section-container p-8">
             {/* Features */}
-            <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-2xl p-6 mb-8 border border-slate-200/50">
+            <div className="glass-card rounded-2xl p-6 mb-8">
               <div className="flex items-center mb-4">
-                <div className="w-2 h-2 bg-slate-600 rounded-full mr-3"></div>
-                <h3 className="font-semibold text-slate-900 text-sm">주요 기능</h3>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mr-3"></div>
+                <h3 className="font-semibold text-white text-sm">Key Features</h3>
               </div>
               <div className="space-y-3">
                 <div className="flex items-start">
-                  <div className="w-1 h-1 bg-slate-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                  <span className="text-sm text-slate-700">URL 자동 분류 및 태그 생성</span>
+                  <div className="w-1 h-1 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                  <span className="text-sm text-gray-300">Automatic URL categorization and tag generation</span>
                 </div>
                 <div className="flex items-start">
-                  <div className="w-1 h-1 bg-slate-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                  <span className="text-sm text-slate-700">읽음 상태 관리 및 달력 뷰</span>
+                  <div className="w-1 h-1 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                  <span className="text-sm text-gray-300">Read status management and calendar view</span>
                 </div>
                 <div className="flex items-start">
-                  <div className="w-1 h-1 bg-slate-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                  <span className="text-sm text-slate-700">카테고리 및 태그별 정리</span>
+                  <div className="w-1 h-1 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                  <span className="text-sm text-gray-300">Organize by categories and tags</span>
                 </div>
                 <div className="flex items-start">
-                  <div className="w-1 h-1 bg-slate-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                  <span className="text-sm text-slate-700">개인 메모 및 북마크 관리</span>
+                  <div className="w-1 h-1 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                  <span className="text-sm text-gray-300">Personal notes and bookmark management</span>
                 </div>
               </div>
             </div>
 
             {/* Error Message */}
             {error && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl">
-                <p className="text-sm text-red-700 font-medium">{error}</p>
+              <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl">
+                <p className="text-sm text-red-300 font-medium">{error}</p>
               </div>
             )}
             
@@ -528,7 +558,7 @@ export default function Home() {
                 {/* Google Login Button */}
                 <button
                   onClick={handleGoogleSignIn}
-                  className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white border border-slate-200 rounded-2xl sds-shadow-100 hover:sds-shadow-200 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 font-medium text-slate-700 group"
+                  className="w-full flex items-center justify-center gap-3 px-6 py-3.5 glass-button border border-white/20 rounded-2xl hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 font-medium text-white group"
                 >
                   <svg className="w-5 h-5 group-hover:scale-105 transition-transform" viewBox="0 0 24 24">
                     <path
@@ -548,14 +578,14 @@ export default function Home() {
                       d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                     />
                   </svg>
-                  Google로 계속하기
+                  Continue with Google
                 </button>
 
                 {/* Kakao Login Button - 임시 숨김 (scope 에러 해결 중) */}
                 {false && (
                   <button
                     onClick={handleKakaoSignIn}
-                    className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-[#FEE500] border border-[#FEE500] rounded-2xl sds-shadow-100 hover:sds-shadow-200 hover:bg-[#FDD835] focus:outline-none focus:ring-2 focus:ring-[#FEE500] transition-all duration-200 font-medium text-slate-900 group"
+                    className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-[#FEE500] border border-[#FEE500] rounded-2xl hover:bg-[#FDD835] focus:outline-none focus:ring-2 focus:ring-[#FEE500] transition-all duration-200 font-medium text-slate-900 group"
                   >
                     <svg className="w-5 h-5 group-hover:scale-105 transition-transform" viewBox="0 0 24 24">
                       <path
@@ -563,29 +593,29 @@ export default function Home() {
                         d="M12 3C6.48 3 2 6.48 2 10.8c0 2.7 1.68 5.1 4.2 6.6L5.4 20.7c-.15.45.3.84.72.63L9.6 19.2c.72.12 1.56.18 2.4.18 5.52 0 10-3.48 10-7.8S17.52 3 12 3z"
                       />
                     </svg>
-                    카카오로 계속하기
+                    Continue with Kakao
                   </button>
                 )}
                 
                 {/* Divider */}
                 <div className="relative my-6">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-slate-200" />
+                    <div className="w-full border-t border-white/20" />
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-4 bg-white text-slate-500 font-medium">또는</span>
+                    <span className="px-4 bg-black text-gray-400 font-medium">or</span>
                   </div>
                 </div>
                 
                 {/* Email Login Button */}
                 <button
                   onClick={handleShowEmailAuth}
-                  className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-gradient-to-r from-slate-800 to-slate-700 text-white rounded-2xl sds-shadow-100 hover:sds-shadow-300 hover:from-slate-700 hover:to-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-all duration-200 font-medium group"
+                  className="w-full flex items-center justify-center gap-3 px-6 py-3.5 glass-button border border-white/20 rounded-2xl hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 font-medium text-white group"
                 >
                   <svg className="w-5 h-5 group-hover:scale-105 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  이메일로 계속하기
+                  Continue with Email
                 </button>
               </div>
             ) : (
@@ -596,8 +626,8 @@ export default function Home() {
             )}
             
             {!showEmailAuth && (
-              <p className="text-xs text-slate-500 text-center mt-6 font-medium">
-                개인정보 보호 정책에 따라 안전하게 보호됩니다
+              <p className="text-xs text-gray-400 text-center mt-6 font-medium">
+                Your data is securely protected by our privacy policy
               </p>
             )}
           </div>
@@ -678,8 +708,11 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="glass-button px-6 py-2 rounded-lg text-white font-medium disabled:opacity-50 transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 hover:from-blue-500/30 hover:via-purple-500/30 hover:to-pink-500/30"
-                style={{ lineHeight: 1 }}
+                className="glass-button px-6 py-2 rounded-lg text-white font-medium disabled:opacity-50 transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20"
+                style={{ 
+                  lineHeight: 1,
+                  background: 'radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, rgba(147, 51, 234, 0.2) 50%, rgba(236, 72, 153, 0.2) 100%)'
+                }}
               >
                 {isLoading ? (
                   <span className="flex items-center">
@@ -700,12 +733,11 @@ export default function Home() {
           </form>
         </div>
 
-        {/* Main Content Grid: Saved Links (2.5fr) + Reading Calendar (calc(1.5fr - 60px)) */}
-        <div className="grid grid-cols-1 lg:grid-cols-[2.5fr_calc(1.5fr-60px)] gap-6 lg:gap-[60px] mb-12">
+        {/* Main Content: All Links, Reading Calendar, Summary (Vertical Stack) */}
+        <div className="space-y-8">
           
-          {/* Saved Links Section - 2.5fr width */}
-          <div>
-            <div className="section-container p-6 lg:p-8">
+          {/* All Links Section */}
+          <div className="section-container p-6 lg:p-8">
                 {/* Filters with Add button */}
                 <div className="mb-4 rounded-lg">
                   <div className="flex items-end justify-between gap-4">
@@ -804,8 +836,8 @@ export default function Home() {
                         title="Manage"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <circle cx="12" cy="12" r="3" strokeWidth={1.5}/>
-                          <path d="M12 1v6m0 6v6m11-5h-6m-6 0H1" strokeWidth={1.5} strokeLinecap="round"/>
+                          <circle cx="12" cy="12" r="2" strokeWidth={1.5}/>
+                          <circle cx="12" cy="12" r="8" strokeWidth={1} strokeDasharray="2 6"/>
                         </svg>
                       </button>
                     </div>
@@ -818,11 +850,12 @@ export default function Home() {
                 
                 {/* Links List */}
                 {results.length > 0 && (
-                  <div className="max-h-[600px] overflow-y-auto scrollbar-hide">
-                    <table className="w-full">
-                    <tbody>
-                      {filteredResults.slice(0, 10).map((result) => (
-                        <tr key={result.id} className={`py-4 hover:px-8 hover:rounded-2xl transition-all duration-200 ${result.isRead ? '' : ''}`}>
+                  <div className="relative">
+                    <div className="max-h-[600px] overflow-y-auto scrollbar-hide">
+                      <table className="w-full">
+                      <tbody>
+                        {filteredResults.slice(0, 10).map((result) => (
+                          <tr key={result.id} className={`py-4 hover:px-8 hover:rounded-2xl transition-all duration-200 ${result.isRead ? '' : ''}`}>
                           <td className="pr-4 py-4 w-8">
                             <input
                               type="checkbox"
@@ -848,11 +881,11 @@ export default function Home() {
                               
                               {/* Category + Tags */}
                               <div className="flex flex-wrap gap-1.5 mb-2">
-                                <span className="sds-chip sds-chip-category px-2 py-0.5 rounded-md text-xs font-medium bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                                <span className="sds-chip sds-chip-category px-1.5 py-0.5 rounded-md text-xs font-medium bg-blue-500/20 text-blue-300 border border-blue-500/30" style={{ fontSize: '10px' }}>
                                   {result.category}
                                 </span>
                                 {result.tags.map((tag, index) => (
-                                  <span key={index} className="sds-chip sds-chip-tag px-2 py-0.5 rounded-md text-xs font-medium bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                                  <span key={index} className="sds-chip sds-chip-tag px-1.5 py-0.5 rounded-md text-xs font-medium bg-purple-500/20 text-purple-300 border border-purple-500/30" style={{ fontSize: '10px' }}>
                                     #{tag}
                                   </span>
                                 ))}
@@ -868,15 +901,6 @@ export default function Home() {
                           </td>
                           <td className="py-4 w-auto pl-4">
                             <div className="flex items-center space-x-2">
-                              <button
-                                onClick={() => window.open(result.url, '_blank')}
-                                className="inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-white transition-colors rounded-md hover:bg-white/10"
-                                title="Go to Link"
-                              >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                </svg>
-                              </button>
                               <button
                                 onClick={() => handleEditLink(result)}
                                 className="inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-white transition-colors rounded-md hover:bg-white/10"
@@ -902,6 +926,9 @@ export default function Home() {
                     </tbody>
                     </table>
                   </div>
+                    {/* Scroll affordance gradient */}
+                    <div className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none bg-gradient-to-t from-black to-transparent"></div>
+                  </div>
                 )}
 
                 {/* No results message */}
@@ -922,77 +949,74 @@ export default function Home() {
                 )}
               </div>
             </div>
-          </div>
 
-          {/* Reading Calendar Section - calc(1.5fr - 60px) width */}
-          <div>
-            <div className="section-container p-6 lg:p-8">
-              <div className="mb-4">
-                <h2 className="text-xl font-semibold text-white tracking-tight">Reading Calendar</h2>
-              </div>
-              <ReadingCalendar />
+          {/* Reading Calendar Section */}
+          <div className="section-container p-6 lg:p-8">
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold text-white tracking-tight">Reading Calendar</h2>
             </div>
+            <ReadingCalendar />
           </div>
 
-        </div>
-
-        {/* Summary Section */}
-        <div className="section-container p-6 lg:p-8 mb-8">
-          <div className="mb-4">
-            <h2 className="text-xl font-semibold text-white tracking-tight">Summary</h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* Active Days Card */}
-            <div className="glass-card rounded-xl p-4 text-center">
-              <div className="text-2xl font-semibold text-white mb-1">
-                {(() => {
-                  const currentDate = new Date();
-                  const year = currentDate.getFullYear();
-                  const month = currentDate.getMonth();
-                  const monthStart = new Date(year, month, 1);
-                  const monthEnd = new Date(year, month + 1, 0);
-                  
-                  const monthDates = new Set();
-                  results.forEach(link => {
-                    if (link.readAt) {
-                      const readDate = new Date(link.readAt);
-                      if (readDate >= monthStart && readDate <= monthEnd) {
-                        monthDates.add(readDate.getDate());
-                      }
-                    }
-                    if (link.createdAt) {
-                      const createdDate = new Date(link.createdAt);
-                      if (createdDate >= monthStart && createdDate <= monthEnd) {
-                        monthDates.add(createdDate.getDate());
-                      }
-                    }
-                  });
-                  return monthDates.size;
-                })()}
-              </div>
-              <div className="text-sm text-gray-300 font-medium">Active Days</div>
-              <div className="text-xs text-gray-500 mt-1">This month</div>
+          {/* Summary Section */}
+          <div className="section-container p-6 lg:p-8">
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold text-white tracking-tight">Summary</h2>
             </div>
             
-            {/* Total Links Card */}
-            <div className="glass-card rounded-xl p-4 text-center">
-              <div className="text-2xl font-semibold text-white mb-1">
-                {results.length}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Active Days Card */}
+              <div className="glass-card rounded-xl p-4 text-center">
+                <div className="text-2xl font-semibold text-white mb-1">
+                  {(() => {
+                    const currentDate = new Date();
+                    const year = currentDate.getFullYear();
+                    const month = currentDate.getMonth();
+                    const monthStart = new Date(year, month, 1);
+                    const monthEnd = new Date(year, month + 1, 0);
+                    
+                    const monthDates = new Set();
+                    results.forEach(link => {
+                      if (link.readAt) {
+                        const readDate = new Date(link.readAt);
+                        if (readDate >= monthStart && readDate <= monthEnd) {
+                          monthDates.add(readDate.getDate());
+                        }
+                      }
+                      if (link.createdAt) {
+                        const createdDate = new Date(link.createdAt);
+                        if (createdDate >= monthStart && createdDate <= monthEnd) {
+                          monthDates.add(createdDate.getDate());
+                        }
+                      }
+                    });
+                    return monthDates.size;
+                  })()}
+                </div>
+                <div className="text-sm text-gray-300 font-medium">Active Days</div>
+                <div className="text-xs text-gray-300 mt-1">This month</div>
               </div>
-              <div className="text-sm text-gray-300 font-medium">Total Links</div>
-              <div className="text-xs text-gray-500 mt-1">All time</div>
-            </div>
-            
-            {/* Read Percentage Card */}
-            <div className="glass-card rounded-xl p-4 text-center">
-              <div className="text-2xl font-semibold text-white mb-1">
-                {results.length > 0 ? Math.round((results.filter(r => r.isRead).length / results.length) * 100) : 0}%
+              
+              {/* Total Links Card */}
+              <div className="glass-card rounded-xl p-4 text-center">
+                <div className="text-2xl font-semibold text-white mb-1">
+                  {results.length}
+                </div>
+                <div className="text-sm text-gray-300 font-medium">Total Links</div>
+                <div className="text-xs text-gray-300 mt-1">All time</div>
               </div>
-              <div className="text-sm text-gray-300 font-medium">Read Rate</div>
-              <div className="text-xs text-gray-500 mt-1">Completion</div>
+              
+              {/* Read Percentage Card */}
+              <div className="glass-card rounded-xl p-4 text-center">
+                <div className="text-2xl font-semibold text-white mb-1">
+                  {results.length > 0 ? Math.round((results.filter(r => r.isRead).length / results.length) * 100) : 0}%
+                </div>
+                <div className="text-sm text-gray-300 font-medium">Read Rate</div>
+                <div className="text-xs text-gray-300 mt-1">Completion</div>
+              </div>
             </div>
           </div>
+
         </div>
 
         {/* Debug info - 개발 중에만 표시 */}

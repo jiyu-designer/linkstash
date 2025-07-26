@@ -268,30 +268,36 @@ export default function ReadingCalendar() {
         
             {/* Content List */}
             {readLinksForDate.length > 0 ? (
-              <div className="space-y-2 max-h-80 overflow-y-auto">
-                {readLinksForDate.map((link) => (
-                  <div
-                    key={link.id}
-                    className="bg-white/3 rounded-lg px-4 py-2 hover:bg-white/8 transition-colors border border-white/8"
-                  >
-                    <h4 className="font-medium text-white text-base line-clamp-2 mb-1">
-                      <a
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-blue-300 transition-colors"
-                      >
-                        {link.title}
-                      </a>
-                    </h4>
+              <div className="relative">
+                <div className="space-y-2 max-h-80 overflow-y-auto scrollbar-hide">
+                  {readLinksForDate.map((link) => (
+                    <div
+                      key={link.id}
+                      className="bg-white/3 rounded-lg px-4 py-2 hover:bg-white/8 transition-colors border border-white/8"
+                    >
+                      <h4 className="font-medium text-white text-base line-clamp-2 mb-1">
+                        <a
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-blue-300 transition-colors"
+                        >
+                          {link.title}
+                        </a>
+                      </h4>
 
-                    {link.memo && (
-                      <p className="text-sm text-gray-300 line-clamp-1">
-                        {link.memo}
-                      </p>
-                    )}
-                  </div>
-                ))}
+                      {link.memo && (
+                        <p className="text-sm text-gray-300 line-clamp-1">
+                          {link.memo}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                {/* Scroll affordance gradient - only show if content exceeds container height */}
+                {readLinksForDate.length > 4 && (
+                  <div className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none bg-gradient-to-t from-black to-transparent"></div>
+                )}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center h-80 text-center">
