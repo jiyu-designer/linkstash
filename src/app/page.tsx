@@ -644,38 +644,23 @@ export default function Home() {
 
         {/* Links Section */}
         <div className="mb-12">
-          <div className="section-container rounded-2xl p-8">
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-slate-600 to-slate-500 rounded-xl flex items-center justify-center">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                  </svg>
-                </div>
-                <h2 className="text-xl font-bold sds-text-primary tracking-tight">Links</h2>
-              </div>
-              <div className="flex items-center gap-4">
-                                  <Button
-                    onPress={() => setShowAddModal(true)}
-                    variant="primary"
-                    size="medium"
-                  >
-                    Add
-                  </Button>
-              </div>
-            </div>
 
             {/* 카테고리 및 태그 요약 */}
             <div className="space-y-6 mb-8">
-              <div className="p-6">
+              <div className="section-container p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold sds-text-primary">Categories</h3>
+                  <div className="flex items-center gap-4">
+                    <h3 className="text-lg font-semibold sds-text-primary">Categories</h3>
+                    <div className="sds-text-secondary text-sm font-medium">
+                      {categories.length} items
+                    </div>
+                  </div>
                   <Button
                     href="/categories"
-                    variant="neutral"
+                    variant="subtle"
                     size="small"
                   >
-                    Manage ({categories.length})
+                    Manage
                   </Button>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -703,15 +688,20 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="p-6">
+              <div className="section-container p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold sds-text-primary">Tags</h3>
+                  <div className="flex items-center gap-4">
+                    <h3 className="text-lg font-semibold sds-text-primary">Tags</h3>
+                    <div className="sds-text-secondary text-sm font-medium">
+                      {tags.length} items
+                    </div>
+                  </div>
                   <Button
                     href="/tags"
-                    variant="neutral"
+                    variant="subtle"
                     size="small"
                   >
-                    Manage ({tags.length})
+                    Manage
                   </Button>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -738,17 +728,23 @@ export default function Home() {
 
             {/* Categorized Links Table - Links 섹션 내부로 이동, 그림자와 배경색 제거 */}
             {results.length > 0 && (
-              <div className="mt-8">
+              <div className="section-container p-6 mt-8">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-4">
-                                      <h3 className="text-lg font-semibold sds-text-primary">
-                    Saved Links
-                  </h3>
-                  <div className="sds-text-secondary text-sm font-medium">
-                    {results.filter(link => link.isRead).length} / {results.length} Read
+                    <h3 className="text-lg font-semibold sds-text-primary">
+                      Saved Links
+                    </h3>
+                    <div className="sds-text-secondary text-sm font-medium">
+                      {results.filter(link => link.isRead).length} / {results.length} Read
+                    </div>
                   </div>
-                  </div>
-
+                  <Button
+                    onPress={() => setShowAddModal(true)}
+                    variant="primary"
+                    size="medium"
+                  >
+                    Add
+                  </Button>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="sds-table">
@@ -1169,7 +1165,6 @@ User Agent: ${debugInfo.userAgent}
           </div>
         )}
       </div>
-    </div>
     </>
   );
 }
