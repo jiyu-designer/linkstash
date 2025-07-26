@@ -544,7 +544,7 @@ export default function Home() {
   return (
     <>
       <AntiExtension />
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+      <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-6 py-8">
         {/* localStorage Mode Notice */}
         {!isSupabaseConfigured() && (
@@ -584,7 +584,7 @@ export default function Home() {
         </header>
 
         {/* URL Input Form - 미니멀 버전 */}
-        <div className="bg-slate-50 rounded-2xl p-6 mb-8">
+        <div className="section-container rounded-2xl p-6 mb-8">
           <h2 className="text-lg font-bold text-slate-900 mb-4">새 링크 추가</h2>
           
           <form onSubmit={handleSubmit}>
@@ -627,7 +627,7 @@ export default function Home() {
 
         {/* Reading Calendar Section */}
         <div className="mb-8">
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-slate-200/60 shadow-lg p-6">
+          <div className="section-container rounded-2xl p-6">
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-6 h-6 bg-gradient-to-br from-slate-600 to-slate-500 rounded-lg flex items-center justify-center">
                 <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -636,7 +636,6 @@ export default function Home() {
               </div>
               <div>
                 <h2 className="text-lg font-bold text-slate-900 tracking-tight">Reading Calendar</h2>
-                <p className="text-slate-600 text-xs">날짜별 읽기 통계 및 기록</p>
               </div>
             </div>
             <ReadingCalendar />
@@ -645,7 +644,7 @@ export default function Home() {
 
         {/* Links Section */}
         <div className="mb-12">
-          <div className="bg-white/70 backdrop-blur-sm rounded-3xl border border-slate-200/60 shadow-xl shadow-slate-200/20 p-8">
+          <div className="section-container rounded-2xl p-8">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-br from-slate-600 to-slate-500 rounded-xl flex items-center justify-center">
@@ -653,10 +652,7 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                   </svg>
                 </div>
-                <div>
-                  <h2 className="text-xl font-bold text-slate-900 tracking-tight">Links</h2>
-                  <p className="text-slate-600 text-sm">{results.length}개의 링크가 저장되어 있습니다</p>
-                </div>
+                <h2 className="text-xl font-bold text-slate-900 tracking-tight">Links</h2>
               </div>
               <div className="flex items-center gap-4">
                 <div className="text-slate-500 text-sm font-medium">
