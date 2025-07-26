@@ -176,7 +176,7 @@ export default function ReadingCalendar() {
                 disabled={isLoading}
               >
                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="m15 18-6-6 6-6" />
                 </svg>
               </button>
               
@@ -195,7 +195,7 @@ export default function ReadingCalendar() {
                 disabled={isLoading}
               >
                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="m9 18 6-6-6-6" />
                 </svg>
               </button>
             </div>
@@ -305,7 +305,11 @@ export default function ReadingCalendar() {
               <div className="text-center py-12">
                 <div className="w-16 h-16 glass-card rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <circle cx="12" cy="12" r="1" strokeWidth={1.5}/>
+                    <circle cx="12" cy="8" r="1" strokeWidth={1.5}/>
+                    <circle cx="12" cy="16" r="1" strokeWidth={1.5}/>
+                    <circle cx="8" cy="12" r="1" strokeWidth={1.5}/>
+                    <circle cx="16" cy="12" r="1" strokeWidth={1.5}/>
                   </svg>
                 </div>
                 <p className="text-gray-300 text-sm text-center">
