@@ -585,8 +585,6 @@ export default function Home() {
 
         {/* URL Input Form - 미니멀 버전 */}
         <div className="section-container rounded-2xl p-6 mb-8">
-          <h2 className="text-lg font-bold text-slate-900 mb-4">새 링크 추가</h2>
-          
           <form onSubmit={handleSubmit}>
             <div className="flex gap-3">
               <div className="flex-1">
@@ -612,7 +610,7 @@ export default function Home() {
                     분석중
                   </span>
                 ) : (
-                  '자동 분류하기'
+                  '링크 자동 분류'
                 )}
               </button>
             </div>
@@ -655,9 +653,6 @@ export default function Home() {
                 <h2 className="text-xl font-bold text-slate-900 tracking-tight">Links</h2>
               </div>
               <div className="flex items-center gap-4">
-                <div className="text-slate-500 text-sm font-medium">
-                  {results.filter(link => link.isRead).length} / {results.length} 읽음
-                </div>
                 <button
                   onClick={() => setShowAddModal(true)}
                   className="px-3 py-1.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700 transition-colors text-sm font-medium"
@@ -750,9 +745,14 @@ export default function Home() {
             {results.length > 0 && (
               <div className="mt-8">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-slate-900">
-                    저장된 링크 목록
-                  </h3>
+                  <div className="flex items-center gap-4">
+                    <h3 className="text-lg font-semibold text-slate-900">
+                      저장된 링크 목록
+                    </h3>
+                    <div className="text-slate-500 text-sm font-medium">
+                      {results.filter(link => link.isRead).length} / {results.length} 읽음
+                    </div>
+                  </div>
                   <div className="flex items-center">
                     <input
                       type="checkbox"
