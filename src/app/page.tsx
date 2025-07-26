@@ -761,30 +761,20 @@ export default function Home() {
 
                 </div>
                 <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="sds-bg-surface-secondary">
+                  <table className="sds-table">
+                    <thead className="sds-table-header">
                       <tr>
-                        <th className="px-4 py-3 text-left text-xs font-medium sds-text-secondary uppercase tracking-wider">
-                          Read
-                        </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium sds-text-secondary uppercase tracking-wider">
-                          Category
-                        </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium sds-text-secondary uppercase tracking-wider">
-                          Title & Tags
-                        </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium sds-text-secondary uppercase tracking-wider">
-                          Memo
-                        </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium sds-text-secondary uppercase tracking-wider">
-                          URL
-                        </th>
+                        <th>Read</th>
+                        <th>Category</th>
+                        <th>Title & Tags</th>
+                        <th>Memo</th>
+                        <th>URL</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-200">
+                    <tbody className="sds-table-body">
                       {results.map((result) => (
-                        <tr key={result.id} className={`sds-hover-bg-tertiary ${result.isRead ? 'sds-bg-surface-tertiary' : ''}`}>
-                          <td className="px-4 py-4 whitespace-nowrap">
+                        <tr key={result.id} className={`sds-table-row ${result.isRead ? 'sds-table-row-selected' : ''}`}>
+                          <td className="sds-table-cell whitespace-nowrap">
                             <div className="flex items-center">
                               <input
                                 type="checkbox"
@@ -793,13 +783,13 @@ export default function Home() {
                                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded cursor-pointer"
                               />
                               {result.readAt && (
-                                <span className="ml-2 text-xs sds-text-tertiary">
+                                <span className="ml-2 sds-table-cell-tertiary">
                                   {result.readAt.toLocaleDateString()}
                                 </span>
                               )}
                             </div>
                           </td>
-                          <td className="px-4 py-4 whitespace-nowrap">
+                          <td className="sds-table-cell whitespace-nowrap">
                             <Link 
                               href={`/categories/${encodeURIComponent(result.category)}`}
                               className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors cursor-pointer"
@@ -807,9 +797,9 @@ export default function Home() {
                               {result.category}
                             </Link>
                           </td>
-                          <td className="px-4 py-4">
+                          <td className="sds-table-cell">
                             <div className="space-y-2">
-                              <div className="text-sm sds-text-primary font-medium">
+                              <div className="font-medium">
                                 {result.title}
                               </div>
                               <div>
@@ -826,27 +816,27 @@ export default function Home() {
                                     ))}
                                   </div>
                                 ) : (
-                                  <span className="sds-text-tertiary text-xs">No tags</span>
+                                  <span className="sds-table-cell-tertiary">No tags</span>
                                 )}
                               </div>
                             </div>
                           </td>
-                          <td className="px-4 py-4">
+                          <td className="sds-table-cell">
                             {result.memo ? (
-                              <div className="text-sm sds-text-secondary max-w-md">
+                              <div className="sds-table-cell-secondary max-w-md">
                                 {result.memo}
                               </div>
                             ) : (
-                              <span className="sds-text-tertiary text-sm">-</span>
+                              <span className="sds-table-cell-tertiary">-</span>
                             )}
                           </td>
-                          <td className="px-4 py-4 whitespace-nowrap">
+                          <td className="sds-table-cell whitespace-nowrap">
                             <div className="flex space-x-3">
                               <a
                                 href={result.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center text-sm font-medium sds-text-secondary hover:sds-text-primary transition-colors px-2 py-1 rounded-md hover:bg-gray-50"
+                                className="inline-flex items-center sds-table-cell-secondary font-medium hover:sds-text-primary transition-colors px-2 py-1 rounded-md hover:bg-gray-50"
                               >
                                 Link
                                 <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
