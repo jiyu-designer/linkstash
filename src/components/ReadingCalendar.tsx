@@ -285,13 +285,13 @@ export default function ReadingCalendar() {
         
             {/* Content List */}
             {readLinksForDate.length > 0 ? (
-              <div className="space-y-3 max-h-80 overflow-y-auto">
+              <div className="space-y-2 max-h-80 overflow-y-auto">
                 {readLinksForDate.map((link) => (
                   <div
                     key={link.id}
-                    className="bg-white rounded-lg p-3 hover:bg-slate-100 transition-colors"
+                    className="bg-white rounded-lg p-2 hover:bg-slate-50 transition-colors"
                   >
-                    <h4 className="font-medium text-slate-900 text-sm line-clamp-2 mb-2">
+                    <h4 className="font-medium text-slate-900 text-sm line-clamp-2 mb-1">
                       <a
                         href={link.url}
                         target="_blank"
@@ -301,41 +301,9 @@ export default function ReadingCalendar() {
                         {link.title}
                       </a>
                     </h4>
-                    
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="inline-flex px-2 py-0.5 text-xs font-medium rounded bg-slate-800 text-white">
-                        {link.category}
-                      </span>
-                      {link.readAt && (
-                        <span className="text-xs text-slate-500">
-                          {link.readAt.toLocaleTimeString('en-US', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                        </span>
-                      )}
-                    </div>
-
-                    {link.tags && link.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mb-2">
-                        {link.tags.slice(0, 3).map((tag, tagIndex) => (
-                          <span
-                            key={tagIndex}
-                            className="inline-flex px-1.5 py-0.5 text-xs rounded bg-green-100 text-green-700 font-medium"
-                          >
-                            #{tag}
-                          </span>
-                        ))}
-                        {link.tags.length > 3 && (
-                          <span className="text-xs text-slate-500">
-                            +{link.tags.length - 3}
-                          </span>
-                        )}
-                      </div>
-                    )}
 
                     {link.memo && (
-                      <p className="text-xs text-slate-600 line-clamp-2 mt-2">
+                      <p className="text-xs text-slate-500 line-clamp-1">
                         {link.memo}
                       </p>
                     )}
