@@ -808,9 +808,7 @@ export default function Home() {
                     <thead className="sds-table-header">
                       <tr>
                         <th>Read</th>
-                        <th>Category</th>
-                        <th>Title & Tags</th>
-                        <th>Memo</th>
+                        <th>Content</th>
                         <th>URL</th>
                       </tr>
                     </thead>
@@ -818,94 +816,80 @@ export default function Home() {
                       {filteredResults.map((result) => (
                         <tr key={result.id} className={`sds-table-row ${result.isRead ? 'sds-table-row-selected' : ''}`}>
                           <td className="sds-table-cell whitespace-nowrap">
-                            <div className="flex items-center">
-                              <input
-                                type="checkbox"
-                                checked={result.isRead}
-                                onChange={() => handleToggleReadStatus(result.id)}
-                                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded cursor-pointer"
-                              />
-                              {result.readAt && (
-                                <span className="ml-2 sds-table-cell-tertiary">
-                                  {result.readAt.toLocaleDateString()}
-                                </span>
+                            <input
+                              type="checkbox"
+                              checked={result.isRead}
+                              onChange={() => handleToggleReadStatus(result.id)}
+                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded cursor-pointer"
+                            />
+                          </td>
+                          <td className="sds-table-cell">
+                            <div className="space-y-3">
+                              {/* Title */}
+                              <div className="font-medium text-base">
+                                {result.title}
+                              </div>
+                              
+                              {/* Category + Tags */}
+                              <div className="flex flex-wrap gap-1">
+                                <Link 
+                                  href={`/categories/${encodeURIComponent(result.category)}`}
+                                  className="sds-chip sds-chip-category"
+                                >
+                                  {result.category}
+                                </Link>
+                                {result.tags && result.tags.length > 0 && (
+                                  result.tags.map((tag, tagIndex) => (
+                                    <Link
+                                      key={tagIndex}
+                                      href={`/tags/${encodeURIComponent(tag)}`}
+                                      className="sds-chip sds-chip-tag"
+                                    >
+                                      #{tag}
+                                    </Link>
+                                  ))
+                                )}
+                              </div>
+                              
+                              {/* Memo */}
+                              {result.memo && (
+                                <div className="sds-table-cell-secondary text-sm max-w-md">
+                                  {result.memo}
+                                </div>
                               )}
                             </div>
                           </td>
                           <td className="sds-table-cell whitespace-nowrap">
-                            <Link 
-                              href={`/categories/${encodeURIComponent(result.category)}`}
-                              className="sds-chip sds-chip-category"
-                            >
-                              {result.category}
-                            </Link>
-                          </td>
-                          <td className="sds-table-cell">
-                            <div className="space-y-2">
-                              <div className="font-medium">
-                                {result.title}
-                              </div>
-                              <div>
-                                {result.tags && result.tags.length > 0 ? (
-                                  <div className="flex flex-wrap gap-1">
-                                    {result.tags.map((tag, tagIndex) => (
-                                      <Link
-                                        key={tagIndex}
-                                        href={`/tags/${encodeURIComponent(tag)}`}
-                                        className="sds-chip sds-chip-tag"
-                                      >
-                                        #{tag}
-                                      </Link>
-                                    ))}
-                                  </div>
-                                ) : (
-                                  <span className="sds-table-cell-tertiary">No tags</span>
-                                )}
-                              </div>
-                            </div>
-                          </td>
-                          <td className="sds-table-cell">
-                            {result.memo ? (
-                              <div className="sds-table-cell-secondary max-w-md">
-                                {result.memo}
-                              </div>
-                            ) : (
-                              <span className="sds-table-cell-tertiary">-</span>
-                            )}
-                          </td>
-                          <td className="sds-table-cell whitespace-nowrap">
-                            <div className="flex space-x-3">
+                            <div className="flex space-x-2">
                               <a
                                 href={result.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center sds-table-cell-secondary font-medium hover:sds-text-primary transition-colors px-2 py-1 rounded-md hover:bg-gray-50"
+                                className="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 transition-colors rounded-md hover:bg-gray-100"
+                                title="Open link"
                               >
-                                Link
-                                <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                 </svg>
                               </a>
-                              <Button
-                                onPress={() => handleEditLink(result)}
-                                variant="subtle"
-                                size="small"
-                                className="p-2"
+                              <button
+                                onClick={() => handleEditLink(result)}
+                                className="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 transition-colors rounded-md hover:bg-gray-100"
+                                title="Edit"
                               >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
-                              </Button>
-                              <ButtonDanger
-                                onPress={() => handleDeleteLink(result.id)}
-                                variant="danger-subtle"
-                                size="small"
-                                className="p-2"
+                              </button>
+                              <button
+                                onClick={() => handleDeleteLink(result.id)}
+                                className="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-red-600 transition-colors rounded-md hover:bg-gray-100"
+                                title="Delete"
                               >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                 </svg>
-                              </ButtonDanger>
+                              </button>
                             </div>
                           </td>
                         </tr>
