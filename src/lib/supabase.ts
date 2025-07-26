@@ -4,6 +4,16 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://localhost:3000';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy-key-for-development';
 
+// Debug environment variables (only in development)
+if (process.env.NODE_ENV === 'development') {
+  console.log('🔧 Environment Variables Check:');
+  console.log('📍 Environment:', process.env.NODE_ENV);
+  console.log('🌐 Supabase URL:', supabaseUrl.substring(0, 30) + '...');
+  console.log('🔑 Supabase Key:', supabaseAnonKey.substring(0, 20) + '...');
+  console.log('🔐 Google Client ID:', process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID?.substring(0, 20) + '...' || 'Not set');
+  console.log('🤖 Google API Key:', process.env.GOOGLE_API_KEY?.substring(0, 20) + '...' || 'Not set');
+}
+
 // Check if we have valid Supabase configuration
 export const isSupabaseConfigured = () => {
   return !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);

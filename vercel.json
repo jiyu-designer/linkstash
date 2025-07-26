@@ -8,11 +8,5 @@
     "src/app/api/**/*.ts": {
       "maxDuration": 30
     }
-  },
-  "env": {
-    "NEXT_PUBLIC_SUPABASE_URL": "$NEXT_PUBLIC_SUPABASE_URL",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "$NEXT_PUBLIC_SUPABASE_ANON_KEY",
-    "NEXT_PUBLIC_GOOGLE_CLIENT_ID": "$NEXT_PUBLIC_GOOGLE_CLIENT_ID",
-    "GOOGLE_API_KEY": "$GOOGLE_API_KEY"
   }
 } 
