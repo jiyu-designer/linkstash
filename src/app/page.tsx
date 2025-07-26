@@ -793,19 +793,22 @@ export default function Home() {
                   </div>
                 </div>
                 
+                {/* Divider Line */}
+                <div className="border-t border-white/20 my-6"></div>
+                
                 {results.length > 0 && (
                   <div className="overflow-x-auto">
                     <table className="w-full">
                     <tbody>
                       {filteredResults.map((result) => (
-                        <tr key={result.id} className={`py-3 hover:bg-white/5 ${result.isRead ? '' : ''}`}>
+                        <tr key={result.id} className={`py-3 hover:bg-white/5 hover:px-4 hover:rounded-2xl transition-all duration-200 ${result.isRead ? '' : ''}`}>
                           <td className="pr-5 py-3 w-8">
                             <input
                               type="checkbox"
                               checked={result.isRead}
                               onChange={() => handleToggleReadStatus(result.id)}
-                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 cursor-pointer rounded-sm border-white/30 bg-transparent checked:bg-blue-500 checked:border-blue-500"
-                              style={{ borderRadius: '4px' }}
+                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 cursor-pointer border-white/30 bg-transparent checked:bg-blue-500 checked:border-blue-500"
+                              style={{ borderRadius: '8px' }}
                               title={!result.isRead ? 'Read' : ''}
                             />
                           </td>

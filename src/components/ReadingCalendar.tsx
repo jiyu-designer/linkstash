@@ -258,7 +258,7 @@ export default function ReadingCalendar() {
                 {readLinksForDate.map((link) => (
                   <div
                     key={link.id}
-                    className="glass-card rounded-lg px-4 py-2 hover:bg-white/10 transition-colors"
+                    className="bg-white/5 rounded-lg px-4 py-2 hover:bg-white/10 transition-colors border border-white/10"
                   >
                     <h4 className="font-medium text-white text-base line-clamp-2 mb-1">
                       <a
@@ -280,7 +280,7 @@ export default function ReadingCalendar() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12">
+              <div className="flex flex-col items-center justify-center h-48 text-center">
                 <div className="w-16 h-16 glass-card rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="1" strokeWidth={1.5}/>
