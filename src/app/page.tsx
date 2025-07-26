@@ -690,8 +690,8 @@ export default function Home() {
           </form>
         </div>
 
-        {/* Main Content Grid: Saved Links (2.5fr) + Reading Calendar (1.5fr) */}
-        <div className="grid grid-cols-1 lg:grid-cols-[2.5fr_1.5fr] gap-[60px] mb-12">
+        {/* Main Content Grid: Saved Links (2.5fr) + Reading Calendar (calc(1.5fr - 60px)) */}
+        <div className="grid grid-cols-1 lg:grid-cols-[2.5fr_calc(1.5fr-60px)] gap-[60px] mb-12">
           
           {/* Saved Links Section - 2.5fr width */}
           <div>
@@ -913,18 +913,11 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Reading Calendar Section - 1.5fr width */}
+          {/* Reading Calendar Section - calc(1.5fr - 60px) width */}
           <div>
             <div className="section-container rounded-2xl p-8">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-6 h-6 bg-gradient-to-br from-slate-600 to-slate-500 rounded-lg flex items-center justify-center">
-                  <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div>
-                  <h2 className="text-xl font-semibold sds-text-primary tracking-tight">Reading Calendar</h2>
-                </div>
+              <div className="mb-4">
+                <h2 className="text-xl font-semibold sds-text-primary tracking-tight">Reading Calendar</h2>
               </div>
               <ReadingCalendar />
             </div>
