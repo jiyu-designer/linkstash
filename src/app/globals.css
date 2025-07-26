@@ -31,7 +31,7 @@ body {
 /* Custom section styles */
 .section-container {
   background: #FFF;
-  box-shadow: 0 0 4px 6px rgba(168, 168, 168, 0.10);
+  box-shadow: var(--sds-effects-shadows-drop-shadow-200);
 }
 
 /* SDS Token Utility Classes */
@@ -100,8 +100,41 @@ body {
   border-color: var(--sds-color-border-brand-hover);
 }
 
+.hover\:sds-shadow-200:hover {
+  box-shadow: var(--sds-effects-shadows-drop-shadow-200);
+}
+
+.hover\:sds-shadow-300:hover {
+  box-shadow: var(--sds-effects-shadows-drop-shadow-300);
+}
+
 /* Focus states */
 .sds-focus-ring:focus {
   outline: none;
   box-shadow: 0 0 0 2px var(--sds-color-border-brand-default);
+}
+
+/* SDS Shadow System */
+.sds-shadow-100 {
+  box-shadow: var(--sds-effects-shadows-drop-shadow-100);
+}
+
+.sds-shadow-200 {
+  box-shadow: var(--sds-effects-shadows-drop-shadow-200);
+}
+
+.sds-shadow-300 {
+  box-shadow: var(--sds-effects-shadows-drop-shadow-300);
+}
+
+.sds-shadow-400 {
+  box-shadow: var(--sds-effects-shadows-drop-shadow-400);
+}
+
+.sds-shadow-500 {
+  box-shadow: var(--sds-effects-shadows-drop-shadow-500);
+}
+
+.sds-shadow-600 {
+  box-shadow: var(--sds-effects-shadows-drop-shadow-600);
 }

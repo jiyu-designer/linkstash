@@ -410,7 +410,7 @@ export default function Home() {
         <div className="max-w-md w-full">
           {/* Header */}
           <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-slate-800 to-slate-600 rounded-2xl mb-6 shadow-lg">
+            <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-slate-800 to-slate-600 rounded-2xl mb-6 sds-shadow-300">
               <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
               </svg>
@@ -424,7 +424,7 @@ export default function Home() {
           </div>
           
           {/* Login Card */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-slate-200/60 shadow-xl shadow-slate-200/50 p-8">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-slate-200/60 sds-shadow-400 p-8">
             {/* Features */}
             <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-2xl p-6 mb-8 border border-slate-200/50">
               <div className="flex items-center mb-4">
@@ -464,7 +464,7 @@ export default function Home() {
                 {/* Google Login Button */}
                 <button
                   onClick={handleGoogleSignIn}
-                  className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 font-medium text-slate-700 group"
+                  className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white border border-slate-200 rounded-2xl sds-shadow-100 hover:sds-shadow-200 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 font-medium text-slate-700 group"
                 >
                   <svg className="w-5 h-5 group-hover:scale-105 transition-transform" viewBox="0 0 24 24">
                     <path
@@ -491,7 +491,7 @@ export default function Home() {
                 {false && (
                   <button
                     onClick={handleKakaoSignIn}
-                    className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-[#FEE500] border border-[#FEE500] rounded-2xl shadow-sm hover:shadow-md hover:bg-[#FDD835] focus:outline-none focus:ring-2 focus:ring-[#FEE500] transition-all duration-200 font-medium text-slate-900 group"
+                    className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-[#FEE500] border border-[#FEE500] rounded-2xl sds-shadow-100 hover:sds-shadow-200 hover:bg-[#FDD835] focus:outline-none focus:ring-2 focus:ring-[#FEE500] transition-all duration-200 font-medium text-slate-900 group"
                   >
                     <svg className="w-5 h-5 group-hover:scale-105 transition-transform" viewBox="0 0 24 24">
                       <path
@@ -516,7 +516,7 @@ export default function Home() {
                 {/* Email Login Button */}
                 <button
                   onClick={handleShowEmailAuth}
-                  className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-gradient-to-r from-slate-800 to-slate-700 text-white rounded-2xl shadow-sm hover:shadow-lg hover:from-slate-700 hover:to-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-all duration-200 font-medium group"
+                  className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-gradient-to-r from-slate-800 to-slate-700 text-white rounded-2xl sds-shadow-100 hover:sds-shadow-300 hover:from-slate-700 hover:to-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-all duration-200 font-medium group"
                 >
                   <svg className="w-5 h-5 group-hover:scale-105 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -758,23 +758,7 @@ export default function Home() {
                     {results.filter(link => link.isRead).length} / {results.length} Read
                   </div>
                   </div>
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={results.length > 0 && results.every(result => result.isRead)}
-                      onChange={async (e) => {
-                        // 전체 읽음 상태 토글
-                        const targetStatus = e.target.checked;
-                        for (const result of results) {
-                          if (result.isRead !== targetStatus) {
-                            await handleToggleReadStatus(result.id);
-                          }
-                        }
-                      }}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer mr-2"
-                    />
-                    <span className="text-sm text-slate-600">모두 읽음으로 표시</span>
-                  </div>
+
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full">
@@ -906,7 +890,7 @@ export default function Home() {
         {/* Edit Modal */}
         {showEditModal && editingLink && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-lg sds-shadow-500 max-w-md w-full max-h-[90vh] overflow-y-auto">
               <div className="px-6 py-4 border-b border-gray-200">
                 <h3 className="text-lg font-medium text-gray-900">링크 편집</h3>
               </div>
@@ -1003,7 +987,7 @@ export default function Home() {
         {/* Add Modal */}
         {showAddModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div className="bg-white rounded-lg sds-shadow-500 max-w-md w-full">
               <div className="px-6 py-4 border-b border-gray-200">
                 <h3 className="text-lg font-medium text-gray-900">Add New Link</h3>
               </div>
@@ -1111,7 +1095,7 @@ export default function Home() {
                   forceAuthReset();
                 }
               }}
-              className="px-3 py-2 bg-red-600 text-white rounded-full shadow-lg hover:bg-red-700 transition-colors text-sm font-medium"
+                              className="px-3 py-2 bg-red-600 text-white rounded-full sds-shadow-300 hover:bg-red-700 transition-colors text-sm font-medium"
               title="인증 세션 정리 및 새로고침"
             >
                               Reset Auth
@@ -1192,7 +1176,7 @@ User Agent: ${debugInfo.userAgent}
                 alert('클립보드 복사에 실패했습니다. 콘솔을 확인해주세요.');
               }
             }}
-            className="fixed bottom-4 right-4 z-50 px-3 py-2 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                          className="fixed bottom-4 right-4 z-50 px-3 py-2 bg-blue-600 text-white rounded-full sds-shadow-300 hover:bg-blue-700 transition-colors text-sm font-medium"
             title="디버그 정보 복사"
                       >
               🔍 Debug
