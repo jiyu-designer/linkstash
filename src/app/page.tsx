@@ -771,10 +771,7 @@ export default function Home() {
                           Category
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium sds-text-secondary uppercase tracking-wider">
-                          Title
-                        </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium sds-text-secondary uppercase tracking-wider">
-                          Tags
+                          Title & Tags
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium sds-text-secondary uppercase tracking-wider">
                           Memo
@@ -811,30 +808,32 @@ export default function Home() {
                             </Link>
                           </td>
                           <td className="px-4 py-4">
-                            <div className="text-sm sds-text-primary font-medium">
-                              {result.title}
+                            <div className="space-y-2">
+                              <div className="text-sm sds-text-primary font-medium">
+                                {result.title}
+                              </div>
+                              <div>
+                                {result.tags && result.tags.length > 0 ? (
+                                  <div className="flex flex-wrap gap-1">
+                                    {result.tags.map((tag, tagIndex) => (
+                                      <Link
+                                        key={tagIndex}
+                                        href={`/tags/${encodeURIComponent(tag)}`}
+                                        className="inline-flex px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition-colors cursor-pointer"
+                                      >
+                                        #{tag}
+                                      </Link>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <span className="sds-text-tertiary text-xs">No tags</span>
+                                )}
+                              </div>
                             </div>
                           </td>
                           <td className="px-4 py-4">
-                            {result.tags && result.tags.length > 0 ? (
-                              <div className="flex flex-wrap gap-1">
-                                {result.tags.map((tag, tagIndex) => (
-                                  <Link
-                                    key={tagIndex}
-                                    href={`/tags/${encodeURIComponent(tag)}`}
-                                    className="inline-flex px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition-colors cursor-pointer"
-                                  >
-                                    #{tag}
-                                  </Link>
-                                ))}
-                              </div>
-                            ) : (
-                              <span className="text-slate-400 text-sm">-</span>
-                            )}
-                          </td>
-                          <td className="px-4 py-4">
                             {result.memo ? (
-                              <div className="text-sm sds-text-secondary max-w-xs">
+                              <div className="text-sm sds-text-secondary max-w-md">
                                 {result.memo}
                               </div>
                             ) : (
@@ -849,7 +848,7 @@ export default function Home() {
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center text-sm font-medium sds-text-secondary hover:sds-text-primary transition-colors px-2 py-1 rounded-md hover:bg-gray-50"
                               >
-                                Visit
+                                Link
                                 <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                 </svg>
