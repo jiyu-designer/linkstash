@@ -34,7 +34,7 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedTag, setSelectedTag] = useState<string>('all');
   const [readFilter, setReadFilter] = useState<string>('all'); // 'all', 'read', 'unread'
-  const [sortBy, setSortBy] = useState<string>('newest'); // 'newest', 'oldest', 'title'
+  const [sortBy, setSortBy] = useState<string>('newest-added'); // 'newest-added', 'oldest-added', 'newest', 'oldest', 'title'
 
   // Filter and sort results
   const getFilteredAndSortedResults = () => {
@@ -62,6 +62,16 @@ export default function Home() {
     // Sort results
     filtered.sort((a, b) => {
       switch (sortBy) {
+        case 'newest-added':
+          if (!a.createdAt && !b.createdAt) return 0;
+          if (!a.createdAt) return 1;
+          if (!b.createdAt) return -1;
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        case 'oldest-added':
+          if (!a.createdAt && !b.createdAt) return 0;
+          if (!a.createdAt) return 1;
+          if (!b.createdAt) return -1;
+          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
         case 'newest':
           if (!a.readAt && !b.readAt) return 0;
           if (!a.readAt) return 1;
@@ -690,6 +700,65 @@ export default function Home() {
           </form>
         </div>
 
+        {/* Summary Section */}
+        <div className="section-container p-6 lg:p-8 mb-8">
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold text-white tracking-tight">Summary</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Active Days Card */}
+            <div className="glass-card rounded-xl p-4 text-center">
+              <div className="text-2xl font-semibold text-white mb-1">
+                {(() => {
+                  const currentDate = new Date();
+                  const year = currentDate.getFullYear();
+                  const month = currentDate.getMonth();
+                  const monthStart = new Date(year, month, 1);
+                  const monthEnd = new Date(year, month + 1, 0);
+                  
+                  const monthDates = new Set();
+                  results.forEach(link => {
+                    if (link.readAt) {
+                      const readDate = new Date(link.readAt);
+                      if (readDate >= monthStart && readDate <= monthEnd) {
+                        monthDates.add(readDate.getDate());
+                      }
+                    }
+                    if (link.createdAt) {
+                      const createdDate = new Date(link.createdAt);
+                      if (createdDate >= monthStart && createdDate <= monthEnd) {
+                        monthDates.add(createdDate.getDate());
+                      }
+                    }
+                  });
+                  return monthDates.size;
+                })()}
+              </div>
+              <div className="text-sm text-gray-300 font-medium">Active Days</div>
+              <div className="text-xs text-gray-500 mt-1">This month</div>
+            </div>
+            
+            {/* Total Links Card */}
+            <div className="glass-card rounded-xl p-4 text-center">
+              <div className="text-2xl font-semibold text-white mb-1">
+                {results.length}
+              </div>
+              <div className="text-sm text-gray-300 font-medium">Total Links</div>
+              <div className="text-xs text-gray-500 mt-1">All time</div>
+            </div>
+            
+            {/* Read Percentage Card */}
+            <div className="glass-card rounded-xl p-4 text-center">
+              <div className="text-2xl font-semibold text-white mb-1">
+                {results.length > 0 ? Math.round((results.filter(r => r.isRead).length / results.length) * 100) : 0}%
+              </div>
+              <div className="text-sm text-gray-300 font-medium">Read Rate</div>
+              <div className="text-xs text-gray-500 mt-1">Completion</div>
+            </div>
+          </div>
+        </div>
+
         {/* Main Content Grid: Saved Links (2.5fr) + Reading Calendar (calc(1.5fr - 60px)) */}
         <div className="grid grid-cols-1 lg:grid-cols-[2.5fr_calc(1.5fr-60px)] gap-6 lg:gap-[60px] mb-12">
           
@@ -702,8 +771,11 @@ export default function Home() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 flex-1">
                     {/* Category Filter */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-3">
+                      <label className="flex items-center text-sm font-medium text-gray-300 mb-3">
                         Category
+                        {selectedCategory !== 'all' && (
+                          <div className="w-2 h-2 bg-blue-500 rounded-full ml-2"></div>
+                        )}
                       </label>
                       <select
                         value={selectedCategory}
@@ -721,8 +793,11 @@ export default function Home() {
 
                     {/* Tag Filter */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-3">
+                      <label className="flex items-center text-sm font-medium text-gray-300 mb-3">
                         Tag
+                        {selectedTag !== 'all' && (
+                          <div className="w-2 h-2 bg-blue-500 rounded-full ml-2"></div>
+                        )}
                       </label>
                       <select
                         value={selectedTag}
@@ -740,8 +815,11 @@ export default function Home() {
 
                     {/* Read Status Filter */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-3">
+                      <label className="flex items-center text-sm font-medium text-gray-300 mb-3">
                         Read Status
+                        {readFilter !== 'all' && (
+                          <div className="w-2 h-2 bg-blue-500 rounded-full ml-2"></div>
+                        )}
                       </label>
                       <select
                         value={readFilter}
@@ -756,14 +834,19 @@ export default function Home() {
 
                     {/* Sort By */}
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-3">
+                      <label className="flex items-center text-sm font-medium text-gray-300 mb-3">
                         Sort By
+                        {sortBy !== 'newest-added' && (
+                          <div className="w-2 h-2 bg-blue-500 rounded-full ml-2"></div>
+                        )}
                       </label>
                       <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
                         className="glass-input w-full px-3 py-2 pr-8 rounded-md text-sm focus:outline-none appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOCIgdmlld0JveD0iMCAwIDEyIDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNiA2TDExIDEiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K')] bg-no-repeat bg-[position:calc(100%-16px)_center]"
                       >
+                        <option value="newest-added">Newest Added</option>
+                        <option value="oldest-added">Oldest Added</option>
                         <option value="newest">Newest Read</option>
                         <option value="oldest">Oldest Read</option>
                         <option value="title">Title A-Z</option>
@@ -772,20 +855,14 @@ export default function Home() {
 
                     </div>
                     
-                    {/* Add and Manage Buttons */}
-                    <div className="flex items-end gap-2">
-                      <button
-                        onClick={() => setShowAddModal(true)}
-                        className="glass-button px-3 py-2 rounded-lg text-white font-medium transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20 bg-gradient-to-r from-emerald-500/20 via-blue-500/20 to-cyan-500/20 hover:from-emerald-500/30 hover:via-blue-500/30 hover:to-cyan-500/30"
-                      >
-                        Add
-                      </button>
+                    {/* Manage Button */}
+                    <div className="flex items-end">
                       <button
                         onClick={() => window.location.href = '/manage'}
-                        className="px-3 py-2 text-white hover:bg-white/10 transition-all rounded-lg border border-white/20"
+                        className="px-4 py-3 text-white hover:bg-white/10 transition-all rounded-lg"
                         title="Manage"
                       >
-                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
@@ -798,7 +875,7 @@ export default function Home() {
                 <div className="border-t border-white/20 mt-8 mb-6"></div>
                 
                 {results.length > 0 && (
-                  <div className="max-h-[600px] overflow-y-auto">
+                  <div className="max-h-[600px] overflow-y-auto scrollbar-hide">
                     <table className="w-full">
                     <tbody>
                       {filteredResults.slice(0, 10).map((result) => (
@@ -808,8 +885,7 @@ export default function Home() {
                               type="checkbox"
                               checked={result.isRead}
                               onChange={() => handleToggleReadStatus(result.id)}
-                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 cursor-pointer border-white/30 bg-transparent checked:bg-blue-500 checked:border-blue-500"
-                              style={{ borderRadius: '50%' }}
+                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 cursor-pointer border border-white/30 bg-transparent checked:bg-blue-500 checked:border-blue-500 rounded-full"
                               title={!result.isRead ? 'Read' : ''}
                             />
                           </td>
@@ -890,7 +966,7 @@ export default function Home() {
                   filteredResults.length === 0 && (
                     <div className="text-center py-8">
                       <div className="text-gray-500">
-                        No links match the current filters. Try adjusting your filter criteria.
+                        No links match the current filters.
                       </div>
                     </div>
                   )
@@ -916,72 +992,6 @@ export default function Home() {
           </div>
 
         </div>
-
-        {/* Summary Section */}
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold text-white tracking-tight">Summary</h2>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
-            {/* Active Days Card */}
-            <div className="glass-card rounded-xl p-4 text-center">
-                             <div className="text-2xl font-semibold text-white mb-1">
-                 {(() => {
-                   const currentDate = new Date();
-                   const year = currentDate.getFullYear();
-                   const month = currentDate.getMonth();
-                   const monthStart = new Date(year, month, 1);
-                   const monthEnd = new Date(year, month + 1, 0);
-                   
-                   const monthDates = new Set();
-                   results.forEach(link => {
-                     if (link.readAt) {
-                       const readDate = new Date(link.readAt);
-                       if (readDate >= monthStart && readDate <= monthEnd) {
-                         monthDates.add(readDate.getDate());
-                       }
-                     }
-                     if (link.createdAt) {
-                       const createdDate = new Date(link.createdAt);
-                       if (createdDate >= monthStart && createdDate <= monthEnd) {
-                         monthDates.add(createdDate.getDate());
-                       }
-                     }
-                   });
-                   return monthDates.size;
-                 })()}
-               </div>
-              <div className="text-sm text-gray-300 font-medium">Active Days</div>
-              <div className="text-xs text-gray-500 mt-1">This month</div>
-            </div>
-            
-            {/* Total Links Card */}
-            <div className="glass-card rounded-xl p-4 text-center">
-              <div className="text-2xl font-semibold text-white mb-1">
-                {results.length}
-              </div>
-              <div className="text-sm text-gray-300 font-medium">Total Links</div>
-              <div className="text-xs text-gray-500 mt-1">All time</div>
-            </div>
-            
-            {/* Read Percentage Card */}
-            <div className="glass-card rounded-xl p-4 text-center">
-              <div className="text-2xl font-semibold text-white mb-1">
-                {results.length > 0 ? Math.round((results.filter(r => r.isRead).length / results.length) * 100) : 0}%
-              </div>
-              <div className="text-sm text-gray-300 font-medium">Read Rate</div>
-              <div className="text-xs text-gray-500 mt-1">Completion</div>
-            </div>
-            
-            {/* Categories Card */}
-            <div className="glass-card rounded-xl p-4 text-center">
-              <div className="text-2xl font-semibold text-white mb-1">
-                {categories.length}
-              </div>
-              <div className="text-sm text-gray-300 font-medium">Categories</div>
-              <div className="text-xs text-gray-500 mt-1">Organized</div>
-            </div>
-          </div>
 
         {/* Debug info - 개발 중에만 표시 */}
         {process.env.NODE_ENV === 'development' && (

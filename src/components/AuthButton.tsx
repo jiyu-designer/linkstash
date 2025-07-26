@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { signInWithGoogle, signOut, getCurrentUser, onAuthStateChange, type User } from '@/lib/auth';
 
 export default function AuthButton() {
@@ -58,10 +57,7 @@ export default function AuthButton() {
   if (user) {
     return (
       <div className="flex items-center gap-3">
-        <Link 
-          href="/profile"
-          className="flex items-center gap-2 hover:bg-white/10 p-2 rounded-lg transition-colors"
-        >
+        <div className="flex items-center gap-2">
           {user.avatar_url ? (
             <img
               src={user.avatar_url}
@@ -77,7 +73,7 @@ export default function AuthButton() {
             <span className="text-sm font-medium text-white">{user.name}</span>
             <span className="text-xs text-gray-300">{user.email}</span>
           </div>
-        </Link>
+        </div>
         <button
           onClick={handleSignOut}
           className="text-sm text-gray-300 hover:text-white transition-colors"

@@ -287,3 +287,13 @@ body {
 .sds-shadow-600 {
   box-shadow: var(--sds-effects-shadows-drop-shadow-600);
 }
+
+/* Custom scrollbar hide utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}

@@ -294,7 +294,7 @@ export default function ReadingCalendar() {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center h-48 text-center">
+              <div className="flex flex-col items-center justify-center h-80 text-center">
                 <p className="text-gray-300 text-sm text-center">
                   Looks a little empty in here.
                 </p>
