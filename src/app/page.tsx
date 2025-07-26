@@ -296,7 +296,7 @@ export default function Home() {
       setResults(updatedLinks);
     } catch (error) {
       console.error('Error toggling read status:', error);
-      alert('읽음 상태 변경에 실패했습니다.');
+      alert('Failed to change read status.');
     }
   };
 
@@ -308,7 +308,7 @@ export default function Home() {
 
   // Delete link function
   const handleDeleteLink = async (linkId: string) => {
-    if (!confirm('이 링크를 삭제하시겠습니까?')) {
+    if (!confirm('Are you sure you want to delete this link?')) {
       return;
     }
 
@@ -319,7 +319,7 @@ export default function Home() {
       setResults(updatedLinks);
     } catch (error) {
       console.error('Error deleting link:', error);
-      alert('링크 삭제에 실패했습니다.');
+      alert('Failed to delete link.');
     }
   };
 
@@ -776,13 +776,13 @@ export default function Home() {
                     <div className="flex items-end gap-2">
                       <button
                         onClick={() => setShowAddModal(true)}
-                        className="glass-button px-6 py-2 rounded-lg text-white font-medium transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20 bg-gradient-to-r from-green-500/30 to-blue-500/30 hover:from-green-500/40 hover:to-blue-500/40"
+                        className="glass-button px-3 py-2 rounded-lg text-white font-medium transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20 bg-gradient-to-r from-green-500/30 to-blue-500/30 hover:from-green-500/40 hover:to-blue-500/40"
                       >
                         Add
                       </button>
                       <button
                         onClick={() => window.location.href = '/manage'}
-                        className="px-4 py-2 text-white hover:bg-white/10 transition-all rounded-lg border border-white/20"
+                        className="px-3 py-2 text-white hover:bg-white/10 transition-all rounded-lg border border-white/20"
                         title="Manage"
                       >
                         <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -798,10 +798,10 @@ export default function Home() {
                 <div className="border-t border-white/20 mt-8 mb-6"></div>
                 
                 {results.length > 0 && (
-                  <div className="overflow-x-auto">
+                  <div className="max-h-[600px] overflow-y-auto">
                     <table className="w-full">
                     <tbody>
-                      {filteredResults.map((result) => (
+                      {filteredResults.slice(0, 10).map((result) => (
                         <tr key={result.id} className={`py-6 hover:bg-white/5 hover:px-8 hover:rounded-2xl transition-all duration-200 ${result.isRead ? '' : ''}`}>
                           <td className="pr-5 py-6 w-8">
                             <input
@@ -918,12 +918,11 @@ export default function Home() {
         </div>
 
         {/* Summary Section */}
-        <div className="section-container p-6 lg:p-8 mb-12">
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold text-white tracking-tight">Summary</h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-white tracking-tight">Summary</h2>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
             {/* Active Days Card */}
             <div className="glass-card rounded-xl p-4 text-center">
                              <div className="text-2xl font-semibold text-white mb-1">
@@ -983,7 +982,6 @@ export default function Home() {
               <div className="text-xs text-gray-500 mt-1">Organized</div>
             </div>
           </div>
-        </div>
 
         {/* Debug info - 개발 중에만 표시 */}
         {process.env.NODE_ENV === 'development' && (
@@ -994,15 +992,15 @@ export default function Home() {
 
         {/* Edit Modal */}
         {showEditModal && editingLink && (
-          <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
+          <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
             <div className="section-container max-w-md w-full max-h-[90vh] overflow-y-auto">
               <div className="px-6 py-4 border-b border-white/20">
-                <h3 className="text-lg font-medium text-white">링크 편집</h3>
+                <h3 className="text-lg font-medium text-white">Edit Link</h3>
               </div>
               <form onSubmit={handleSaveEdit} className="p-6 space-y-4">
                 <div>
-                  <label htmlFor="edit-title" className="block text-sm font-medium text-gray-300 mb-2">
-                    제목
+                  <label htmlFor="edit-title" className="block text-sm font-medium text-gray-300 mb-4">
+                    Title
                   </label>
                   <Input
                     type="text"
@@ -1014,8 +1012,8 @@ export default function Home() {
                 </div>
                 
                 <div>
-                  <label htmlFor="edit-category" className="block text-sm font-medium text-gray-300 mb-2">
-                    카테고리
+                  <label htmlFor="edit-category" className="block text-sm font-medium text-gray-300 mb-4">
+                    Category
                   </label>
                   <select
                     id="edit-category"
@@ -1038,8 +1036,8 @@ export default function Home() {
                 </div>
                 
                 <div>
-                  <label htmlFor="edit-tags" className="block text-sm font-medium text-gray-300 mb-2">
-                    태그 (쉼표로 구분)
+                  <label htmlFor="edit-tags" className="block text-sm font-medium text-gray-300 mb-4">
+                    Tags (comma separated)
                   </label>
                   <Input
                     type="text"
@@ -1051,8 +1049,8 @@ export default function Home() {
                 </div>
                 
                 <div>
-                  <label htmlFor="edit-memo" className="block text-sm font-medium text-gray-300 mb-2">
-                    메모
+                  <label htmlFor="edit-memo" className="block text-sm font-medium text-gray-300 mb-4">
+                    Memo
                   </label>
                   <textarea
                     id="edit-memo"
@@ -1060,7 +1058,7 @@ export default function Home() {
                     defaultValue={editingLink.memo || ''}
                     rows={3}
                     className="glass-input w-full px-3 py-2 rounded-md resize-none"
-                    placeholder="개인적인 메모를 남겨보세요..."
+                    placeholder="Leave a personal note..."
                   />
                 </div>
                 
@@ -1073,13 +1071,13 @@ export default function Home() {
                     }}
                     className="px-4 py-2 text-gray-300 hover:text-white transition-all rounded-lg border border-white/20 hover:bg-white/10"
                   >
-                    취소
+                    Cancel
                   </button>
                   <button
                     type="submit"
                     className="glass-button px-6 py-2 rounded-lg text-white font-medium transition-all hover:bg-white/15 border border-white/30 backdrop-blur-20 bg-gradient-to-r from-blue-500/20 to-purple-500/20"
                   >
-                    저장
+                    Save
                   </button>
                 </div>
               </form>
@@ -1127,7 +1125,7 @@ export default function Home() {
                 handleSubmit(syntheticEvent);
               }} className="p-6 space-y-4">
                 <div>
-                  <label htmlFor="modal-url" className="block text-sm font-medium text-gray-300 mb-2">
+                  <label htmlFor="modal-url" className="block text-sm font-medium text-gray-300 mb-4">
                     URL Address
                   </label>
                   <Input
@@ -1140,7 +1138,7 @@ export default function Home() {
                 </div>
                 
                 <div>
-                  <label htmlFor="modal-memo" className="block text-sm font-medium text-gray-300 mb-2">
+                  <label htmlFor="modal-memo" className="block text-sm font-medium text-gray-300 mb-4">
                     Personal Memo (Optional)
                   </label>
                   <textarea

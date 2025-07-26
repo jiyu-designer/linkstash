@@ -298,15 +298,6 @@ export default function ReadingCalendar() {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center h-48 text-center">
-                <div className="w-16 h-16 glass-card rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="1" strokeWidth={1.5}/>
-                    <circle cx="12" cy="8" r="1" strokeWidth={1.5}/>
-                    <circle cx="12" cy="16" r="1" strokeWidth={1.5}/>
-                    <circle cx="8" cy="12" r="1" strokeWidth={1.5}/>
-                    <circle cx="16" cy="12" r="1" strokeWidth={1.5}/>
-                  </svg>
-                </div>
                 <p className="text-gray-300 text-sm text-center">
                   Looks a little empty in here.
                 </p>
