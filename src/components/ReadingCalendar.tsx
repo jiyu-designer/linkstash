@@ -201,14 +201,10 @@ export default function ReadingCalendar() {
             </div>
 
             {/* Statistics under month title */}
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 gap-3">
               <div className="bg-white rounded-xl p-3 text-center border border-slate-200">
                 <div className="text-xl font-bold text-slate-900">{monthReadLinks.size}</div>
                 <div className="text-sm text-slate-600">Active Days</div>
-              </div>
-              <div className="bg-blue-50 rounded-xl p-3 text-center border border-blue-200">
-                <div className="text-xl font-bold text-blue-700">{totalSavedLinks}</div>
-                <div className="text-sm text-slate-600">Content Saved</div>
               </div>
               <div className="bg-green-50 rounded-xl p-3 text-center border border-green-200">
                 <div className="text-xl font-bold text-green-700">
@@ -243,10 +239,19 @@ export default function ReadingCalendar() {
                     ${
                       dayData && !dayData.isSelected && !dayData.isToday 
                         ? dayData.hasReadLinks && dayData.hasSavedLinks 
-                          ? 'bg-green-500 text-white' // 둘 다 있는 날 - green 500
+                          ? 'text-green-800' // 둘 다 있는 날 - green 300
                           : dayData.hasReadLinks || dayData.hasSavedLinks 
-                            ? 'bg-green-300 text-green-900' // 저장 또는 읽은 날 - green 300
+                            ? 'text-green-700' // 저장 또는 읽은 날 - green 200
                             : 'bg-white hover:bg-slate-100' // 아무것도 없는 날
+                        : ''
+                    }
+                    ${
+                      dayData && !dayData.isSelected && !dayData.isToday 
+                        ? dayData.hasReadLinks && dayData.hasSavedLinks 
+                          ? 'bg-[#aff4c6]' // green 300
+                          : dayData.hasReadLinks || dayData.hasSavedLinks 
+                            ? 'bg-[#cff7d3]' // green 200
+                            : ''
                         : ''
                     }
                   `}
