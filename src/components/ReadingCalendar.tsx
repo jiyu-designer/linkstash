@@ -126,7 +126,7 @@ export default function ReadingCalendar() {
     <div className="grid grid-cols-1 gap-6">
       {/* Calendar */}
       <div>
-        <div className="bg-slate-50 rounded-2xl overflow-hidden">
+                      <div className="rounded-2xl overflow-hidden">
           {/* Header with Navigation and Statistics */}
           <div className="px-4 py-3 bg-white">
             {/* Month Navigation */}
