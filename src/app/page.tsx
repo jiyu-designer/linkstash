@@ -26,6 +26,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [editingLink, setEditingLink] = useState<CategorizedLink | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   // Check authentication state and load data
   useEffect(() => {
@@ -582,55 +583,20 @@ export default function Home() {
           {isSupabaseConfigured() && <AuthButton />}
         </header>
 
-        {/* URL Input Form - 가장 위로 이동 */}
-        <div className="bg-white/70 backdrop-blur-sm rounded-3xl border border-slate-200/60 shadow-xl shadow-slate-200/20 p-8 mb-8">
-          <div className="mb-8">
-            <div className="flex items-center space-x-3 mb-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-slate-600 to-slate-500 rounded-xl flex items-center justify-center">
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-              </div>
-              <h2 className="text-xl font-bold text-slate-900 tracking-tight">새 링크 추가</h2>
-            </div>
-            <p className="text-slate-600 ml-11">URL을 입력하면 AI가 자동으로 분류해드려요</p>
-          </div>
+        {/* URL Input Form - 미니멀 버전 */}
+        <div className="bg-slate-50 rounded-2xl p-6 mb-8">
+          <h2 className="text-lg font-bold text-slate-900 mb-4">새 링크 추가</h2>
           
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-6">
-              <div>
-                <label htmlFor="url" className="block text-sm font-semibold text-slate-700 mb-3">
-                  URL 주소
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    id="url"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    placeholder="https://example.com/article"
-                    className="w-full px-4 py-3.5 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-slate-500 focus:border-slate-500 bg-white shadow-sm transition-all duration-200 placeholder:text-slate-400"
-                    disabled={isLoading}
-                  />
-                  {isLoading && (
-                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-slate-300 border-t-slate-600"></div>
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              <div>
-                <label htmlFor="memo" className="block text-sm font-semibold text-slate-700 mb-3">
-                  개인 메모 <span className="text-slate-400 font-normal">(선택사항)</span>
-                </label>
-                <textarea
-                  id="memo"
-                  value={memo}
-                  onChange={(e) => setMemo(e.target.value)}
-                  placeholder="이 링크에 대한 개인적인 메모를 남겨보세요..."
-                  rows={3}
-                  className="w-full px-4 py-3.5 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-slate-500 focus:border-slate-500 bg-white shadow-sm resize-none transition-all duration-200 placeholder:text-slate-400"
+          <form onSubmit={handleSubmit}>
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <input
+                  type="text"
+                  id="url"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="URL 주소를 입력하세요"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-slate-500 focus:border-slate-500 bg-white transition-all duration-200 placeholder:text-slate-400"
                   disabled={isLoading}
                 />
               </div>
@@ -638,34 +604,24 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full px-6 py-4 bg-gradient-to-r from-slate-800 to-slate-700 text-white rounded-2xl hover:from-slate-700 hover:to-slate-600 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed font-semibold shadow-lg transform transition-all duration-200 hover:scale-[1.02] disabled:hover:scale-100"
+                className="px-6 py-3 bg-slate-800 text-white rounded-xl hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-all duration-200"
               >
                 {isLoading ? (
-                  <span className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-slate-300 border-t-white mr-3"></div>
-                    AI가 분석중...
+                  <span className="flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-slate-300 border-t-white mr-2"></div>
+                    분석중
                   </span>
                 ) : (
-                  <span className="flex items-center justify-center">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                    </svg>
-                    AI로 분류하기
-                  </span>
+                  '자동 분류하기'
                 )}
               </button>
-              
-              {error && (
-                <div className="p-4 bg-red-50 border border-red-100 rounded-2xl">
-                  <p className="text-sm text-red-700 flex items-center font-medium">
-                    <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.863-.833-2.633 0L4.18 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                    </svg>
-                    {error}
-                  </p>
-                </div>
-              )}
             </div>
+              
+            {error && (
+              <div className="p-3 bg-red-50 border border-red-100 rounded-xl mt-3">
+                <p className="text-sm text-red-700">{error}</p>
+              </div>
+            )}
           </form>
         </div>
 
@@ -702,8 +658,16 @@ export default function Home() {
                   <p className="text-slate-600 text-sm">{results.length}개의 링크가 저장되어 있습니다</p>
                 </div>
               </div>
-              <div className="text-slate-500 text-sm font-medium">
-                {results.filter(link => link.isRead).length} / {results.length} 읽음
+              <div className="flex items-center gap-4">
+                <div className="text-slate-500 text-sm font-medium">
+                  {results.filter(link => link.isRead).length} / {results.length} 읽음
+                </div>
+                <button
+                  onClick={() => setShowAddModal(true)}
+                  className="px-3 py-1.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700 transition-colors text-sm font-medium"
+                >
+                  Add
+                </button>
               </div>
             </div>
 
@@ -1026,6 +990,92 @@ export default function Home() {
                     className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
                     저장
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Add Modal */}
+        {showAddModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h3 className="text-lg font-medium text-gray-900">새 링크 추가</h3>
+              </div>
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                const urlValue = formData.get('url') as string;
+                const memoValue = formData.get('memo') as string;
+                
+                setUrl(urlValue);
+                setMemo(memoValue);
+                setShowAddModal(false);
+                
+                // Submit the form programmatically
+                const form = document.createElement('form');
+                const urlInput = document.createElement('input');
+                urlInput.value = urlValue;
+                const memoInput = document.createElement('input');
+                memoInput.value = memoValue;
+                
+                form.appendChild(urlInput);
+                form.appendChild(memoInput);
+                
+                // Create a synthetic form event
+                const syntheticEvent = new Event('submit', { bubbles: true, cancelable: true }) as any;
+                syntheticEvent.preventDefault = () => {};
+                syntheticEvent.currentTarget = {
+                  elements: {
+                    url: urlInput,
+                    memo: memoInput
+                  }
+                };
+                
+                handleSubmit(syntheticEvent);
+              }} className="p-6 space-y-4">
+                <div>
+                  <label htmlFor="modal-url" className="block text-sm font-medium text-gray-700 mb-2">
+                    URL 주소
+                  </label>
+                  <input
+                    type="text"
+                    id="modal-url"
+                    name="url"
+                    placeholder="https://example.com/article"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="modal-memo" className="block text-sm font-medium text-gray-700 mb-2">
+                    개인 메모 (선택사항)
+                  </label>
+                  <textarea
+                    id="modal-memo"
+                    name="memo"
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    placeholder="이 링크에 대한 개인적인 메모를 남겨보세요..."
+                  />
+                </div>
+                
+                <div className="flex justify-end space-x-3 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setShowAddModal(false)}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                  >
+                    취소
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    추가
                   </button>
                 </div>
               </form>
