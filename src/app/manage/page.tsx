@@ -56,11 +56,11 @@ export default function ManagePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-8">
-        <div className="max-w-6xl mx-auto">
+      <div className="min-h-screen bg-black px-10 lg:px-[120px] py-8">
+        <div className="mx-auto">
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
+            <p className="mt-4 text-gray-300">Loading...</p>
           </div>
         </div>
       </div>
@@ -68,18 +68,18 @@ export default function ManagePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-black px-10 lg:px-[120px] py-8">
+      <div className="mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Manage</h1>
-              <p className="text-gray-600 mt-2">Organize your categories and tags</p>
+              <h1 className="text-3xl font-semibold text-white tracking-tight">Manage</h1>
+              <p className="text-gray-300 mt-2">Organize your categories and tags</p>
             </div>
             <Link 
               href="/"
-              className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+              className="px-4 py-2 text-gray-300 hover:text-white transition-colors"
             >
               ← Back to Home
             </Link>
@@ -88,24 +88,24 @@ export default function ManagePage() {
 
         {/* Tabs */}
         <div className="mb-6">
-          <div className="border-b border-gray-200">
+          <div className="border-b border-white/20">
             <nav className="-mb-px flex space-x-8">
               <button
                 onClick={() => setActiveTab('categories')}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === 'categories'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-white text-white'
+                    : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-400'
                 }`}
               >
                 Categories ({categories.length})
               </button>
               <button
                 onClick={() => setActiveTab('tags')}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === 'tags'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-white text-white'
+                    : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-400'
                 }`}
               >
                 Tags ({tags.length})
@@ -115,17 +115,17 @@ export default function ManagePage() {
         </div>
 
         {/* Content */}
-        <div className="bg-white rounded-lg shadow">
+        <div className="section-container p-6 lg:p-8">
           {activeTab === 'categories' ? (
-            <div className="p-6">
+            <div>
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold text-gray-900">Categories</h2>
-                <p className="text-sm text-gray-500">{categories.length} total categories</p>
+                <h2 className="text-xl font-semibold text-white">Categories</h2>
+                <p className="text-sm text-gray-300">{categories.length} total categories</p>
               </div>
               
               {categories.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-gray-500">No categories found</p>
+                  <p className="text-gray-300">No categories found</p>
                 </div>
               ) : (
                 <div className="flex flex-wrap gap-2">
@@ -145,7 +145,7 @@ export default function ManagePage() {
                       {/* Delete button - only visible on hover */}
                       <button
                         onClick={() => handleDeleteCategory(category.id)}
-                        className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center hover:bg-red-600"
+                        className="absolute -top-2 -right-2 w-5 h-5 bg-red-400 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center hover:bg-red-500"
                         title="Delete category"
                       >
                         ×
@@ -156,15 +156,15 @@ export default function ManagePage() {
               )}
             </div>
           ) : (
-            <div className="p-6">
+            <div>
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold text-gray-900">Tags</h2>
-                <p className="text-sm text-gray-500">{tags.length} total tags</p>
+                <h2 className="text-xl font-semibold text-white">Tags</h2>
+                <p className="text-sm text-gray-300">{tags.length} total tags</p>
               </div>
               
               {tags.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-gray-500">No tags found</p>
+                  <p className="text-gray-300">No tags found</p>
                 </div>
               ) : (
                 <div className="flex flex-wrap gap-2">
@@ -178,7 +178,7 @@ export default function ManagePage() {
                       {/* Delete button - only visible on hover */}
                       <button
                         onClick={() => handleDeleteTag(tag.id)}
-                        className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center hover:bg-red-600"
+                        className="absolute -top-2 -right-2 w-5 h-5 bg-red-400 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center hover:bg-red-500"
                         title="Delete tag"
                       >
                         ×

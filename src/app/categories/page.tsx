@@ -131,24 +131,24 @@ export default function CategoriesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-black py-8">
+      <div className="mx-auto px-10 lg:px-[120px]">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">카테고리 관리</h1>
-            <p className="text-gray-600 mt-2">링크를 분류할 카테고리를 관리하세요</p>
+            <h1 className="text-3xl font-semibold text-white tracking-tight">카테고리 관리</h1>
+            <p className="text-gray-300 mt-2">링크를 분류할 카테고리를 관리하세요</p>
           </div>
           <div className="flex gap-4">
             <Link
               href="/"
-              className="px-4 py-2 text-gray-600 hover:text-gray-800"
+              className="px-4 py-2 text-gray-300 hover:text-white transition-colors"
             >
               ← 홈으로
             </Link>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="glass-button px-6 py-2 rounded-lg"
             >
               새 카테고리 추가
             </button>
@@ -162,7 +162,7 @@ export default function CategoriesPage() {
             return (
               <div
                 key={category.id}
-                className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+                className="section-container p-6 hover:bg-white/10 transition-all"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
@@ -171,10 +171,10 @@ export default function CategoriesPage() {
                       style={{ backgroundColor: category.color }}
                     ></div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">
+                      <h3 className="text-lg font-semibold text-white">
                         {category.name}
                       </h3>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-300">
                         {linkCount}개의 링크
                       </p>
                     </div>
