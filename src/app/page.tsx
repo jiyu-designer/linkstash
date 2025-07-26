@@ -700,65 +700,6 @@ export default function Home() {
           </form>
         </div>
 
-        {/* Summary Section */}
-        <div className="section-container p-6 lg:p-8 mb-8">
-          <div className="mb-4">
-            <h2 className="text-xl font-semibold text-white tracking-tight">Summary</h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* Active Days Card */}
-            <div className="glass-card rounded-xl p-4 text-center">
-              <div className="text-2xl font-semibold text-white mb-1">
-                {(() => {
-                  const currentDate = new Date();
-                  const year = currentDate.getFullYear();
-                  const month = currentDate.getMonth();
-                  const monthStart = new Date(year, month, 1);
-                  const monthEnd = new Date(year, month + 1, 0);
-                  
-                  const monthDates = new Set();
-                  results.forEach(link => {
-                    if (link.readAt) {
-                      const readDate = new Date(link.readAt);
-                      if (readDate >= monthStart && readDate <= monthEnd) {
-                        monthDates.add(readDate.getDate());
-                      }
-                    }
-                    if (link.createdAt) {
-                      const createdDate = new Date(link.createdAt);
-                      if (createdDate >= monthStart && createdDate <= monthEnd) {
-                        monthDates.add(createdDate.getDate());
-                      }
-                    }
-                  });
-                  return monthDates.size;
-                })()}
-              </div>
-              <div className="text-sm text-gray-300 font-medium">Active Days</div>
-              <div className="text-xs text-gray-500 mt-1">This month</div>
-            </div>
-            
-            {/* Total Links Card */}
-            <div className="glass-card rounded-xl p-4 text-center">
-              <div className="text-2xl font-semibold text-white mb-1">
-                {results.length}
-              </div>
-              <div className="text-sm text-gray-300 font-medium">Total Links</div>
-              <div className="text-xs text-gray-500 mt-1">All time</div>
-            </div>
-            
-            {/* Read Percentage Card */}
-            <div className="glass-card rounded-xl p-4 text-center">
-              <div className="text-2xl font-semibold text-white mb-1">
-                {results.length > 0 ? Math.round((results.filter(r => r.isRead).length / results.length) * 100) : 0}%
-              </div>
-              <div className="text-sm text-gray-300 font-medium">Read Rate</div>
-              <div className="text-xs text-gray-500 mt-1">Completion</div>
-            </div>
-          </div>
-        </div>
-
         {/* Main Content Grid: Saved Links (2.5fr) + Reading Calendar (calc(1.5fr - 60px)) */}
         <div className="grid grid-cols-1 lg:grid-cols-[2.5fr_calc(1.5fr-60px)] gap-6 lg:gap-[60px] mb-12">
           
@@ -859,28 +800,30 @@ export default function Home() {
                     <div className="flex items-end">
                       <button
                         onClick={() => window.location.href = '/manage'}
-                        className="px-4 py-3 text-white hover:bg-white/10 transition-all rounded-lg"
+                        className="px-4 py-3 text-gray-400 hover:text-white transition-colors rounded-lg"
                         title="Manage"
                       >
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <circle cx="12" cy="12" r="3" strokeWidth={1.5}/>
+                          <path d="M12 1v6m0 6v6m11-5h-6m-6 0H1" strokeWidth={1.5} strokeLinecap="round"/>
                         </svg>
                       </button>
                     </div>
+
                   </div>
                 </div>
+
+                {/* Divider */}
+                <div className="border-b border-white/10 mb-6"></div>
                 
-                {/* Divider Line */}
-                <div className="border-t border-white/20 mt-8 mb-6"></div>
-                
+                {/* Links List */}
                 {results.length > 0 && (
                   <div className="max-h-[600px] overflow-y-auto scrollbar-hide">
                     <table className="w-full">
                     <tbody>
                       {filteredResults.slice(0, 10).map((result) => (
-                        <tr key={result.id} className={`py-6 hover:bg-white/5 hover:px-8 hover:rounded-2xl transition-all duration-200 ${result.isRead ? '' : ''}`}>
-                          <td className="pr-5 py-6 w-8">
+                        <tr key={result.id} className={`py-4 hover:px-8 hover:rounded-2xl transition-all duration-200 ${result.isRead ? '' : ''}`}>
+                          <td className="pr-4 py-4 w-8">
                             <input
                               type="checkbox"
                               checked={result.isRead}
@@ -889,51 +832,51 @@ export default function Home() {
                               title={!result.isRead ? 'Read' : ''}
                             />
                           </td>
-                          <td className="py-6 w-full">
+                          <td className="py-4 w-full">
                             <div>
                               {/* Title */}
-                              <div className="mb-2">
+                              <div className="mb-1">
                                 <a
                                   href={result.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="font-semibold text-lg text-white hover:text-blue-300 transition-colors cursor-pointer"
+                                  className="text-white font-medium text-base line-clamp-2 hover:text-blue-300 transition-colors"
                                 >
                                   {result.title}
                                 </a>
                               </div>
                               
                               {/* Category + Tags */}
-                              <div className="flex flex-wrap gap-1">
-                                <Link 
-                                  href={`/categories/${encodeURIComponent(result.category)}`}
-                                  className="sds-chip sds-chip-category"
-                                >
+                              <div className="flex flex-wrap gap-1.5 mb-2">
+                                <span className="sds-chip sds-chip-category px-2 py-0.5 rounded-md text-xs font-medium bg-blue-500/20 text-blue-300 border border-blue-500/30">
                                   {result.category}
-                                </Link>
-                                {result.tags && result.tags.length > 0 && (
-                                  result.tags.map((tag, tagIndex) => (
-                                    <Link
-                                      key={tagIndex}
-                                      href={`/tags/${encodeURIComponent(tag)}`}
-                                      className="sds-chip sds-chip-tag"
-                                    >
-                                      #{tag}
-                                    </Link>
-                                  ))
-                                )}
+                                </span>
+                                {result.tags.map((tag, index) => (
+                                  <span key={index} className="sds-chip sds-chip-tag px-2 py-0.5 rounded-md text-xs font-medium bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                                    #{tag}
+                                  </span>
+                                ))}
                               </div>
                               
                               {/* Memo */}
                               {result.memo && (
-                                <div className="text-gray-300 text-base max-w-md mt-4">
+                                <div className="text-gray-300 text-xs line-clamp-2 mt-2">
                                   {result.memo}
                                 </div>
                               )}
                             </div>
                           </td>
-                          <td className="py-6 pl-3 whitespace-nowrap">
-                            <div className="flex space-x-2">
+                          <td className="py-4 w-auto pl-4">
+                            <div className="flex items-center space-x-2">
+                              <button
+                                onClick={() => window.open(result.url, '_blank')}
+                                className="inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-white transition-colors rounded-md hover:bg-white/10"
+                                title="Go to Link"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                              </button>
                               <button
                                 onClick={() => handleEditLink(result)}
                                 className="inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-white transition-colors rounded-md hover:bg-white/10"
@@ -957,7 +900,7 @@ export default function Home() {
                         </tr>
                       ))}
                     </tbody>
-                  </table>
+                    </table>
                   </div>
                 )}
 
@@ -993,6 +936,65 @@ export default function Home() {
 
         </div>
 
+        {/* Summary Section */}
+        <div className="section-container p-6 lg:p-8 mb-8">
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold text-white tracking-tight">Summary</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Active Days Card */}
+            <div className="glass-card rounded-xl p-4 text-center">
+              <div className="text-2xl font-semibold text-white mb-1">
+                {(() => {
+                  const currentDate = new Date();
+                  const year = currentDate.getFullYear();
+                  const month = currentDate.getMonth();
+                  const monthStart = new Date(year, month, 1);
+                  const monthEnd = new Date(year, month + 1, 0);
+                  
+                  const monthDates = new Set();
+                  results.forEach(link => {
+                    if (link.readAt) {
+                      const readDate = new Date(link.readAt);
+                      if (readDate >= monthStart && readDate <= monthEnd) {
+                        monthDates.add(readDate.getDate());
+                      }
+                    }
+                    if (link.createdAt) {
+                      const createdDate = new Date(link.createdAt);
+                      if (createdDate >= monthStart && createdDate <= monthEnd) {
+                        monthDates.add(createdDate.getDate());
+                      }
+                    }
+                  });
+                  return monthDates.size;
+                })()}
+              </div>
+              <div className="text-sm text-gray-300 font-medium">Active Days</div>
+              <div className="text-xs text-gray-500 mt-1">This month</div>
+            </div>
+            
+            {/* Total Links Card */}
+            <div className="glass-card rounded-xl p-4 text-center">
+              <div className="text-2xl font-semibold text-white mb-1">
+                {results.length}
+              </div>
+              <div className="text-sm text-gray-300 font-medium">Total Links</div>
+              <div className="text-xs text-gray-500 mt-1">All time</div>
+            </div>
+            
+            {/* Read Percentage Card */}
+            <div className="glass-card rounded-xl p-4 text-center">
+              <div className="text-2xl font-semibold text-white mb-1">
+                {results.length > 0 ? Math.round((results.filter(r => r.isRead).length / results.length) * 100) : 0}%
+              </div>
+              <div className="text-sm text-gray-300 font-medium">Read Rate</div>
+              <div className="text-xs text-gray-500 mt-1">Completion</div>
+            </div>
+          </div>
+        </div>
+
         {/* Debug info - 개발 중에만 표시 */}
         {process.env.NODE_ENV === 'development' && (
           <div className="mt-4 text-sm text-gray-500 text-center">
@@ -1009,7 +1011,7 @@ export default function Home() {
               </div>
               <form onSubmit={handleSaveEdit} className="p-6 space-y-4">
                 <div>
-                  <label htmlFor="edit-title" className="block text-sm font-medium text-gray-300 mb-4">
+                  <label htmlFor="edit-title" className="block text-sm font-medium text-gray-300 mb-2">
                     Title
                   </label>
                   <Input
@@ -1022,7 +1024,7 @@ export default function Home() {
                 </div>
                 
                 <div>
-                  <label htmlFor="edit-created-date" className="block text-sm font-medium text-gray-300 mb-4">
+                  <label htmlFor="edit-created-date" className="block text-sm font-medium text-gray-300 mb-2">
                     Created Date
                   </label>
                   <Input
@@ -1035,7 +1037,7 @@ export default function Home() {
                 </div>
                 
                 <div>
-                  <label htmlFor="edit-category" className="block text-sm font-medium text-gray-300 mb-4">
+                  <label htmlFor="edit-category" className="block text-sm font-medium text-gray-300 mb-2">
                     Category
                   </label>
                   <select
@@ -1059,7 +1061,7 @@ export default function Home() {
                 </div>
                 
                 <div>
-                  <label htmlFor="edit-tags" className="block text-sm font-medium text-gray-300 mb-4">
+                  <label htmlFor="edit-tags" className="block text-sm font-medium text-gray-300 mb-2">
                     Tags (comma separated)
                   </label>
                   <Input
@@ -1072,7 +1074,7 @@ export default function Home() {
                 </div>
                 
                 <div>
-                  <label htmlFor="edit-memo" className="block text-sm font-medium text-gray-300 mb-4">
+                  <label htmlFor="edit-memo" className="block text-sm font-medium text-gray-300 mb-2">
                     Memo
                   </label>
                   <textarea

@@ -56,7 +56,7 @@ export default function AuthButton() {
 
   if (user) {
     return (
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4 -ml-6">
         <div className="flex items-center gap-2">
           {user.avatar_url ? (
             <img
