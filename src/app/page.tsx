@@ -788,7 +788,7 @@ export default function Home() {
                 </div>
 
                 {/* Filters */}
-                <div className="mb-4 p-4 rounded-lg border">
+                <div className="mb-4 p-4 rounded-lg">
                   <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                     {/* Category Filter */}
                     <div>
