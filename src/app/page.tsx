@@ -803,18 +803,11 @@ export default function Home() {
                 
                 {results.length > 0 && (
                   <div className="overflow-x-auto">
-                    <table className="sds-table">
-                    <thead className="sds-table-header">
-                      <tr>
-                        <th>Read</th>
-                        <th>Content</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody className="sds-table-body">
+                    <table className="w-full">
+                    <tbody>
                       {filteredResults.map((result) => (
-                        <tr key={result.id} className={`sds-table-row ${result.isRead ? 'sds-table-row-selected' : ''}`}>
-                          <td className="sds-table-cell whitespace-nowrap">
+                        <tr key={result.id} className={`py-3 hover:bg-gray-50 ${result.isRead ? '' : ''}`}>
+                          <td className="pr-3 py-3 w-8">
                             <input
                               type="checkbox"
                               checked={result.isRead}
@@ -822,7 +815,7 @@ export default function Home() {
                               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded cursor-pointer"
                             />
                           </td>
-                          <td className="sds-table-cell">
+                          <td className="py-3">
                             <div className="space-y-3">
                               {/* Title */}
                               <div className="font-medium text-base flex items-center gap-2">
@@ -869,7 +862,7 @@ export default function Home() {
                               )}
                             </div>
                           </td>
-                          <td className="sds-table-cell whitespace-nowrap">
+                          <td className="py-3 pl-3 whitespace-nowrap">
                             <div className="flex space-x-2">
                               <button
                                 onClick={() => handleEditLink(result)}
