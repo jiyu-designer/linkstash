@@ -699,7 +699,7 @@ export default function Home() {
                 {/* Filters with Add button */}
                 <div className="mb-4 rounded-lg">
                   <div className="flex items-end justify-between gap-4 mb-4">
-                    <div className="sds-text-secondary text-base font-medium">
+                    <div className="text-gray-300 text-base font-medium">
                       {filteredResults.filter(link => link.isRead).length} / {filteredResults.length} Read
                     </div>
                     <Button
@@ -800,7 +800,7 @@ export default function Home() {
                     <table className="w-full">
                     <tbody>
                       {filteredResults.map((result) => (
-                        <tr key={result.id} className={`py-3 hover:bg-gray-50 ${result.isRead ? '' : ''}`}>
+                        <tr key={result.id} className={`py-3 hover:bg-white/5 ${result.isRead ? '' : ''}`}>
                           <td className="pr-3 py-3 w-8">
                             <input
                               type="checkbox"
@@ -814,13 +814,13 @@ export default function Home() {
                           <td className="py-3 w-full">
                             <div className="space-y-3">
                               {/* Title */}
-                              <div className="font-semibold text-lg flex items-center gap-2">
+                              <div className="font-semibold text-lg flex items-center gap-2 text-white">
                                 <span>{result.title}</span>
                                 <a
                                   href={result.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="inline-flex items-center justify-center w-4 h-4 text-gray-400 hover:text-gray-600 transition-colors"
+                                  className="inline-flex items-center justify-center w-4 h-4 text-gray-400 hover:text-white transition-colors"
                                   title="Open link"
                                 >
                                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -852,7 +852,7 @@ export default function Home() {
                               
                               {/* Memo */}
                               {result.memo && (
-                                <div className="sds-table-cell-secondary text-base max-w-md">
+                                <div className="text-gray-300 text-base max-w-md">
                                   {result.memo}
                                 </div>
                               )}
@@ -862,7 +862,7 @@ export default function Home() {
                             <div className="flex space-x-2">
                               <button
                                 onClick={() => handleEditLink(result)}
-                                className="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 transition-colors rounded-md hover:bg-gray-100"
+                                className="inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-white transition-colors rounded-md hover:bg-white/10"
                                 title="Edit"
                               >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -871,7 +871,7 @@ export default function Home() {
                               </button>
                               <button
                                 onClick={() => handleDeleteLink(result.id)}
-                                className="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-red-600 transition-colors rounded-md hover:bg-gray-100"
+                                className="inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-red-400 transition-colors rounded-md hover:bg-white/10"
                                 title="Delete"
                               >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -911,7 +911,7 @@ export default function Home() {
           <div>
             <div className="section-container rounded-2xl p-6 lg:p-8">
               <div className="mb-4">
-                <h2 className="text-xl font-semibold sds-text-primary tracking-tight">Reading Calendar</h2>
+                <h2 className="text-xl font-semibold text-white tracking-tight">Reading Calendar</h2>
               </div>
               <ReadingCalendar />
             </div>

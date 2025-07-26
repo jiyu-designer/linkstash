@@ -71,6 +71,11 @@ body {
   background: rgba(255, 255, 255, 0.12);
 }
 
+.glass-input option {
+  background: #1f1f1f;
+  color: #ffffff;
+}
+
 /* SDS Token Utility Classes */
 .sds-bg-surface-primary {
   background-color: var(--sds-color-background-default-default);
