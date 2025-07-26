@@ -222,13 +222,13 @@ export default function ReadingCalendar() {
                   className={`
                     h-8 md:h-10 text-xs md:text-sm rounded-lg transition-all duration-200 relative
                     ${dayData ? 'hover:bg-slate-200' : ''}
-                    ${dayData?.isSelected ? 'border-2 border-gray-500' : 'border border-transparent'}
+                    ${dayData?.isSelected ? 'border-2 border-white' : 'border border-transparent'}
                     ${
                       dayData 
                         ? dayData.hasReadLinks && dayData.hasSavedLinks 
-                          ? `bg-[#aff4c6] text-green-800 ${dayData.isToday ? 'font-bold' : ''}` // 둘 다 있는 날 - green 300
+                          ? `bg-[#4ade80] text-green-900 ${dayData.isToday ? 'font-bold' : ''}` // 둘 다 있는 날 - green 400
                           : dayData.hasReadLinks || dayData.hasSavedLinks 
-                            ? `bg-[#cff7d3] text-green-700 ${dayData.isToday ? 'font-bold' : ''}` // 저장 또는 읽은 날 - green 200
+                            ? `bg-[#86efac] text-green-800 ${dayData.isToday ? 'font-bold' : ''}` // 저장 또는 읽은 날 - green 300
                             : `bg-white/10 hover:bg-white/20 text-white ${dayData.isToday ? 'font-bold' : ''}` // 아무것도 없는 날
                         : ''
                     }
@@ -251,15 +251,6 @@ export default function ReadingCalendar() {
 
       {/* Selected Date Content */}
       <div>
-        {/* Active Days Statistics */}
-        <div className="mb-4">
-          <div className="glass-card rounded-xl p-3 text-center">
-            <div className="text-2xl font-semibold text-white">
-              {new Set([...monthReadLinks.keys(), ...monthSavedLinks.keys()]).size}
-            </div>
-            <div className="text-base text-gray-300 font-medium">Active Days</div>
-          </div>
-        </div>
         
             {/* Content List */}
             {readLinksForDate.length > 0 ? (

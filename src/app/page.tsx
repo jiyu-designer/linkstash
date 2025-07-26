@@ -628,7 +628,7 @@ export default function Home() {
               </svg>
             </div>
             <div>
-              <h1 className="text-3xl font-semibold text-white tracking-tight">
+              <h1 className="text-2xl font-semibold text-white tracking-tight">
                 LinkStash
               </h1>
               <p className="text-base text-gray-300 font-medium">
@@ -848,7 +848,7 @@ export default function Home() {
                               
                               {/* Memo */}
                               {result.memo && (
-                                <div className="text-gray-300 text-base max-w-md">
+                                <div className="text-gray-500 text-base max-w-md">
                                   {result.memo}
                                 </div>
                               )}
@@ -913,6 +913,82 @@ export default function Home() {
             </div>
           </div>
 
+        </div>
+
+        {/* Challenges Section */}
+        <div className="section-container p-6 lg:p-8 mb-12">
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
+              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.228V2.721m-2.48 5.228a6.726 6.726 0 01-2.748 1.35m0 0a6.772 6.772 0 01-3.044 0" />
+              </svg>
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold text-white tracking-tight">Challenges</h2>
+              <p className="text-sm text-gray-400">Track your reading progress and achievements</p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Active Days Card */}
+            <div className="glass-card rounded-xl p-4 text-center">
+                             <div className="text-2xl font-semibold text-white mb-1">
+                 {(() => {
+                   const currentDate = new Date();
+                   const year = currentDate.getFullYear();
+                   const month = currentDate.getMonth();
+                   const monthStart = new Date(year, month, 1);
+                   const monthEnd = new Date(year, month + 1, 0);
+                   
+                   const monthDates = new Set();
+                   results.forEach(link => {
+                     if (link.readAt) {
+                       const readDate = new Date(link.readAt);
+                       if (readDate >= monthStart && readDate <= monthEnd) {
+                         monthDates.add(readDate.getDate());
+                       }
+                     }
+                     if (link.createdAt) {
+                       const createdDate = new Date(link.createdAt);
+                       if (createdDate >= monthStart && createdDate <= monthEnd) {
+                         monthDates.add(createdDate.getDate());
+                       }
+                     }
+                   });
+                   return monthDates.size;
+                 })()}
+               </div>
+              <div className="text-sm text-gray-300 font-medium">Active Days</div>
+              <div className="text-xs text-gray-500 mt-1">This month</div>
+            </div>
+            
+            {/* Total Links Card */}
+            <div className="glass-card rounded-xl p-4 text-center">
+              <div className="text-2xl font-semibold text-white mb-1">
+                {results.length}
+              </div>
+              <div className="text-sm text-gray-300 font-medium">Total Links</div>
+              <div className="text-xs text-gray-500 mt-1">All time</div>
+            </div>
+            
+            {/* Read Percentage Card */}
+            <div className="glass-card rounded-xl p-4 text-center">
+              <div className="text-2xl font-semibold text-white mb-1">
+                {results.length > 0 ? Math.round((results.filter(r => r.isRead).length / results.length) * 100) : 0}%
+              </div>
+              <div className="text-sm text-gray-300 font-medium">Read Rate</div>
+              <div className="text-xs text-gray-500 mt-1">Completion</div>
+            </div>
+            
+            {/* Categories Card */}
+            <div className="glass-card rounded-xl p-4 text-center">
+              <div className="text-2xl font-semibold text-white mb-1">
+                {categories.length}
+              </div>
+              <div className="text-sm text-gray-300 font-medium">Categories</div>
+              <div className="text-xs text-gray-500 mt-1">Organized</div>
+            </div>
+          </div>
         </div>
 
         {/* Debug info - 개발 중에만 표시 */}

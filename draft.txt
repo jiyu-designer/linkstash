@@ -1,3 +1,12 @@
 draft
 
 
+가장 상단의 프로필 영역과 로그아웃 버튼에도 dark theme을 적용해
+Linkstash 헤더 크기를 4px정도 줄여줘
+링크 모임의 메모 폰트의 색깔을 한단계 더 명도가 낮은 grey로 바꿔줘
+calendar의 배경컬러 규칙을 변경할게
+하나라도 읽거나 저장하면 green 300
+하나 이상 읽고, 하나 이상 저장하면 grenn 400으로 말이야
+selected 상태일때는 white boarder를 적용해줘
+date 위의 숫자 뱃지는 없애줘
+Active Days 섹션은 아예 가장 아래에 새로운 cahllenges 섹션으로 만들고 그쪽으로 옮겨줘, 여러가지 상태와 뱃지를 표기하기 위한 섹션이야
