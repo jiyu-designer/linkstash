@@ -100,6 +100,29 @@ const localStorageHelpers = {
     }
   },
 
+  updateLinkDates: (title: string, createdAt?: string, readAt?: string): void => {
+    try {
+      const links = localStorageHelpers.getLinks();
+      const linkIndex = links.findIndex(link => link.title === title);
+      
+      if (linkIndex !== -1) {
+        if (createdAt) {
+          links[linkIndex].createdAt = new Date(createdAt);
+        }
+        if (readAt) {
+          links[linkIndex].readAt = new Date(readAt);
+          links[linkIndex].isRead = true;
+        }
+        localStorageHelpers.setLinks(links);
+        console.log(`Updated dates for: ${title}`);
+      } else {
+        console.log(`Link not found: ${title}`);
+      }
+    } catch (error) {
+      console.error('Error updating link dates:', error);
+    }
+  },
+
   updateLink: (linkId: string, updates: Partial<CategorizedLink>): void => {
     try {
       const links = localStorageHelpers.getLinks();
