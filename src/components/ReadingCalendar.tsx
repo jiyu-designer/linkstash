@@ -169,7 +169,7 @@ export default function ReadingCalendar() {
           {/* Header with Navigation and Statistics */}
           <div className="px-4 py-3">
             {/* Month Navigation */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-center mb-4 gap-4">
               <button
                 onClick={goToPreviousMonth}
                 className="p-1 hover:bg-white/20 rounded-lg transition-colors text-white"
@@ -184,9 +184,6 @@ export default function ReadingCalendar() {
                 <h2 className="text-xl font-semibold text-white tracking-tight">
                   {currentDate.getFullYear()} {monthNames[currentDate.getMonth()]}
                 </h2>
-                {isLoading && (
-                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-slate-300 border-t-slate-600 mx-auto mt-1"></div>
-                )}
               </div>
               
               <button
