@@ -815,7 +815,7 @@ export default function Home() {
                               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded cursor-pointer"
                             />
                           </td>
-                          <td className="py-3">
+                          <td className="py-3 w-full">
                             <div className="space-y-3">
                               {/* Title */}
                               <div className="font-medium text-base flex items-center gap-2">
