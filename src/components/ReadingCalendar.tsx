@@ -234,15 +234,14 @@ export default function ReadingCalendar() {
                   className={`
                     h-10 text-xs rounded-lg transition-all duration-200 relative
                     ${dayData ? 'hover:bg-slate-200' : ''}
-                    ${dayData?.isToday ? 'bg-slate-800 text-white' : ''}
-                    ${dayData?.isSelected ? 'border-2 border-blue-600 bg-white text-blue-600' : 'border border-transparent'}
+                    ${dayData?.isSelected ? 'border-2 border-gray-500' : 'border border-transparent'}
                     ${
-                      dayData && !dayData.isSelected && !dayData.isToday 
+                      dayData 
                         ? dayData.hasReadLinks && dayData.hasSavedLinks 
-                          ? 'bg-[#aff4c6] text-green-800' // 둘 다 있는 날 - green 300
+                          ? `bg-[#aff4c6] text-green-800 ${dayData.isToday ? 'font-bold' : ''}` // 둘 다 있는 날 - green 300
                           : dayData.hasReadLinks || dayData.hasSavedLinks 
-                            ? 'bg-[#cff7d3] text-green-700' // 저장 또는 읽은 날 - green 200
-                            : 'bg-white hover:bg-slate-100' // 아무것도 없는 날
+                            ? `bg-[#cff7d3] text-green-700 ${dayData.isToday ? 'font-bold' : ''}` // 저장 또는 읽은 날 - green 200
+                            : `bg-white hover:bg-slate-100 ${dayData.isToday ? 'font-bold' : ''}` // 아무것도 없는 날
                         : ''
                     }
                   `}
@@ -254,8 +253,7 @@ export default function ReadingCalendar() {
                       <span className="font-medium">{dayData.day}</span>
                       {(dayData.hasReadLinks || dayData.hasSavedLinks) && (
                         <div className={`absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] flex items-center justify-center font-medium
-                          ${dayData.isToday ? 'bg-white/20 text-white'
-                            : dayData.isSelected ? 'bg-blue-600 text-white'
+                          ${dayData.isSelected ? 'bg-gray-500 text-white'
                             : dayData.hasReadLinks && dayData.hasSavedLinks 
                               ? 'bg-white/90 text-green-700'
                               : 'bg-white/80 text-green-700'}
