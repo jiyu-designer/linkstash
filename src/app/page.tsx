@@ -691,10 +691,10 @@ export default function Home() {
         </div>
 
         {/* Main Content Grid: Saved Links (3) + Reading Calendar (1) */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           
           {/* Saved Links Section - 3/4 width */}
-          <div className="lg:col-span-3">
+          <div className="md:col-span-3">
             <div className="section-container rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-4">
@@ -919,7 +919,7 @@ export default function Home() {
           </div>
 
           {/* Reading Calendar Section - 1/4 width */}
-          <div className="lg:col-span-1">
+          <div className="md:col-span-1">
             <div className="section-container rounded-2xl p-6">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-6 h-6 bg-gradient-to-br from-slate-600 to-slate-500 rounded-lg flex items-center justify-center">
