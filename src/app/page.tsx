@@ -695,10 +695,7 @@ export default function Home() {
           
           {/* Saved Links Section - 3/4 width */}
           <div className="xl:col-span-3">
-
-            {/* Categorized Links Table - Links 섹션 내부로 이동, 그림자와 배경색 제거 */}
-            {results.length > 0 && (
-              <div className="section-container rounded-2xl p-6 mt-8">
+            <div className="section-container rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-4">
                     <h3 className="text-lg font-semibold sds-text-primary">
@@ -803,8 +800,10 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                <div className="overflow-x-auto">
-                  <table className="sds-table">
+                
+                {results.length > 0 && (
+                  <div className="overflow-x-auto">
+                    <table className="sds-table">
                     <thead className="sds-table-header">
                       <tr>
                         <th>Read</th>
@@ -896,19 +895,27 @@ export default function Home() {
                       ))}
                     </tbody>
                   </table>
-                </div>
+                  </div>
+                )}
 
                 {/* No results message */}
-                {filteredResults.length === 0 && results.length > 0 && (
+                {results.length > 0 ? (
+                  filteredResults.length === 0 && (
+                    <div className="text-center py-8">
+                      <div className="text-gray-500">
+                        No links match the current filters. Try adjusting your filter criteria.
+                      </div>
+                    </div>
+                  )
+                ) : (
                   <div className="text-center py-8">
                     <div className="text-gray-500">
-                      No links match the current filters. Try adjusting your filter criteria.
+                      No saved links yet. Start by adding your first link above!
                     </div>
                   </div>
                 )}
               </div>
-            )}
-          </div>
+            </div>
           </div>
 
           {/* Reading Calendar Section - 1/4 width */}
