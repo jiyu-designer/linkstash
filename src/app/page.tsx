@@ -696,26 +696,20 @@ export default function Home() {
           {/* Saved Links Section - 2.5fr width */}
           <div>
             <div className="section-container rounded-2xl p-8">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-4">
-                    <h3 className="text-xl font-semibold sds-text-primary tracking-tight">
-                      Saved Links
-                    </h3>
+                {/* Filters with Add button */}
+                <div className="mb-4 rounded-lg">
+                  <div className="flex items-end justify-between gap-4 mb-4">
                     <div className="sds-text-secondary text-base font-medium">
                       {filteredResults.filter(link => link.isRead).length} / {filteredResults.length} Read
                     </div>
+                    <Button
+                      onPress={() => setShowAddModal(true)}
+                      variant="primary"
+                      size="medium"
+                    >
+                      Add
+                    </Button>
                   </div>
-                  <Button
-                    onPress={() => setShowAddModal(true)}
-                    variant="primary"
-                    size="medium"
-                  >
-                    Add
-                  </Button>
-                </div>
-
-                {/* Filters */}
-                <div className="mb-4 rounded-lg">
                   <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
                     {/* Category Filter */}
                     <div>
