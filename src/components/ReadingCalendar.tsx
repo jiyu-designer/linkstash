@@ -239,7 +239,7 @@ export default function ReadingCalendar() {
                     h-10 text-xs rounded-lg transition-all duration-200 relative
                     ${dayData ? 'hover:bg-slate-200' : ''}
                     ${dayData?.isToday ? 'bg-slate-800 text-white' : ''}
-                    ${dayData?.isSelected ? 'bg-blue-600 text-white' : ''}
+                    ${dayData?.isSelected ? 'border-2 border-blue-600 bg-white text-blue-600' : 'border border-transparent'}
                     ${
                       dayData && !dayData.isSelected && !dayData.isToday 
                         ? dayData.hasReadLinks && dayData.hasSavedLinks 
@@ -258,7 +258,8 @@ export default function ReadingCalendar() {
                       <span className="font-medium">{dayData.day}</span>
                       {(dayData.hasReadLinks || dayData.hasSavedLinks) && (
                         <div className={`absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] flex items-center justify-center font-medium
-                          ${dayData.isSelected || dayData.isToday ? 'bg-white/20 text-white' 
+                          ${dayData.isToday ? 'bg-white/20 text-white'
+                            : dayData.isSelected ? 'bg-blue-600 text-white'
                             : dayData.hasReadLinks && dayData.hasSavedLinks 
                               ? 'bg-white/90 text-green-700'
                               : 'bg-white/80 text-green-700'}
