@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { CategorizedLink, Category, Tag } from '@/types';
 import { storage } from '@/lib/storage';
 import { getCurrentUser, onAuthStateChange, signInWithGoogle, signInWithKakao, type User } from '@/lib/auth';
-import { isSupabaseConfigured } from '@/lib/supabase';
+import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 import { clearAuthData, forceAuthReset } from '@/lib/clear-auth';
 import ReadingCalendar from '@/components/ReadingCalendar';
 import AuthButton from '@/components/AuthButton';
@@ -57,8 +57,31 @@ export default function Home() {
       
       if (accessToken) {
         console.log('✅ OAuth 토큰 감지 - 로그인 처리 중...', accessToken.substring(0, 20) + '...');
-        // Clear URL hash after processing
-        window.history.replaceState(null, '', window.location.pathname);
+        
+        // Extract session data from URL
+        const refreshToken = hashParams.get('refresh_token') || searchParams.get('refresh_token');
+        const expiresAt = hashParams.get('expires_at') || searchParams.get('expires_at');
+        
+        if (refreshToken) {
+          console.log('🔄 세션 설정 중...');
+          // Set the session with Supabase
+          supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
+          }).then(({ data, error }: any) => {
+            if (error) {
+              console.error('❌ 세션 설정 오류:', error);
+            } else {
+              console.log('✅ 세션 설정 성공:', data.user?.email);
+              // Clear URL after successful session setup
+              window.history.replaceState(null, '', window.location.pathname);
+            }
+          });
+        } else {
+          console.warn('⚠️ refresh_token이 없어서 세션 설정을 건너뜀');
+          // Still clear URL
+          window.history.replaceState(null, '', window.location.pathname);
+        }
       }
       
       if (code) {
@@ -114,7 +137,11 @@ export default function Home() {
 
     // Listen to auth state changes
     const { data: { subscription } } = onAuthStateChange((currentUser) => {
-      console.log('🔄 Auth state changed:', currentUser?.email || 'logged out');
+      console.log('🔄 Auth state changed:', {
+        user: currentUser?.email || 'logged out',
+        hasUser: !!currentUser,
+        timestamp: new Date().toISOString()
+      });
       setUser(currentUser);
       setAuthLoading(false);
       
