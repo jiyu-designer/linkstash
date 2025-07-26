@@ -12,6 +12,7 @@ import AuthButton from '@/components/AuthButton';
 import EmailAuthForm from '@/components/EmailAuthForm';
 import AntiExtension from './anti-extension';
 
+
 export default function Home() {
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
@@ -669,7 +670,7 @@ export default function Home() {
                   <h3 className="text-lg font-semibold text-slate-900">카테고리</h3>
                   <Link
                     href="/categories"
-                    className="px-3 py-1.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700 transition-colors text-sm font-medium"
+                    className="px-3 py-1.5 text-slate-700 hover:bg-slate-100 rounded-xl transition-colors text-sm font-medium border border-slate-200"
                   >
                     관리 ({categories.length})
                   </Link>
@@ -709,7 +710,7 @@ export default function Home() {
                   <h3 className="text-lg font-semibold text-slate-900">태그</h3>
                   <Link
                     href="/tags"
-                    className="px-3 py-1.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700 transition-colors text-sm font-medium"
+                    className="px-3 py-1.5 text-slate-700 hover:bg-slate-100 rounded-xl transition-colors text-sm font-medium border border-slate-200"
                   >
                     관리 ({tags.length})
                   </Link>
