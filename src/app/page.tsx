@@ -698,22 +698,11 @@ export default function Home() {
             <div className="section-container rounded-2xl p-6 lg:p-8">
                 {/* Filters with Add button */}
                 <div className="mb-4 rounded-lg">
-                  <div className="flex items-end justify-between gap-4 mb-4">
-                    <div className="text-gray-300 text-base font-medium">
-                      {filteredResults.filter(link => link.isRead).length} / {filteredResults.length} Read
-                    </div>
-                    <Button
-                      onPress={() => setShowAddModal(true)}
-                      variant="primary"
-                      size="medium"
-                    >
-                      Add
-                    </Button>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                  <div className="flex items-end justify-between gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 flex-1">
                     {/* Category Filter */}
                     <div>
-                      <label className="block text-base font-semibold text-gray-300 mb-3">
+                      <label className="block text-sm font-medium text-gray-300 mb-3">
                         Category
                       </label>
                       <select
@@ -732,7 +721,7 @@ export default function Home() {
 
                     {/* Tag Filter */}
                     <div>
-                      <label className="block text-base font-semibold text-gray-300 mb-3">
+                      <label className="block text-sm font-medium text-gray-300 mb-3">
                         Tag
                       </label>
                       <select
@@ -751,7 +740,7 @@ export default function Home() {
 
                     {/* Read Status Filter */}
                     <div>
-                      <label className="block text-base font-semibold sds-text-secondary mb-3">
+                      <label className="block text-sm font-medium text-gray-300 mb-3">
                         Read Status
                       </label>
                       <select
@@ -767,7 +756,7 @@ export default function Home() {
 
                     {/* Sort By */}
                     <div>
-                      <label className="block text-base font-semibold sds-text-secondary mb-3">
+                      <label className="block text-sm font-medium text-gray-300 mb-3">
                         Sort By
                       </label>
                       <select
@@ -781,13 +770,21 @@ export default function Home() {
                       </select>
                     </div>
 
-                    {/* Manage Button */}
-                    <div className="flex items-end">
+                    </div>
+                    
+                    {/* Add and Manage Buttons */}
+                    <div className="flex items-end gap-2">
+                      <Button
+                        onPress={() => setShowAddModal(true)}
+                        variant="primary"
+                        size="medium"
+                      >
+                        Add
+                      </Button>
                       <Button
                         href="/manage"
                         variant="subtle"
                         size="small"
-                        className="mb-0"
                       >
                         Manage
                       </Button>
@@ -801,7 +798,7 @@ export default function Home() {
                     <tbody>
                       {filteredResults.map((result) => (
                         <tr key={result.id} className={`py-3 hover:bg-white/5 ${result.isRead ? '' : ''}`}>
-                          <td className="pr-3 py-3 w-8">
+                          <td className="pr-5 py-3 w-8">
                             <input
                               type="checkbox"
                               checked={result.isRead}
@@ -812,20 +809,16 @@ export default function Home() {
                             />
                           </td>
                           <td className="py-3 w-full">
-                            <div className="space-y-3">
+                            <div className="space-y-2">
                               {/* Title */}
-                              <div className="font-semibold text-lg flex items-center gap-2 text-white">
-                                <span>{result.title}</span>
+                              <div>
                                 <a
                                   href={result.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="inline-flex items-center justify-center w-4 h-4 text-gray-400 hover:text-white transition-colors"
-                                  title="Open link"
+                                  className="font-semibold text-lg text-white hover:text-blue-300 transition-colors cursor-pointer"
                                 >
-                                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                  </svg>
+                                  {result.title}
                                 </a>
                               </div>
                               
