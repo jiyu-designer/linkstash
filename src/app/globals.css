@@ -243,6 +243,24 @@ body {
   border: none;
 }
 
+/* Input Error State */
+.input-error {
+  border: 1px solid rgba(239, 68, 68, 0.5) !important;
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.08) 0%,
+    rgba(239, 68, 68, 0.04) 100%
+  ) !important;
+}
+
+.input-error:focus {
+  border: 1px solid rgba(239, 68, 68, 0.7) !important;
+  box-shadow: 
+    0 0 0 3px rgba(239, 68, 68, 0.1),
+    0 4px 8px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
 /* Custom Select Dropdown Arrow Positioning */
 .glass-input select,
 select.glass-input {
@@ -424,18 +442,20 @@ select.glass-input {
     0 0 16px rgba(34, 197, 94, 0.4);
 }
 
-/* SmartSort Button - Premium Glass Style */
+/* SmartSort Button - Premium Purple Glass Style */
 .smartsort-button {
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.12) 0%,
-    rgba(255, 255, 255, 0.08) 100%
+    rgba(139, 92, 246, 0.25) 0%,
+    rgba(168, 85, 247, 0.15) 50%,
+    rgba(192, 132, 252, 0.12) 100%
   );
   backdrop-filter: blur(12px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.3);
   box-shadow: 
-    0 4px 16px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 4px 16px rgba(139, 92, 246, 0.15),
+    0 2px 8px rgba(168, 85, 247, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
   position: relative;
   overflow: hidden;
 }
@@ -446,9 +466,9 @@ select.glass-input {
   inset: 0;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.1) 0%,
+    rgba(192, 132, 252, 0.2) 0%,
     transparent 50%,
-    rgba(255, 255, 255, 0.05) 100%
+    rgba(139, 92, 246, 0.1) 100%
   );
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -461,20 +481,23 @@ select.glass-input {
 .smartsort-button:hover:not(:disabled) {
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.16) 0%,
-    rgba(255, 255, 255, 0.12) 100%
+    rgba(139, 92, 246, 0.35) 0%,
+    rgba(168, 85, 247, 0.25) 50%,
+    rgba(192, 132, 252, 0.20) 100%
   );
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(139, 92, 246, 0.4);
   transform: translateY(-1px);
   box-shadow: 
-    0 6px 20px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 6px 20px rgba(139, 92, 246, 0.25),
+    0 3px 12px rgba(168, 85, 247, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .smartsort-button:active:not(:disabled) {
   transform: translateY(0px);
   box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(139, 92, 246, 0.2),
+    0 1px 4px rgba(168, 85, 247, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
@@ -482,7 +505,7 @@ select.glass-input {
 .sds-chip {
   display: inline-flex;
   align-items: center;
-  padding: 4px 10px;
+  padding: 3px 8px;
   border-radius: 8px;
   font-size: 0.8125rem;
   font-weight: 500;
@@ -802,6 +825,6 @@ select.glass-input {
   
   .sds-chip {
     font-size: 0.75rem !important;
-    padding: 4px 8px !important;
+    padding: 3px 6px !important;
   }
 }

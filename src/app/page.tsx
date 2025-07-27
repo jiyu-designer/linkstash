@@ -694,14 +694,22 @@ export default function Home() {
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col lg:flex-row gap-5">
               <div className="flex-1">
-                <Input
-                  type="text"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  placeholder="Enter URL address"
-                  className="w-full h-12 px-4 glass-input text-sm font-normal"
-                  disabled={isLoading}
-                />
+                <div className="relative">
+                  <Input
+                    type="text"
+                    value={url}
+                    onChange={(e) => {
+                      setUrl(e.target.value);
+                      if (error) setError(''); // Clear error when user starts typing
+                    }}
+                    placeholder="Enter URL address"
+                    className={`w-full h-12 px-4 glass-input text-sm font-normal ${error ? 'input-error' : ''}`}
+                    disabled={isLoading}
+                  />
+                  {error && (
+                    <p className="text-red-400 text-xs mt-2 px-2">{error}</p>
+                  )}
+                </div>
               </div>
               
               <div className="flex-1">
@@ -730,12 +738,6 @@ export default function Home() {
                 )}
               </button>
             </div>
-              
-            {error && (
-              <div className="p-3 bg-red-50 border border-red-100 rounded-xl mt-3">
-                <p className="text-sm text-red-700">{error}</p>
-              </div>
-            )}
           </form>
         </div>
 
@@ -896,7 +898,7 @@ export default function Home() {
                                   href={result.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-white font-medium text-base leading-relaxed line-clamp-2 hover:text-blue-300 transition-colors duration-200 group-hover:underline decoration-1 underline-offset-2"
+                                  className="text-white font-medium text-base leading-relaxed line-clamp-2 hover:text-blue-300 transition-colors duration-200"
                                 >
                                   {result.title}
                                 </a>
@@ -924,13 +926,11 @@ export default function Home() {
                               {/* Memo and Date - Side by side */}
                               <div className="flex justify-between items-start gap-3">
                                 {/* Memo */}
-                                {result.memo && (
-                                  <div className="text-gray-400 text-sm leading-relaxed line-clamp-2 italic flex-1">
-                                    {result.memo}
-                                  </div>
-                                )}
+                                <div className="text-gray-400 text-sm leading-relaxed line-clamp-2 italic flex-1">
+                                  {result.memo || ''}
+                                </div>
                                 
-                                {/* Date */}
+                                {/* Date - Always shown */}
                                 <div className="text-xs text-gray-500 font-normal whitespace-nowrap">
                                   {new Date(result.createdAt).toLocaleDateString('en-US', {
                                     year: 'numeric',
@@ -948,9 +948,7 @@ export default function Home() {
                                 className="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-white transition-all duration-200 rounded-lg hover:bg-white/10 hover:scale-110"
                                 title="Edit link"
                               >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                                </svg>
+                                <span className="text-sm">✏️</span>
                               </button>
                               <button
                                 onClick={() => handleDeleteLink(result.id)}

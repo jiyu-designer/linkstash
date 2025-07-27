@@ -178,8 +178,9 @@ export default function TagsPage() {
                     <button
                       onClick={() => handleEdit(tag)}
                       className="text-gray-400 hover:text-white text-xs"
+                      title="수정"
                     >
-                      수정
+                      ✏️
                     </button>
                     <button
                       onClick={() => handleDelete(tag.id)}

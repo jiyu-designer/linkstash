@@ -184,8 +184,9 @@ export default function CategoriesPage() {
                     <button
                       onClick={() => handleEdit(category)}
                       className="text-gray-400 hover:text-white text-sm transition-colors"
+                      title="수정"
                     >
-                      수정
+                      ✏️
                     </button>
                     <button
                       onClick={() => handleDelete(category.id)}

@@ -247,10 +247,10 @@ export default function ReadingCalendar() {
       <div className="rounded-2xl overflow-hidden">
         {/* Header matching calendar height */}
         <div className="px-4 py-3">
-          {/* Selected Date Display and Stats - Side by side */}
-          <div className="flex items-center justify-between mb-4 gap-3 h-8">
-            <div>
-              <h2 className="text-xl font-semibold text-white tracking-tight">
+          {/* Selected Date Display and Stats - Center aligned */}
+          <div className="flex flex-col items-center mb-4 gap-2">
+            <div className="text-center">
+              <h2 className="text-base font-semibold text-white tracking-tight">
                 {monthNames[selectedDate.getMonth()]} {selectedDate.getDate()}
                 {(() => {
                   const day = selectedDate.getDate();
@@ -261,14 +261,14 @@ export default function ReadingCalendar() {
                 })()}
               </h2>
             </div>
-            <div>
+            <div className="text-center">
               {(() => {
                 const selectedDateKey = selectedDate.toDateString();
                 const savedLinksForDate = monthSavedLinks.get(selectedDateKey) || [];
                 const readLinksForDate = monthReadLinks.get(selectedDateKey) || [];
                 
                 return (
-                  <p className="text-sm text-gray-300 whitespace-nowrap">
+                  <p className="text-sm text-gray-300">
                     {savedLinksForDate.length} Saved, {readLinksForDate.length} Read
                   </p>
                 );
@@ -285,7 +285,7 @@ export default function ReadingCalendar() {
                 {readLinksForDate.map((link) => (
                   <div
                     key={link.id}
-                    className="rounded-lg px-4 py-2 hover:bg-white/5 transition-colors border-l-2 border-gray-600"
+                    className="rounded-lg px-4 py-2 bg-white/3 hover:bg-white/6 transition-colors border-l-2 border-gray-600"
                   >
                     <h4 className="font-medium text-white text-base line-clamp-2 mb-1">
                       <a
