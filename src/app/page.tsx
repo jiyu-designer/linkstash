@@ -515,13 +515,37 @@ export default function Home() {
     setIsLoading(true);
     
     try {
+      // 제목 추출 시도
+      let extractedTitle = url;
+      let extractedDescription = '';
+      
+      try {
+        const titleResponse = await fetch('/api/extract-title', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ url }),
+        });
+
+        if (titleResponse.ok) {
+          const titleData = await titleResponse.json();
+          extractedTitle = titleData.title || url;
+          extractedDescription = titleData.description || '';
+        }
+      } catch (error) {
+        console.error('제목 추출 실패:', error);
+        // 실패 시 URL을 제목으로 사용
+        extractedTitle = url;
+      }
+
       // 기본 링크 정보만으로 저장
       const now = new Date();
       const newLink: CategorizedLink = {
         id: crypto.randomUUID(),
         url: url,
-        title: url, // URL을 제목으로 사용
-        description: '',
+        title: extractedTitle, // 추출된 제목 사용
+        description: extractedDescription,
         category: 'Other', // 기본 카테고리
         tags: [], // 빈 태그
         memo: memo.trim() || undefined,
@@ -535,7 +559,7 @@ export default function Home() {
       // 링크 저장
       await storage.addLink(newLink);
       
-      console.log('✅ 기본 저장 완료 (AI 태깅 없음):', { userEmail: user!.email });
+      console.log('✅ 기본 저장 완료 (제목 추출 포함):', { userEmail: user!.email });
       setUrl(''); // 입력 필드 초기화
       setMemo(''); // 메모 필드 초기화
       
@@ -1285,6 +1309,20 @@ export default function Home() {
                     defaultValue={editingLink.title}
                     className="w-full"
                     required
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="edit-url" className="block text-sm font-medium text-gray-300 mb-2">
+                    URL
+                  </label>
+                  <Input
+                    type="url"
+                    name="url"
+                    defaultValue={editingLink.url}
+                    className="w-full"
+                    required
+                    readOnly
                   />
                 </div>
                 

@@ -171,46 +171,103 @@ export default function OnboardingPage() {
     setDemoLoading(true);
 
     try {
-      // 실제 API 호출
-      const response = await fetch('/api/categorize', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ url: demoUrl }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Categorization failed');
-      }
-
       // 현재 사용자 정보 가져오기
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         throw new Error('User not authenticated');
       }
 
-      // Create new link object with memo and auto-generated tags
-      const now = new Date();
-      const newLink: CategorizedLink = {
-        id: crypto.randomUUID(),
-        url: data.url,
-        title: data.title,
-        description: data.description,
-        category: data.category,
-        tags: Array.isArray(data.tags) ? data.tags : [],
-        memo: demoMemo.trim() || undefined,
-        isRead: false,
-        readAt: undefined,
-        userId: user.id,
-        createdAt: now,
-        updatedAt: now
-      };
+      // AI 사용량 체크
+      let aiUsage = null;
+      try {
+        aiUsage = await database.aiLimits.getUserLimit(user.email);
+        console.log('🔍 온보딩 AI 제한 체크:', {
+          userEmail: user.email,
+          isExempt: aiUsage?.is_exempt,
+          currentUsage: aiUsage?.current_usage,
+          dailyLimit: aiUsage?.today_daily_limit,
+          canUseAi: aiUsage?.can_use_ai
+        });
+      } catch (error) {
+        console.error('AI 사용량 조회 실패:', error);
+      }
 
-      // Auto-create category and tags using storage utility
-      await storage.autoCreateCategoryAndTags(data.category, data.tags || []);
+      // AI 사용 가능 여부 확인
+      const canUseAi = aiUsage?.can_use_ai ?? true;
+
+      let newLink: CategorizedLink;
+
+      if (canUseAi) {
+        // AI 태깅으로 저장
+        const response = await fetch('/api/categorize', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ url: demoUrl }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Categorization failed');
+        }
+
+        // AI 사용량 증가
+        if (aiUsage) {
+          try {
+            await database.aiLimits.incrementUsage(user.email);
+            console.log(`✅ 온보딩 AI 사용량 증가 완료: ${user.email}`);
+          } catch (error) {
+            console.error('❌ 온보딩 AI 사용량 증가 오류:', error);
+          }
+        }
+
+        newLink = {
+          id: crypto.randomUUID(),
+          url: data.url,
+          title: data.title,
+          description: data.description,
+          category: data.category,
+          tags: Array.isArray(data.tags) ? data.tags : [],
+          memo: demoMemo.trim() || undefined,
+          isRead: false,
+          readAt: undefined,
+          userId: user.id,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+
+        // Auto-create category and tags using storage utility
+        await storage.autoCreateCategoryAndTags(data.category, data.tags || []);
+      } else {
+        // 기본 저장 (제목 추출 포함)
+        const titleResponse = await fetch('/api/extract-title', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ url: demoUrl }),
+        });
+
+        const titleData = await titleResponse.json();
+        const extractedTitle = titleData.title || demoUrl;
+
+        newLink = {
+          id: crypto.randomUUID(),
+          url: demoUrl,
+          title: extractedTitle,
+          description: titleData.description || '',
+          category: 'Other',
+          tags: [],
+          memo: demoMemo.trim() || undefined,
+          isRead: false,
+          readAt: undefined,
+          userId: user.id,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+      }
 
       // Add the new link
       await storage.addLink(newLink);
