@@ -165,18 +165,18 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- 11. 초기 데이터 삽입 (기존 사용자들을 위한 기본 설정)
-INSERT INTO user_ai_limits (user_id, email, daily_limit, current_usage, is_exempt, reset_date)
-SELECT 
-  id,
-  email,
-  5,
-  0,
-  CASE WHEN email = 'jiyu0719@kyonggi.ac.kr' THEN true ELSE false END,
-  CURRENT_DATE
-FROM auth.users
-WHERE id NOT IN (SELECT user_id FROM user_ai_limits)
-ON CONFLICT (user_id) DO NOTHING;
+  -- 11. 초기 데이터 삽입 (기존 사용자들을 위한 기본 설정)
+  INSERT INTO user_ai_limits (user_id, email, daily_limit, current_usage, is_exempt, reset_date)
+  SELECT 
+    id,
+    email,
+    5,
+    0,
+    false, -- 모든 사용자를 일반 유저로 설정
+    CURRENT_DATE
+  FROM auth.users
+  WHERE id NOT IN (SELECT user_id FROM user_ai_limits)
+  ON CONFLICT (user_id) DO NOTHING;
 
 -- 12. 완료 메시지
 DO $$

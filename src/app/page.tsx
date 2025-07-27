@@ -304,25 +304,12 @@ export default function Home() {
       if (currentUser) {
         console.log('📊 사용자 데이터 로딩 시작...');
         
-        try {
-          // AI 사용량 조회
-          await getAiUsage(currentUser.email);
-          
-          // jiyu0719@kyonggi.ac.kr 사용자의 오늘 사용량 리셋 (7월 28일 한 번만)
-          if (currentUser.email === 'jiyu0719@kyonggi.ac.kr') {
-            const today = new Date().toDateString();
-            const resetKey = `jiyu0719_reset_${today}`;
-            const hasResetToday = localStorage.getItem(resetKey);
-            
-            if (!hasResetToday) {
-              console.log('🎉 jiyu0719@kyonggi.ac.kr 사용자 - 오늘 사용량 리셋');
-              await resetAiUsage(currentUser.email);
-              localStorage.setItem(resetKey, 'true');
-            }
+                  try {
+            // AI 사용량 조회
+            await getAiUsage(currentUser.email);
+          } catch (error) {
+            console.error('❌ AI 사용량 조회 오류:', error);
           }
-        } catch (error) {
-          console.error('❌ AI 사용량 조회/리셋 오류:', error);
-        }
         
         loadData();
       }
@@ -952,7 +939,11 @@ export default function Home() {
                 ) : (
                   <>
                     <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                      <div className={`w-2 h-2 rounded-full ${
+                        (aiUsage?.current_usage || 0) >= (aiUsage?.daily_limit || 5) 
+                          ? 'bg-orange-400' 
+                          : 'bg-blue-400'
+                      }`}></div>
                       <span className="text-xs text-gray-400 font-medium">
                         Daily AutoStash Usage: {aiUsage?.current_usage || 0}/{aiUsage?.daily_limit || 5}
                         {aiUsage?.current_usage >= aiUsage?.daily_limit ? ' (Basic save only)' : ''}
