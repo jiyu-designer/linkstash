@@ -315,7 +315,7 @@ export default function ReadingCalendar() {
               )}
             </div>
           ) : (
-            <div className="text-center py-8 flex items-center justify-center min-h-80">
+            <div className="text-center py-6 flex items-center justify-center min-h-32">
               <div className="text-gray-500">
                 {selectedDate.toDateString() === new Date().toDateString() 
                   ? 'Feel like reading something you saved?' 

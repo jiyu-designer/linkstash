@@ -795,7 +795,7 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
             <AuthButton />
             <Link
               href="/onboarding"
@@ -819,7 +819,7 @@ export default function Home() {
                       setUrl(e.target.value);
                       if (error) setError(''); // Clear error when user starts typing
                     }}
-                    placeholder="Enter URL address"
+                    placeholder="Paste a link"
                     className={`w-full h-12 px-4 glass-input text-sm font-normal ${error ? 'input-error' : ''}`}
                     disabled={isLoading}
                   />
