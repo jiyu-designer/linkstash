@@ -304,46 +304,7 @@ export default function Home() {
     };
   }, []);
 
-  // 신규 사용자 온보딩 체크
-  useEffect(() => {
-    const checkOnboarding = async () => {
-      if (!user || authLoading) return;
-      
-      try {
-        const { data: { user: authUser } } = await supabase.auth.getUser();
-        if (authUser) {
-          const userData = authUser.user_metadata;
-          console.log('👤 사용자 메타데이터:', userData);
-          
-          // 구글 로그인으로 처음 로그인한 사용자인 경우 firstLogin 플래그 설정
-          if (!userData?.firstLogin && authUser.app_metadata?.provider === 'google') {
-            console.log('🔍 구글 로그인 신규 사용자 감지 - firstLogin 플래그 설정');
-            await supabase.auth.updateUser({
-              data: { firstLogin: true }
-            });
-            // 플래그 설정 후 바로 온보딩으로 이동
-            console.log('🎉 신규 사용자 온보딩 시작');
-            router.push('/onboarding');
-            return;
-          }
-          
-          // 신규 사용자 체크 (이메일 회원가입)
-          if (userData?.firstLogin === true) {
-            console.log('🎉 신규 사용자 온보딩 시작');
-            router.push('/onboarding');
-            return;
-          }
-        }
-      } catch (error) {
-        console.error('온보딩 체크 오류:', error);
-      }
-    };
 
-    // 데이터 로딩이 완료된 후 온보딩 체크 실행
-    if (user && !authLoading) {
-      checkOnboarding();
-    }
-  }, [user, router, authLoading]);
 
   // Handle Google Sign In
   const handleGoogleSignIn = async () => {
@@ -378,19 +339,7 @@ export default function Home() {
     console.log('🎉 이메일 인증 성공');
     setShowEmailAuth(false);
     
-          // 신규 사용자 체크 및 온보딩 리디렉션
-      try {
-        const { data: { user: authUser } } = await supabase.auth.getUser();
-        if (authUser?.user_metadata?.firstLogin === true) {
-          console.log('🎉 신규 사용자 온보딩으로 이동');
-          router.push('/onboarding');
-          return;
-        }
-      } catch (error) {
-        console.error('사용자 정보 확인 오류:', error);
-      }
-    
-    // 기존 사용자는 페이지 새로고침
+    // 페이지 새로고침
     window.location.reload();
   };
 
