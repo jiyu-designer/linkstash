@@ -162,19 +162,20 @@ export default function CategoriesPage() {
             return (
               <div
                 key={category.id}
-                className="section-container p-6 hover:bg-white/10 transition-all"
+                className="p-4 border-l-4 hover:bg-white/5 transition-all"
+                style={{ borderLeftColor: category.color }}
               >
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <div
-                      className="w-6 h-6 rounded-full"
+                      className="w-4 h-4 rounded-full"
                       style={{ backgroundColor: category.color }}
                     ></div>
                     <div>
-                      <h3 className="text-lg font-semibold text-white">
+                      <h3 className="text-lg font-medium text-white">
                         {category.name}
                       </h3>
-                      <p className="text-sm text-gray-300">
+                      <p className="text-sm text-gray-400">
                         {linkCount}개의 링크
                       </p>
                     </div>
@@ -182,13 +183,13 @@ export default function CategoriesPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleEdit(category)}
-                      className="text-blue-600 hover:text-blue-800 text-sm"
+                      className="text-gray-400 hover:text-white text-sm transition-colors"
                     >
                       수정
                     </button>
                     <button
                       onClick={() => handleDelete(category.id)}
-                      className="text-red-600 hover:text-red-800 text-sm"
+                      className="text-gray-500 hover:text-red-400 text-sm transition-colors"
                     >
                       삭제
                     </button>
@@ -196,17 +197,17 @@ export default function CategoriesPage() {
                 </div>
                 
                 {category.description && (
-                  <p className="text-gray-600 text-sm mb-4">{category.description}</p>
+                  <p className="text-gray-400 text-sm mb-3">{category.description}</p>
                 )}
                 
-                <div className="flex justify-between items-center">
-                  <div className="text-xs text-gray-500">
-                    생성일: {category.createdAt.toLocaleDateString()}
+                <div className="flex justify-between items-center text-xs text-gray-500">
+                  <div>
+                    {category.createdAt.toLocaleDateString()}
                   </div>
                   {linkCount > 0 && (
                     <Link
                       href={`/categories/${encodeURIComponent(category.name)}`}
-                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      className="text-gray-400 hover:text-white transition-colors font-medium"
                     >
                       링크 보기 →
                     </Link>

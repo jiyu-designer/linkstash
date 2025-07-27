@@ -147,11 +147,6 @@ export default function ManagePage() {
         <div className="section-container p-6 lg:p-8">
           {activeTab === 'categories' ? (
             <div>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold text-white">Categories</h2>
-                <p className="text-sm text-gray-300">{categories.length} total categories</p>
-              </div>
-              
               {categories.length === 0 ? (
                 <div className="text-center py-12">
                   <p className="text-gray-300">No categories found</p>
@@ -233,11 +228,6 @@ export default function ManagePage() {
             </div>
           ) : (
             <div>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold text-white">Tags</h2>
-                <p className="text-sm text-gray-300">{tags.length} total tags</p>
-              </div>
-              
               {tags.length === 0 ? (
                 <div className="text-center py-12">
                   <p className="text-gray-300">No tags found</p>

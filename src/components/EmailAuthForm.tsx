@@ -89,9 +89,18 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
           break;
 
         case 'signup':
-          await signUpWithEmail(formData.email, formData.password, formData.fullName);
-          setSuccess('회원가입이 완료되었습니다! 이메일을 확인해주세요.');
-          setMode('confirm');
+          const signUpData = await signUpWithEmail(formData.email, formData.password, formData.fullName);
+          console.log('📧 회원가입 데이터:', signUpData);
+          
+          if (signUpData?.user && !signUpData?.session) {
+            setSuccess('회원가입이 완료되었습니다! 이메일 확인 링크를 발송했습니다. 받은편지함(또는 스팸함)을 확인해주세요.');
+            setMode('confirm');
+          } else if (signUpData?.session) {
+            setSuccess('회원가입 및 로그인이 완료되었습니다!');
+            onSuccess?.();
+          } else {
+            setError('회원가입은 완료되었지만 확인 이메일 발송에 문제가 있을 수 있습니다.');
+          }
           break;
 
         case 'reset':

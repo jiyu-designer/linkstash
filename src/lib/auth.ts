@@ -13,19 +13,34 @@ export interface User {
  * Sign up with email and password
  */
 export const signUpWithEmail = async (email: string, password: string, fullName?: string) => {
+  console.log('🔧 이메일 회원가입 시작:', { email, fullName });
+  
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: {
         full_name: fullName || '',
-      }
+      },
+      emailRedirectTo: `${window.location.origin}/auth/callback`
     }
   });
 
+  console.log('📧 회원가입 응답:', { data, error });
+  console.log('📧 사용자 정보:', data?.user);
+  console.log('📧 세션 정보:', data?.session);
+
   if (error) {
-    console.error('이메일 회원가입 오류:', error);
+    console.error('❌ 이메일 회원가입 오류:', error);
     throw error;
+  }
+
+  // 회원가입 성공했지만 이메일 확인이 필요한 경우
+  if (data?.user && !data?.session) {
+    console.log('✅ 회원가입 성공 - 이메일 확인 필요');
+    console.log('📩 확인 이메일 발송됨:', email);
+  } else if (data?.session) {
+    console.log('✅ 회원가입 및 자동 로그인 완료');
   }
 
   return data;
@@ -99,15 +114,25 @@ export const signInWithKakao = async () => {
  * Resend email confirmation
  */
 export const resendConfirmation = async (email: string) => {
-  const { error } = await supabase.auth.resend({
+  console.log('🔧 이메일 확인 재전송 시작:', email);
+  
+  const { data, error } = await supabase.auth.resend({
     type: 'signup',
     email,
+    options: {
+      emailRedirectTo: `${window.location.origin}/auth/callback`
+    }
   });
 
+  console.log('📧 이메일 재전송 응답:', { data, error });
+
   if (error) {
-    console.error('이메일 확인 재전송 오류:', error);
+    console.error('❌ 이메일 확인 재전송 오류:', error);
     throw error;
   }
+
+  console.log('✅ 확인 이메일 재전송 완료');
+  return data;
 };
 
 /**

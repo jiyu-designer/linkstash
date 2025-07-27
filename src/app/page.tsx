@@ -35,28 +35,7 @@ export default function Home() {
   const [selectedTag, setSelectedTag] = useState<string>('all');
   const [readFilter, setReadFilter] = useState<string>('all'); // 'all', 'read', 'unread'
   
-  // Card hover effects
-  const [cardHoverStates, setCardHoverStates] = useState<{[key: string]: {x: number, y: number, isHovering: boolean}}>({});
   const [sortBy, setSortBy] = useState<string>('newest-added'); // 'newest-added', 'oldest-added', 'newest', 'oldest', 'title'
-
-  // Handle card hover effects
-  const handleCardMouseMove = (cardId: string, event: React.MouseEvent<HTMLDivElement>) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width) * 100;
-    const y = ((event.clientY - rect.top) / rect.height) * 100;
-    
-    setCardHoverStates(prev => ({
-      ...prev,
-      [cardId]: { x, y, isHovering: true }
-    }));
-  };
-
-  const handleCardMouseLeave = (cardId: string) => {
-    setCardHoverStates(prev => ({
-      ...prev,
-      [cardId]: { x: 50, y: 50, isHovering: false }
-    }));
-  };
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -535,9 +514,9 @@ export default function Home() {
         <div className="max-w-md w-full">
           {/* Header */}
           <div className="text-center mb-10">
-            <div className="w-12 h-12 glass-card rounded-xl flex items-center justify-center backdrop-blur-20 bg-white/10 border border-white/20 mb-6">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+            <div className="w-14 h-14 glass-card rounded-2xl flex items-center justify-center backdrop-blur-20 bg-white/10 border border-white/20 mb-6">
+              <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
               </svg>
             </div>
             <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">
@@ -634,7 +613,7 @@ export default function Home() {
                     <div className="w-full border-t border-white/20" />
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-4 bg-black text-gray-400 font-medium">or</span>
+                    <span className="px-4 text-gray-400 font-medium">or</span>
                   </div>
                 </div>
                 
@@ -739,11 +718,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="glass-button h-12 px-8 rounded-xl text-white font-medium disabled:opacity-50 transition-all duration-200 lg:w-auto w-full"
-                style={{ 
-                  background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(236, 72, 153, 0.15) 100%)',
-                  border: '1px solid rgba(59, 130, 246, 0.3)'
-                }}
+                className="smartsort-button h-12 px-8 rounded-xl text-white font-medium disabled:opacity-50 transition-all duration-200 lg:w-auto w-full"
               >
                 {isLoading ? (
                   <span className="flex items-center justify-center">
@@ -769,6 +744,10 @@ export default function Home() {
           
           {/* All Links Section */}
           <div className="section-container p-6 lg:p-8">
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold text-white tracking-tight" style={{ fontSize: 'calc(1.25rem + 1px)' }}>All Links</h2>
+            </div>
+            
                 {/* Filters with Add button */}
                 <div className="mb-8">
                   <div className="flex items-end justify-between gap-6">
@@ -893,13 +872,20 @@ export default function Home() {
                           <tr key={result.id} className="sds-table-row group">
                           <td className="sds-table-cell w-12">
                             <div className="flex items-center justify-center">
-                              <input
-                                type="checkbox"
-                                checked={result.isRead}
-                                onChange={() => handleToggleReadStatus(result.id)}
-                                className="h-4 w-4 text-blue-500 focus:ring-2 focus:ring-blue-500/20 cursor-pointer border border-white/20 bg-white/5 checked:bg-blue-500 checked:border-blue-500 rounded transition-all duration-200 hover:border-white/40"
+                              <button
+                                onClick={() => handleToggleReadStatus(result.id)}
+                                className="custom-toggle-button"
                                 title={!result.isRead ? 'Mark as read' : 'Mark as unread'}
-                              />
+                                data-checked={result.isRead}
+                              >
+                                <div className="toggle-circle">
+                                  {result.isRead && (
+                                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                    </svg>
+                                  )}
+                                </div>
+                              </button>
                             </div>
                           </td>
                           <td className="sds-table-cell">
@@ -935,20 +921,23 @@ export default function Home() {
                                 ))}
                               </div>
                               
-                              {/* Memo */}
-                              {result.memo && (
-                                <div className="text-gray-400 text-sm leading-relaxed line-clamp-2 italic">
-                                  {result.memo}
+                              {/* Memo and Date - Side by side */}
+                              <div className="flex justify-between items-start gap-3">
+                                {/* Memo */}
+                                {result.memo && (
+                                  <div className="text-gray-400 text-sm leading-relaxed line-clamp-2 italic flex-1">
+                                    {result.memo}
+                                  </div>
+                                )}
+                                
+                                {/* Date */}
+                                <div className="text-xs text-gray-500 font-normal whitespace-nowrap">
+                                  {new Date(result.createdAt).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric'
+                                  })}
                                 </div>
-                              )}
-                              
-                              {/* Date */}
-                              <div className="text-xs text-gray-500 font-normal">
-                                {new Date(result.createdAt).toLocaleDateString('en-US', {
-                                  year: 'numeric',
-                                  month: 'short',
-                                  day: 'numeric'
-                                })}
                               </div>
                             </div>
                           </td>
@@ -1060,16 +1049,7 @@ export default function Home() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Active Days Card */}
-              <div 
-                className="glass-card rounded-xl p-4 text-center relative overflow-hidden transition-all duration-300 cursor-pointer"
-                onMouseMove={(e) => handleCardMouseMove('active-days', e)}
-                onMouseLeave={() => handleCardMouseLeave('active-days')}
-                style={{
-                  background: cardHoverStates['active-days']?.isHovering 
-                    ? `radial-gradient(circle at ${cardHoverStates['active-days'].x}% ${cardHoverStates['active-days'].y}%, rgba(59, 130, 246, 0.15) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.02) 100%)`
-                    : undefined
-                }}
-              >
+              <div className="glassmorphism-card glassmorphism-card-blue rounded-xl p-4 text-center relative overflow-hidden cursor-pointer">
                 <div className="text-2xl font-semibold text-white mb-1">
                   {(() => {
                     const currentDate = new Date();
@@ -1101,16 +1081,7 @@ export default function Home() {
               </div>
               
               {/* Total Links Card */}
-              <div 
-                className="glass-card rounded-xl p-4 text-center relative overflow-hidden transition-all duration-300 cursor-pointer"
-                onMouseMove={(e) => handleCardMouseMove('total-links', e)}
-                onMouseLeave={() => handleCardMouseLeave('total-links')}
-                style={{
-                  background: cardHoverStates['total-links']?.isHovering 
-                    ? `radial-gradient(circle at ${cardHoverStates['total-links'].x}% ${cardHoverStates['total-links'].y}%, rgba(236, 72, 153, 0.15) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.02) 100%)`
-                    : undefined
-                }}
-              >
+              <div className="glassmorphism-card glassmorphism-card-pink rounded-xl p-4 text-center relative overflow-hidden cursor-pointer">
                 <div className="text-2xl font-semibold text-white mb-1">
                   {results.length}
                 </div>
@@ -1119,16 +1090,7 @@ export default function Home() {
               </div>
               
               {/* Read Percentage Card */}
-              <div 
-                className="glass-card rounded-xl p-4 text-center relative overflow-hidden transition-all duration-300 cursor-pointer"
-                onMouseMove={(e) => handleCardMouseMove('read-percentage', e)}
-                onMouseLeave={() => handleCardMouseLeave('read-percentage')}
-                style={{
-                  background: cardHoverStates['read-percentage']?.isHovering 
-                    ? `radial-gradient(circle at ${cardHoverStates['read-percentage'].x}% ${cardHoverStates['read-percentage'].y}%, rgba(34, 197, 94, 0.15) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.02) 100%)`
-                    : undefined
-                }}
-              >
+              <div className="glassmorphism-card glassmorphism-card-green rounded-xl p-4 text-center relative overflow-hidden cursor-pointer">
                 <div className="text-2xl font-semibold text-white mb-1">
                   {results.length > 0 ? Math.round((results.filter(r => r.isRead).length / results.length) * 100) : 0}%
                 </div>
@@ -1162,7 +1124,7 @@ export default function Home() {
               <div className="px-6 py-4 border-b border-white/20">
                 <h3 className="text-lg font-medium text-white">Edit Link</h3>
               </div>
-              <form onSubmit={handleSaveEdit} className="p-6 space-y-4">
+              <form onSubmit={handleSaveEdit} className="p-6" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
                   <label htmlFor="edit-title" className="block text-sm font-medium text-gray-300 mb-2">
                     Title
@@ -1247,7 +1209,8 @@ export default function Home() {
                       setShowEditModal(false);
                       setEditingLink(null);
                     }}
-                    className="px-4 py-2 text-gray-300 hover:text-white transition-all rounded-lg border border-white/20 hover:bg-white/10"
+                    className="px-4 py-2 text-gray-300 hover:text-white transition-all border border-white/20 hover:bg-white/10"
+                    style={{ borderRadius: '12px' }}
                   >
                     Cancel
                   </button>
@@ -1332,7 +1295,8 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={() => setShowAddModal(false)}
-                    className="px-4 py-2 text-gray-300 hover:text-white transition-all rounded-lg border border-white/20 hover:bg-white/10"
+                    className="px-4 py-2 text-gray-300 hover:text-white transition-all border border-white/20 hover:bg-white/10"
+                    style={{ borderRadius: '12px' }}
                   >
                     Cancel
                   </button>

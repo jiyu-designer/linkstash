@@ -165,14 +165,14 @@ export default function ReadingCalendar() {
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-4 lg:gap-4">
       {/* Calendar */}
       <div>
-                      <div className="glass-card rounded-2xl overflow-hidden">
+        <div className="rounded-2xl overflow-hidden">
           {/* Header with Navigation and Statistics */}
           <div className="px-4 py-3">
             {/* Month Navigation */}
             <div className="flex items-center justify-center mb-4 gap-4">
               <button
                 onClick={goToPreviousMonth}
-                className="p-1 hover:bg-white/20 rounded-lg transition-colors text-white"
+                className="p-1 hover:bg-white/10 rounded-lg transition-colors text-white"
                 disabled={isLoading}
               >
                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -188,7 +188,7 @@ export default function ReadingCalendar() {
               
               <button
                 onClick={goToNextMonth}
-                className="p-1 hover:bg-white/20 rounded-lg transition-colors text-white"
+                className="p-1 hover:bg-white/10 rounded-lg transition-colors text-white"
                 disabled={isLoading}
               >
                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -196,8 +196,6 @@ export default function ReadingCalendar() {
                 </svg>
               </button>
             </div>
-
-
           </div>
 
           {/* Calendar Grid */}
@@ -218,14 +216,13 @@ export default function ReadingCalendar() {
                   key={index}
                   className={`
                     h-8 md:h-10 text-xs md:text-sm rounded-lg transition-all duration-200 relative
-                    ${dayData ? 'hover:bg-slate-200' : ''}
                     ${dayData?.isSelected ? 'border-2 border-white' : 'border border-transparent'}
                     ${
                       dayData 
                         ? dayData.hasReadLinks && dayData.hasSavedLinks 
-                          ? `bg-green-400/20 border border-green-400/30 text-green-300 ${dayData.isToday ? 'font-bold' : ''}` // 둘 다 있는 날
+                          ? `bg-green-400/20 border border-green-400/30 text-green-300 hover:bg-green-400/30 hover:text-green-200 ${dayData.isToday ? 'font-bold' : ''}` // 둘 다 있는 날
                           : dayData.hasReadLinks || dayData.hasSavedLinks 
-                            ? `bg-green-400/10 border border-green-400/20 text-green-300 ${dayData.isToday ? 'font-bold' : ''}` // 저장 또는 읽은 날
+                            ? `bg-green-400/10 border border-green-400/20 text-green-300 hover:bg-green-400/20 hover:text-green-200 ${dayData.isToday ? 'font-bold' : ''}` // 저장 또는 읽은 날
                             : `bg-white/10 hover:bg-white/20 text-white ${dayData.isToday ? 'font-bold' : ''}` // 아무것도 없는 날
                         : ''
                     }
@@ -247,12 +244,12 @@ export default function ReadingCalendar() {
       </div>
 
       {/* Selected Date Content */}
-      <div className="glass-card rounded-2xl overflow-hidden">
+      <div className="rounded-2xl overflow-hidden">
         {/* Header matching calendar height */}
         <div className="px-4 py-3">
-          {/* Selected Date Display - matching calendar navigation height */}
-          <div className="flex items-center justify-center mb-4 gap-4 h-8">
-            <div className="text-center">
+          {/* Selected Date Display and Stats - Side by side */}
+          <div className="flex items-center justify-between mb-4 gap-3 h-8">
+            <div>
               <h2 className="text-xl font-semibold text-white tracking-tight">
                 {monthNames[selectedDate.getMonth()]} {selectedDate.getDate()}
                 {(() => {
@@ -264,24 +261,20 @@ export default function ReadingCalendar() {
                 })()}
               </h2>
             </div>
+            <div>
+              {(() => {
+                const selectedDateKey = selectedDate.toDateString();
+                const savedLinksForDate = monthSavedLinks.get(selectedDateKey) || [];
+                const readLinksForDate = monthReadLinks.get(selectedDateKey) || [];
+                
+                return (
+                  <p className="text-sm text-gray-300 whitespace-nowrap">
+                    {savedLinksForDate.length} Saved, {readLinksForDate.length} Read
+                  </p>
+                );
+              })()}
+            </div>
           </div>
-        </div>
-
-        {/* Stats for selected date */}
-        <div className="px-4 pb-3">
-          {(() => {
-            const selectedDateKey = selectedDate.getDate().toString();
-            const savedLinksForDate = monthSavedLinks.get(selectedDateKey) || [];
-            const readLinksForDate = monthReadLinks.get(selectedDateKey) || [];
-            
-            return (
-              <div className="text-center">
-                <p className="text-sm text-gray-300">
-                  {savedLinksForDate.length} Saved, {readLinksForDate.length} Read
-                </p>
-              </div>
-            );
-          })()}
         </div>
         
         {/* Content List - aligned with calendar grid */}
@@ -292,7 +285,7 @@ export default function ReadingCalendar() {
                 {readLinksForDate.map((link) => (
                   <div
                     key={link.id}
-                    className="glass-card rounded-lg px-4 py-2 hover:bg-white/10 transition-colors"
+                    className="rounded-lg px-4 py-2 hover:bg-white/5 transition-colors border-l-2 border-gray-600"
                   >
                     <h4 className="font-medium text-white text-base line-clamp-2 mb-1">
                       <a

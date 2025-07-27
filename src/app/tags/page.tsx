@@ -131,24 +131,24 @@ export default function TagsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-black py-8">
+      <div className="mx-auto px-10 lg:px-[120px]">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">태그 관리</h1>
-            <p className="text-gray-600 mt-2">링크에 붙일 태그를 관리하세요</p>
+            <h1 className="text-3xl font-semibold text-white tracking-tight">태그 관리</h1>
+            <p className="text-gray-300 mt-2">링크에 붙일 태그를 관리하세요</p>
           </div>
           <div className="flex gap-4">
             <Link
               href="/"
-              className="px-4 py-2 text-gray-600 hover:text-gray-800"
+              className="px-4 py-2 text-gray-300 hover:text-white transition-colors"
             >
               ← 홈으로
             </Link>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+              className="glass-button px-6 py-2 rounded-lg"
             >
               새 태그 추가
             </button>
@@ -156,58 +156,56 @@ export default function TagsPage() {
         </div>
 
         {/* Tags Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {tags.map(tag => {
             const linkCount = getLinkCount(tag.name);
             return (
               <div
                 key={tag.id}
-                className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow"
+                className="group p-3 border border-gray-700 rounded-lg hover:border-gray-500 transition-all hover:bg-white/5"
               >
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <div
-                      className="w-4 h-4 rounded-full"
+                      className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: tag.color }}
                     ></div>
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-900">
-                        #{tag.name}
-                      </h3>
-                      <p className="text-xs text-gray-500">
-                        {linkCount}개 링크
-                      </p>
-                    </div>
+                    <h3 className="text-sm font-medium text-white truncate">
+                      #{tag.name}
+                    </h3>
                   </div>
-                  <div className="flex gap-1">
+                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => handleEdit(tag)}
-                      className="text-blue-600 hover:text-blue-800 text-xs"
+                      className="text-gray-400 hover:text-white text-xs"
                     >
                       수정
                     </button>
-                    <span className="text-gray-300">|</span>
                     <button
                       onClick={() => handleDelete(tag.id)}
-                      className="text-red-600 hover:text-red-800 text-xs"
+                      className="text-gray-500 hover:text-red-400 text-xs"
                     >
                       삭제
                     </button>
                   </div>
                 </div>
                 
+                <p className="text-xs text-gray-400 mb-2">
+                  {linkCount}개 링크
+                </p>
+                
                 {tag.description && (
-                  <p className="text-gray-600 text-xs mb-3">{tag.description}</p>
+                  <p className="text-gray-500 text-xs mb-2 line-clamp-2">{tag.description}</p>
                 )}
                 
                 <div className="flex justify-between items-center">
-                  <div className="text-xs text-gray-400">
+                  <div className="text-xs text-gray-500">
                     {tag.createdAt.toLocaleDateString()}
                   </div>
                   {linkCount > 0 && (
                     <Link
                       href={`/tags/${encodeURIComponent(tag.name)}`}
-                      className="text-green-600 hover:text-green-800 text-xs font-medium"
+                      className="text-gray-400 hover:text-white text-xs transition-colors"
                     >
                       보기 →
                     </Link>
@@ -223,7 +221,7 @@ export default function TagsPage() {
             <div className="text-gray-400 text-lg mb-4">등록된 태그가 없습니다</div>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+              className="glass-button px-6 py-2 rounded-lg"
             >
               첫 번째 태그 만들기
             </button>
@@ -232,29 +230,29 @@ export default function TagsPage() {
 
         {/* Modal */}
         {isModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md">
-              <h2 className="text-xl font-semibold mb-4">
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+            <div className="bg-gray-900 rounded-lg p-6 w-full max-w-md border border-gray-700">
+              <h2 className="text-xl font-semibold mb-4 text-white">
                 {editingTag ? '태그 수정' : '새 태그 추가'}
               </h2>
               
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     태그 이름
                   </label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent text-white"
                     placeholder="예: AI, JavaScript, React"
                     required
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     색상
                   </label>
                   <div className="flex gap-2 flex-wrap">
@@ -264,7 +262,7 @@ export default function TagsPage() {
                         type="button"
                         onClick={() => setFormData(prev => ({ ...prev, color }))}
                         className={`w-8 h-8 rounded-full border-2 ${
-                          formData.color === color ? 'border-gray-800' : 'border-gray-300'
+                          formData.color === color ? 'border-white' : 'border-gray-600'
                         }`}
                         style={{ backgroundColor: color }}
                       />
@@ -273,13 +271,13 @@ export default function TagsPage() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     설명 (선택사항)
                   </label>
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent text-white"
                     rows={3}
                     placeholder="태그에 대한 간단한 설명"
                   />
@@ -289,13 +287,13 @@ export default function TagsPage() {
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="flex-1 px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200"
+                    className="flex-1 px-4 py-2 text-gray-300 bg-gray-700 rounded-md hover:bg-gray-600 transition-colors"
                   >
                     취소
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                    className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
                   >
                     {editingTag ? '수정' : '추가'}
                   </button>
