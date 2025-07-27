@@ -214,6 +214,7 @@ export default function OnboardingPage() {
 
       // Add the new link
       await storage.addLink(newLink);
+      console.log('✅ 온보딩에서 링크 저장 완료:', newLink);
       
       // Save the link data for display in step 2
       setSavedLink(newLink);

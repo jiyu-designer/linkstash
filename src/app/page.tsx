@@ -334,12 +334,17 @@ export default function Home() {
             return;
           }
           
-          // 저장된 링크가 없을 때 온보딩 체크 (데이터 로딩 완료 후)
+          // 저장된 링크가 없을 때 온보딩 체크 (실제 저장된 링크 확인)
           // 단, 온보딩을 완료한 사용자는 제외
-          if (results.length === 0 && userData?.firstLogin !== false) {
-            console.log('📝 저장된 링크가 없어서 온보딩 시작');
-            router.push('/onboarding');
-            return;
+          if (userData?.firstLogin !== false) {
+            const userLinks = await storage.getLinks();
+            console.log('🔍 저장된 링크 확인:', { count: userLinks.length, firstLogin: userData?.firstLogin });
+            
+            if (userLinks.length === 0) {
+              console.log('📝 저장된 링크가 없어서 온보딩 시작');
+              router.push('/onboarding');
+              return;
+            }
           }
         }
       } catch (error) {
@@ -348,10 +353,10 @@ export default function Home() {
     };
 
     // 데이터 로딩이 완료된 후 온보딩 체크 실행
-    if (user && !authLoading && results.length >= 0) {
+    if (user && !authLoading) {
       checkOnboarding();
     }
-  }, [user, router, results.length, authLoading]);
+  }, [user, router, authLoading]);
 
   // Handle Google Sign In
   const handleGoogleSignIn = async () => {
