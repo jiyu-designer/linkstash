@@ -9,11 +9,13 @@ import { clearAuthData, forceAuthReset } from '@/lib/clear-auth';
 import { storage } from '@/lib/storage';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 import { CategorizedLink, Category, Tag } from '@/types';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import AntiExtension from './anti-extension';
 
 
 export default function Home() {
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [showEmailAuth, setShowEmailAuth] = useState(false);
@@ -288,6 +290,27 @@ export default function Home() {
       window.removeEventListener('storage-tags-updated', handleTagsUpdate as EventListener);
     };
   }, []);
+
+  // 신규 사용자 온보딩 체크
+  useEffect(() => {
+    const checkFirstLogin = async () => {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (authUser) {
+        const userData = authUser.user_metadata;
+        console.log('👤 사용자 메타데이터:', userData);
+        
+        if (userData?.firstLogin === true) {
+          console.log('🎉 신규 사용자 온보딩 시작');
+          router.push('/onboarding');
+          return;
+        }
+      }
+    };
+
+    if (user) {
+      checkFirstLogin();
+    }
+  }, [user, router]);
 
   // Handle Google Sign In
   const handleGoogleSignIn = async () => {
@@ -610,9 +633,6 @@ export default function Home() {
                 
                 {/* Divider */}
                 <div className="relative my-4">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-1/2 border-t border-white/20" />
-                  </div>
                   <div className="relative flex justify-center text-sm">
                     <span className="px-4 text-gray-400 font-medium">or</span>
                   </div>

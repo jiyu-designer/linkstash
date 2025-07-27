@@ -44,13 +44,39 @@ export const signUpWithEmail = async (email: string, password: string, fullName?
     throw error;
   }
 
-  // 회원가입 성공했지만 이메일 확인이 필요한 경우
-  if (data?.user && !data?.session) {
-    console.log('✅ 회원가입 성공 - 이메일 확인 필요');
-    console.log('📩 확인 이메일 발송 대상:', email);
-    console.log('⏰ 확인 이메일 발송 시간:', data.user.confirmation_sent_at);
-  } else if (data?.session) {
-    console.log('✅ 회원가입 및 자동 로그인 완료');
+  // 회원가입 성공 - 이메일 확인 없이 바로 로그인 처리
+  if (data?.user) {
+    console.log('✅ 회원가입 성공 - 이메일 확인 없이 바로 로그인 처리');
+    
+    // 이메일 확인 없이 바로 로그인
+    if (!data?.session) {
+      console.log('🔄 이메일 확인 없이 자동 로그인 시도...');
+      try {
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        
+        if (signInError) {
+          console.error('❌ 자동 로그인 실패:', signInError);
+          // 원래 데이터 반환 (이메일 확인 필요 상태)
+          return data;
+        }
+        
+        console.log('✅ 자동 로그인 성공');
+        // 로그인된 세션 데이터 반환
+        return {
+          ...data,
+          session: signInData.session,
+          user: signInData.user || data.user
+        };
+      } catch (autoLoginError) {
+        console.error('❌ 자동 로그인 예외:', autoLoginError);
+        return data;
+      }
+    } else {
+      console.log('✅ 회원가입과 동시에 자동 로그인 완료');
+    }
   }
 
   return data;

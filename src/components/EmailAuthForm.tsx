@@ -1,7 +1,7 @@
 'use client';
 
 import { resendConfirmation, resetPassword, signInWithEmail, signUpWithEmail } from '@/lib/auth';
-import { isSupabaseConfigured } from '@/lib/supabase';
+import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 import { useState } from 'react';
 
 type AuthMode = 'signin' | 'signup' | 'reset' | 'confirm';
@@ -105,17 +105,29 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
           const signUpData = await signUpWithEmail(formData.email, formData.password, formData.fullName);
           console.log('📧 회원가입 완료 데이터:', signUpData);
           
-          if (signUpData?.user && !signUpData?.session) {
-            console.log('📩 이메일 확인 필요한 회원가입 완료');
-            setSuccess('Sign up completed! We have sent you an email verification link. Please check your inbox (or spam folder).');
-            setMode('confirm');
-          } else if (signUpData?.session) {
-            console.log('🚀 즉시 로그인 완료');
-            setSuccess('Sign up and login completed successfully!');
+          if (signUpData?.session && signUpData?.user) {
+            console.log('🚀 회원가입 및 즉시 로그인 완료');
+            
+            // 신규 가입자에게 firstLogin 플래그 설정
+            await supabase.auth.updateUser({
+              data: { firstLogin: true }
+            });
+            
+            setSuccess('Welcome to LinkStash! Let\'s get you started.');
+            onSuccess?.();
+          } else if (signUpData?.user) {
+            console.log('✅ 회원가입 완료 (세션 없음)');
+            
+            // 신규 가입자에게 firstLogin 플래그 설정
+            await supabase.auth.updateUser({
+              data: { firstLogin: true }
+            });
+            
+            setSuccess('Sign up completed successfully! You are now logged in.');
             onSuccess?.();
           } else {
             console.warn('⚠️ 예상치 못한 회원가입 응답:', signUpData);
-            setError('Sign up completed but there may be an issue with sending the verification email.');
+            setError('Sign up failed. Please try again.');
           }
           break;
 
