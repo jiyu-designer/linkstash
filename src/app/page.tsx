@@ -591,7 +591,7 @@ export default function Home() {
           </div>
 
           {/* Login Card */}
-          <div className={showEmailAuth ? "p-8" : "section-container p-8"}>
+          <div className="section-container p-8">
 
             {/* Error Message */}
             {error && (

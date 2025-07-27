@@ -23,24 +23,30 @@ export async function GET() {
               fontSize: '72px',
               fontWeight: 700,
               color: '#ffffff',
-              marginBottom: '16px',
+              marginBottom: '64px',
               fontFamily: 'system-ui, -apple-system, sans-serif',
               letterSpacing: '-0.025em',
             }}
           >
-            LinkStash
+            LinkStash (by Jiyu)
           </div>
           
           <div
             style={{
-              fontSize: '32px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '24px',
+              fontSize: '52px',
               fontWeight: 500,
-              color: '#9ca3af',
+              color: '#e5e7eb',
               fontFamily: 'system-ui, -apple-system, sans-serif',
-              letterSpacing: '0.025em',
+              letterSpacing: '0.01em',
+              lineHeight: 1.2,
             }}
           >
-            Save smartly. Learn deeply
+            <div>Save smartly.</div>
+            <div>Learn deeply.</div>
           </div>
 
           <div
@@ -49,7 +55,7 @@ export async function GET() {
               height: '4px',
               backgroundColor: '#3b82f6',
               borderRadius: '2px',
-              marginTop: '32px',
+              marginTop: '64px',
             }}
           />
         </div>
