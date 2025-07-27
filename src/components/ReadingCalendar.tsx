@@ -312,10 +312,10 @@ export default function ReadingCalendar() {
               )}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center h-80 text-center">
-              <p className="text-gray-300 text-sm text-center">
+            <div className="text-center py-8">
+              <div className="text-gray-500">
                 Looks a little empty in here.
-              </p>
+              </div>
             </div>
           )}
         </div>
