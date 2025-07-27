@@ -249,7 +249,7 @@ export default function ReadingCalendar() {
         <div className="px-4 py-3">
           {/* Selected Date Display and Stats - Horizontal aligned */}
           <div className="mb-4">
-            <h2 className="text-base font-semibold text-white tracking-tight">
+            <h2 className="text-base font-semibold text-white tracking-tight" style={{ padding: '0 12px', marginTop: '8px' }}>
               {monthNames[selectedDate.getMonth()]} {selectedDate.getDate()}
               {(() => {
                 const day = selectedDate.getDate();
@@ -257,17 +257,20 @@ export default function ReadingCalendar() {
                 if (day === 2 || day === 22) return 'nd';
                 if (day === 3 || day === 23) return 'rd';
                 return 'th';
-              })()} {(() => {
-                const selectedDateKey = selectedDate.toDateString();
-                const savedLinksForDate = monthSavedLinks.get(selectedDateKey) || [];
-                const readLinksForDate = monthReadLinks.get(selectedDateKey) || [];
-                
-                return (
-                  <span className="text-sm text-gray-300 font-normal">
-                    {savedLinksForDate.length} Saved<span style={{ marginLeft: '12px' }}> {readLinksForDate.length} Read</span>
-                  </span>
-                );
               })()}
+              <span style={{ marginLeft: '16px' }}>
+                {(() => {
+                  const selectedDateKey = selectedDate.toDateString();
+                  const savedLinksForDate = monthSavedLinks.get(selectedDateKey) || [];
+                  const readLinksForDate = monthReadLinks.get(selectedDateKey) || [];
+                  
+                  return (
+                    <span className="text-sm text-gray-300 font-normal">
+                      {savedLinksForDate.length} Saved<span style={{ marginLeft: '8px' }}> {readLinksForDate.length} Read</span>
+                    </span>
+                  );
+                })()}
+              </span>
             </h2>
           </div>
         </div>
@@ -282,7 +285,7 @@ export default function ReadingCalendar() {
                     key={link.id}
                     className="rounded-lg px-4 py-2 bg-white/3"
                   >
-                    <h4 className="font-medium text-white text-base line-clamp-2 mb-1">
+                    <h4 className="font-medium text-white text-sm line-clamp-2 mb-1">
                       <a
                         href={link.url}
                         target="_blank"

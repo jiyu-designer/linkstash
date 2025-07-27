@@ -125,6 +125,7 @@ export default function ManagePage() {
                     ? 'border-white text-white'
                     : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-400'
                 }`}
+                style={{ marginBottom: '6px' }}
               >
                 Categories ({categories.length})
               </button>
@@ -135,6 +136,7 @@ export default function ManagePage() {
                     ? 'border-white text-white'
                     : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-400'
                 }`}
+                style={{ marginBottom: '6px' }}
               >
                 Tags ({tags.length})
               </button>
@@ -151,75 +153,71 @@ export default function ManagePage() {
                   <p className="text-gray-300">No categories found</p>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-2">
                   {categories.map((category) => (
-                    <div key={category.id} className="glass-card rounded-xl p-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          {editingId === category.id ? (
-                            <div className="flex items-center gap-2">
-                              <div
-                                className="w-2 h-2 rounded-full flex-shrink-0"
-                                style={{ backgroundColor: category.color }}
-                              ></div>
-                              <input
-                                type="text"
-                                value={editingName}
-                                onChange={(e) => setEditingName(e.target.value)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') handleEditSave();
-                                  if (e.key === 'Escape') handleEditCancel();
-                                }}
-                                className="flex-1 bg-white/10 rounded-lg px-2 py-1 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-400"
-                                autoFocus
-                              />
-                              <button
-                                onClick={handleEditSave}
-                                className="p-1 text-green-400 hover:text-green-300 transition-colors"
-                                title="Save"
-                              >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                </svg>
-                              </button>
-                              <button
-                                onClick={handleEditCancel}
-                                className="p-1 text-gray-400 hover:text-gray-300 transition-colors"
-                                title="Cancel"
-                              >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                              </button>
-                            </div>
-                          ) : (
+                    <div key={category.id} className="flex items-center justify-between py-2 px-3 hover:bg-white/5 transition-colors">
+                      <div className="flex-1">
+                        {editingId === category.id ? (
+                          <div className="flex items-center gap-2">
                             <div
-                              className="sds-chip sds-chip-category cursor-pointer"
-                              onClick={() => handleEditStart(category.id, category.name)}
+                              className="w-2 h-2 rounded-full flex-shrink-0"
+                              style={{ backgroundColor: category.color }}
+                            ></div>
+                            <input
+                              type="text"
+                              value={editingName}
+                              onChange={(e) => setEditingName(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleEditSave();
+                                if (e.key === 'Escape') handleEditCancel();
+                              }}
+                              className="flex-1 bg-white/10 rounded-lg px-2 py-1 text-white text-base border border-white/20 focus:outline-none focus:border-blue-400"
+                              autoFocus
+                            />
+                            <button
+                              onClick={handleEditSave}
+                              className="p-1 text-green-400 hover:text-green-300 transition-colors"
+                              title="Save"
                             >
-                              <div className="flex items-center">
-                                <div
-                                  className="w-2 h-2 rounded-full mr-2"
-                                  style={{ backgroundColor: category.color }}
-                                ></div>
-                                <span>{category.name}</span>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                        
-                        {editingId !== category.id && (
-                          <button
-                            onClick={() => handleDeleteCategory(category.id)}
-                            className="ml-3 p-1 text-red-400 hover:text-red-300 transition-colors"
-                            title="Delete category"
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={handleEditCancel}
+                              className="p-1 text-gray-400 hover:text-gray-300 transition-colors"
+                              title="Cancel"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </button>
+                          </div>
+                        ) : (
+                          <div
+                            className="flex items-center cursor-pointer"
+                            onClick={() => handleEditStart(category.id, category.name)}
                           >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                          </button>
+                            <div
+                              className="w-2 h-2 rounded-full mr-3"
+                              style={{ backgroundColor: category.color }}
+                            ></div>
+                            <span className="text-white text-base">{category.name}</span>
+                          </div>
                         )}
                       </div>
+                      
+                      {editingId !== category.id && (
+                        <button
+                          onClick={() => handleDeleteCategory(category.id)}
+                          className="ml-3 p-1 text-red-400 hover:text-red-300 transition-colors"
+                          title="Delete category"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -232,66 +230,65 @@ export default function ManagePage() {
                   <p className="text-gray-300">No tags found</p>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-2">
                   {tags.map((tag) => (
-                    <div key={tag.id} className="glass-card rounded-xl p-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          {editingId === tag.id ? (
-                            <div className="flex items-center gap-2">
-                              <span className="text-gray-400 flex-shrink-0">#</span>
-                              <input
-                                type="text"
-                                value={editingName}
-                                onChange={(e) => setEditingName(e.target.value)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') handleEditSave();
-                                  if (e.key === 'Escape') handleEditCancel();
-                                }}
-                                className="flex-1 bg-white/10 rounded-lg px-2 py-1 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-400"
-                                autoFocus
-                              />
-                              <button
-                                onClick={handleEditSave}
-                                className="p-1 text-green-400 hover:text-green-300 transition-colors"
-                                title="Save"
-                              >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                </svg>
-                              </button>
-                              <button
-                                onClick={handleEditCancel}
-                                className="p-1 text-gray-400 hover:text-gray-300 transition-colors"
-                                title="Cancel"
-                              >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                              </button>
-                            </div>
-                          ) : (
-                            <div
-                              className="sds-chip sds-chip-tag cursor-pointer"
-                              onClick={() => handleEditStart(tag.id, tag.name)}
+                    <div key={tag.id} className="flex items-center justify-between py-2 px-3 hover:bg-white/5 transition-colors">
+                      <div className="flex-1">
+                        {editingId === tag.id ? (
+                          <div className="flex items-center gap-2">
+                            <span className="text-gray-400 flex-shrink-0">#</span>
+                            <input
+                              type="text"
+                              value={editingName}
+                              onChange={(e) => setEditingName(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleEditSave();
+                                if (e.key === 'Escape') handleEditCancel();
+                              }}
+                              className="flex-1 bg-white/10 rounded-lg px-2 py-1 text-white text-base border border-white/20 focus:outline-none focus:border-blue-400"
+                              autoFocus
+                            />
+                            <button
+                              onClick={handleEditSave}
+                              className="p-1 text-green-400 hover:text-green-300 transition-colors"
+                              title="Save"
                             >
-                              <span>#{tag.name}</span>
-                            </div>
-                          )}
-                        </div>
-                        
-                        {editingId !== tag.id && (
-                          <button
-                            onClick={() => handleDeleteTag(tag.id)}
-                            className="ml-3 p-1 text-red-400 hover:text-red-300 transition-colors"
-                            title="Delete tag"
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={handleEditCancel}
+                              className="p-1 text-gray-400 hover:text-gray-300 transition-colors"
+                              title="Cancel"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </button>
+                          </div>
+                        ) : (
+                          <div
+                            className="flex items-center cursor-pointer"
+                            onClick={() => handleEditStart(tag.id, tag.name)}
                           >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                          </button>
+                            <span className="text-gray-400 mr-2">#</span>
+                            <span className="text-white text-base">{tag.name}</span>
+                          </div>
                         )}
                       </div>
+                      
+                      {editingId !== tag.id && (
+                        <button
+                          onClick={() => handleDeleteTag(tag.id)}
+                          className="ml-3 p-1 text-red-400 hover:text-red-300 transition-colors"
+                          title="Delete tag"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      )}
                     </div>
                   ))}
                 </div>
