@@ -22,6 +22,7 @@ export const signUpWithEmail = async (email: string, password: string, fullName?
     options: {
       data: {
         full_name: fullName || '',
+        firstLogin: true, // 신규 사용자 플래그 설정
       },
       emailRedirectTo: `${window.location.origin}/auth/callback`
     }

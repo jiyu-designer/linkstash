@@ -237,6 +237,7 @@ export default function OnboardingPage() {
         await supabase.auth.updateUser({
           data: { firstLogin: false }
         });
+        console.log('✅ 온보딩 완료 - firstLogin 플래그 업데이트됨');
       }
       
       router.push('/');
@@ -453,10 +454,18 @@ export default function OnboardingPage() {
             {/* Start Button */}
             <div className="mt-16 flex justify-center">
               <button 
-                onClick={() => router.push('/')}
+                onClick={handleStartApp}
+                disabled={loading}
                 className="cta-button h-12 px-8 rounded-xl text-white font-medium disabled:opacity-50 transition-all duration-200 lg:w-auto w-full"
               >
-                Start
+                {loading ? (
+                  <span className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white mr-3"></div>
+                    <span className="text-sm font-medium">Starting...</span>
+                  </span>
+                ) : (
+                  <span className="text-sm font-medium tracking-wide">Start Using LinkStash</span>
+                )}
               </button>
             </div>
           </div>

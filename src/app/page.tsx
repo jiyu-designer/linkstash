@@ -244,7 +244,7 @@ export default function Home() {
     });
 
     // Listen to auth state changes
-    const { data: { subscription } } = onAuthStateChange((currentUser) => {
+    const { data: { subscription } } = onAuthStateChange(async (currentUser) => {
       console.log('🔄 Auth state changed:', {
         user: currentUser?.email || 'logged out',
         hasUser: !!currentUser,
@@ -257,6 +257,8 @@ export default function Home() {
       if (currentUser) {
         console.log('📊 Loading user data for:', currentUser.email);
         loadData();
+        
+        // 온보딩 체크는 별도 useEffect에서 처리 (데이터 로딩 완료 후)
       } else {
         // Clear data when user logs out
         console.log('🧹 Clearing data on logout');
@@ -291,26 +293,53 @@ export default function Home() {
     };
   }, []);
 
-  // 신규 사용자 온보딩 체크
+  // 신규 사용자 온보딩 체크 및 저장된 링크 없을 때 온보딩 체크
   useEffect(() => {
-    const checkFirstLogin = async () => {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (authUser) {
-        const userData = authUser.user_metadata;
-        console.log('👤 사용자 메타데이터:', userData);
-        
-        if (userData?.firstLogin === true) {
-          console.log('🎉 신규 사용자 온보딩 시작');
-          router.push('/onboarding');
-          return;
+    const checkOnboarding = async () => {
+      if (!user || authLoading) return;
+      
+      try {
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        if (authUser) {
+          const userData = authUser.user_metadata;
+          console.log('👤 사용자 메타데이터:', userData);
+          
+          // 구글 로그인으로 처음 로그인한 사용자인 경우 firstLogin 플래그 설정
+          if (!userData?.firstLogin && authUser.app_metadata?.provider === 'google') {
+            console.log('🔍 구글 로그인 신규 사용자 감지 - firstLogin 플래그 설정');
+            await supabase.auth.updateUser({
+              data: { firstLogin: true }
+            });
+            // 플래그 설정 후 바로 온보딩으로 이동
+            console.log('🎉 신규 사용자 온보딩 시작');
+            router.push('/onboarding');
+            return;
+          }
+          
+          // 신규 사용자 체크 (이메일 회원가입)
+          if (userData?.firstLogin === true) {
+            console.log('🎉 신규 사용자 온보딩 시작');
+            router.push('/onboarding');
+            return;
+          }
+          
+          // 저장된 링크가 없을 때 온보딩 체크 (데이터 로딩 완료 후)
+          if (results.length === 0) {
+            console.log('📝 저장된 링크가 없어서 온보딩 시작');
+            router.push('/onboarding');
+            return;
+          }
         }
+      } catch (error) {
+        console.error('온보딩 체크 오류:', error);
       }
     };
 
-    if (user) {
-      checkFirstLogin();
+    // 데이터 로딩이 완료된 후 온보딩 체크 실행
+    if (user && !authLoading && results.length >= 0) {
+      checkOnboarding();
     }
-  }, [user, router]);
+  }, [user, router, results.length, authLoading]);
 
   // Handle Google Sign In
   const handleGoogleSignIn = async () => {
@@ -350,6 +379,14 @@ export default function Home() {
       const { data: { user: authUser } } = await supabase.auth.getUser();
       if (authUser?.user_metadata?.firstLogin === true) {
         console.log('🎉 신규 사용자 온보딩으로 이동');
+        router.push('/onboarding');
+        return;
+      }
+      
+      // 저장된 링크가 없을 때도 온보딩 체크
+      const userLinks = await storage.getLinks();
+      if (userLinks.length === 0) {
+        console.log('📝 저장된 링크가 없어서 온보딩으로 이동');
         router.push('/onboarding');
         return;
       }
@@ -476,6 +513,15 @@ export default function Home() {
       return;
     }
 
+    // 일일 사용량 제한 체크 (일반 유저만)
+    if (user && !isExemptUser(user.email)) {
+      const dailyUsage = getDailyUsage(user.id);
+      if (dailyUsage >= 5) {
+        setError('Daily limit reached. You can use AutoStash up to 5 times per day. Please try again tomorrow.');
+        return;
+      }
+    }
+
     setIsLoading(true);
 
     try {
@@ -516,6 +562,13 @@ export default function Home() {
 
       // Add the new link
       await storage.addLink(newLink);
+      
+      // 성공 시 일일 사용량 증가 (일반 유저만)
+      if (user && !isExemptUser(user.email)) {
+        incrementDailyUsage(user.id);
+        console.log(`✅ AutoStash 사용량 증가: ${getDailyUsage(user.id)}/5`);
+      }
+      
       setUrl(''); // 입력 필드 초기화
       setMemo(''); // 메모 필드 초기화
     } catch (err) {
@@ -788,6 +841,23 @@ export default function Home() {
                 )}
               </button>
             </div>
+            
+            {/* 일일 사용량 표시 (일반 유저만) */}
+            {user && !isExemptUser(user.email) && (
+              <div className="mt-4 flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                  <span className="text-xs text-gray-400 font-medium">
+                    Daily AutoStash Usage: {getDailyUsage(user.id)}/5
+                  </span>
+                </div>
+                {getDailyUsage(user.id) >= 5 && (
+                  <span className="text-xs text-red-400 font-medium">
+                    Limit reached for today
+                  </span>
+                )}
+              </div>
+            )}
           </form>
         </div>
 
