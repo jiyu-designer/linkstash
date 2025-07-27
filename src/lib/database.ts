@@ -1,6 +1,6 @@
-import { supabase } from './supabase';
+import { CategorizedLink, Category, Tag, User, UserProfile, UserStats } from '@/types';
 import { getCurrentUserId } from './auth';
-import { Category, Tag, CategorizedLink, User, UserStats, UserProfile } from '@/types';
+import { supabase } from './supabase';
 
 // Helper function to convert database row to User
 const dbToUser = (row: any): User => ({
@@ -618,6 +618,57 @@ export const database = {
         totalTags: data.total_tags,
         readingStreakDays: data.reading_streak_days
       };
+    }
+  },
+
+  // AI Limits management
+  aiLimits: {
+    async getUserLimit(userEmail: string): Promise<any> {
+      const { data, error } = await supabase
+        .rpc('get_user_ai_limit', { user_email: userEmail });
+
+      if (error) {
+        console.error('Error getting user AI limit:', error);
+        throw new Error('Failed to get user AI limit');
+      }
+
+      return data;
+    },
+
+    async incrementUsage(userEmail: string): Promise<boolean> {
+      const { data, error } = await supabase
+        .rpc('increment_user_ai_usage', { user_email: userEmail });
+
+      if (error) {
+        console.error('Error incrementing AI usage:', error);
+        throw new Error('Failed to increment AI usage');
+      }
+
+      return data;
+    },
+
+    async resetUsage(userEmail: string): Promise<boolean> {
+      const { data, error } = await supabase
+        .rpc('reset_user_ai_usage', { user_email: userEmail });
+
+      if (error) {
+        console.error('Error resetting AI usage:', error);
+        throw new Error('Failed to reset AI usage');
+      }
+
+      return data;
+    },
+
+    async setExempt(userEmail: string, exempt: boolean): Promise<boolean> {
+      const { data, error } = await supabase
+        .rpc('set_user_exempt', { user_email: userEmail, exempt_status: exempt });
+
+      if (error) {
+        console.error('Error setting user exempt status:', error);
+        throw new Error('Failed to set user exempt status');
+      }
+
+      return data;
     }
   }
 }; 

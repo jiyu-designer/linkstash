@@ -6,6 +6,7 @@ import SummaryAndCalendarSection from '@/components/SummaryAndCalendarSection';
 import { Input } from '@/components/sds';
 import { getCurrentUser, onAuthStateChange, signInWithGoogle, signInWithKakao, type User } from '@/lib/auth';
 import { clearAuthData, forceAuthReset } from '@/lib/clear-auth';
+import { database } from '@/lib/database';
 import { storage } from '@/lib/storage';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 import { CategorizedLink, Category, Tag } from '@/types';
@@ -45,7 +46,66 @@ export default function Home() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
-  // Daily usage tracking functions
+  // AI usage state
+  const [aiUsage, setAiUsage] = useState<any>(null);
+  const [aiUsageLoading, setAiUsageLoading] = useState(false);
+
+  // Get AI usage from database
+  const getAiUsage = async (userEmail: string) => {
+    try {
+      setAiUsageLoading(true);
+      const usage = await database.aiLimits.getUserLimit(userEmail);
+      setAiUsage(usage);
+      console.log('📊 AI 사용량 조회:', usage);
+    } catch (error) {
+      console.error('❌ AI 사용량 조회 오류:', error);
+      // Fallback to localStorage
+      const fallbackUsage = {
+        current_usage: getDailyUsage(user?.id || ''),
+        daily_limit: 5,
+        is_exempt: false,
+        can_use_ai: true,
+        remaining_usage: 5
+      };
+      setAiUsage(fallbackUsage);
+    } finally {
+      setAiUsageLoading(false);
+    }
+  };
+
+  // Increment AI usage in database
+  const incrementAiUsage = async (userEmail: string) => {
+    try {
+      const success = await database.aiLimits.incrementUsage(userEmail);
+      if (success) {
+        // Refresh usage data
+        await getAiUsage(userEmail);
+      }
+      return success;
+    } catch (error) {
+      console.error('❌ AI 사용량 증가 오류:', error);
+      // Fallback to localStorage
+      incrementDailyUsage(user?.id || '');
+      return true;
+    }
+  };
+
+  // Reset AI usage for specific user
+  const resetAiUsage = async (userEmail: string) => {
+    try {
+      const success = await database.aiLimits.resetUsage(userEmail);
+      if (success) {
+        await getAiUsage(userEmail);
+        showToastNotification('오늘 사용량이 리셋되었습니다.');
+      }
+      return success;
+    } catch (error) {
+      console.error('❌ AI 사용량 리셋 오류:', error);
+      return false;
+    }
+  };
+
+  // Legacy localStorage functions (fallback)
   const getDailyUsageKey = (userId: string) => `smartsort_usage_${userId}_${new Date().toDateString()}`;
   
   const getDailyUsage = (userId: string): number => {
@@ -62,7 +122,7 @@ export default function Home() {
   };
 
   const isExemptUser = (userEmail: string): boolean => {
-    return false; // Removed exempt user status for jiyu0719@gmail.com
+    return aiUsage?.is_exempt || false;
   };
 
   const showToastNotification = (message: string) => {
@@ -243,6 +303,23 @@ export default function Home() {
       // Only load data if user is authenticated
       if (currentUser) {
         console.log('📊 사용자 데이터 로딩 시작...');
+        
+        // AI 사용량 조회
+        await getAiUsage(currentUser.email);
+        
+        // jiyu0719@kyonggi.ac.kr 사용자의 오늘 사용량 리셋 (7월 28일 한 번만)
+        if (currentUser.email === 'jiyu0719@kyonggi.ac.kr') {
+          const today = new Date().toDateString();
+          const resetKey = `jiyu0719_reset_${today}`;
+          const hasResetToday = localStorage.getItem(resetKey);
+          
+          if (!hasResetToday) {
+            console.log('🎉 jiyu0719@kyonggi.ac.kr 사용자 - 오늘 사용량 리셋');
+            await resetAiUsage(currentUser.email);
+            localStorage.setItem(resetKey, 'true');
+          }
+        }
+        
         loadData();
       }
     }).catch((error) => {
@@ -497,20 +574,18 @@ export default function Home() {
       return;
     }
 
-    // 일일 사용량 체크 (일반 유저만)
-    if (user) {
-      const isExempt = isExemptUser(user.email);
-      const dailyUsage = getDailyUsage(user.id);
-      
-      console.log('🔍 AutoStash 제한 체크:', {
+    // AI 사용량 체크
+    if (user && aiUsage) {
+      console.log('🔍 AI 제한 체크:', {
         userEmail: user.email,
-        isExempt: isExempt,
-        dailyUsage: dailyUsage,
-        limit: 5
+        isExempt: aiUsage.is_exempt,
+        currentUsage: aiUsage.current_usage,
+        dailyLimit: aiUsage.daily_limit,
+        canUseAi: aiUsage.can_use_ai
       });
       
-      if (!isExempt && dailyUsage >= 5) {
-        console.log('⚠️ AI 태깅 제한 도달 - 기본 저장만 진행:', { userEmail: user.email, dailyUsage });
+      if (!aiUsage.can_use_ai) {
+        console.log('⚠️ AI 태깅 제한 도달 - 기본 저장만 진행:', { userEmail: user.email });
         // AI 태깅 없이 기본 저장 진행
         await handleBasicSave();
         return;
@@ -558,20 +633,17 @@ export default function Home() {
       // Add the new link
       await storage.addLink(newLink);
       
-      // 성공 시 일일 사용량 증가 (일반 유저만)
+      // 성공 시 AI 사용량 증가
       if (user) {
-        const isExempt = isExemptUser(user.email);
-        if (!isExempt) {
-          incrementDailyUsage(user.id);
-          const newUsage = getDailyUsage(user.id);
-          console.log(`✅ AutoStash 사용량 증가: ${newUsage}/5 (${user.email})`);
-          
-          // 6개 이상부터 노티 표시 (하루에 한 번만)
-          if (newUsage >= 6) {
-            showLimitNotification(user.email);
+        try {
+          const success = await incrementAiUsage(user.email);
+          if (success) {
+            console.log(`✅ AI 사용량 증가 완료: ${user.email}`);
+          } else {
+            console.log(`⚠️ AI 사용량 증가 실패: ${user.email}`);
           }
-        } else {
-          console.log(`✅ 면제 사용자 - 사용량 증가 없음: ${user.email}`);
+        } catch (error) {
+          console.error('❌ AI 사용량 증가 오류:', error);
         }
       }
       
@@ -861,27 +933,36 @@ export default function Home() {
             {/* 일일 사용량 표시 */}
             {user && (
               <div className="mt-4 flex items-center justify-between">
-                {!isExemptUser(user.email) ? (
-                  <>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                      <span className="text-xs text-gray-400 font-medium">
-                        Daily AutoStash Usage: {getDailyUsage(user.id)}/5
-                      </span>
-                    </div>
-                    {getDailyUsage(user.id) >= 5 && (
-                      <span className="text-xs text-yellow-400 font-medium">
-                        AI tagging limit reached - basic save only
-                      </span>
-                    )}
-                  </>
-                ) : (
+                {aiUsageLoading ? (
+                  <div className="flex items-center space-x-2">
+                    <div className="animate-spin rounded-full h-3 w-3 border border-gray-400 border-t-white"></div>
+                    <span className="text-xs text-gray-400 font-medium">Loading usage...</span>
+                  </div>
+                ) : aiUsage?.is_exempt ? (
                   <div className="flex items-center space-x-2">
                     <div className="w-2 h-2 bg-green-400 rounded-full"></div>
                     <span className="text-xs text-green-400 font-medium">
                       Unlimited Access (Exempt User)
                     </span>
                   </div>
+                ) : (
+                  <>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                      <span className="text-xs text-gray-400 font-medium">
+                        Daily AutoStash Usage: {aiUsage?.current_usage || 0}/{aiUsage?.daily_limit || 5}
+                        {aiUsage?.current_usage >= aiUsage?.daily_limit ? ' (Basic save only)' : ''}
+                      </span>
+                    </div>
+                    {user.email === 'jiyu0719@kyonggi.ac.kr' && (
+                      <button
+                        onClick={() => resetAiUsage(user.email)}
+                        className="text-xs text-yellow-400 hover:text-yellow-300 font-medium transition-colors"
+                      >
+                        Reset Today
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             )}
