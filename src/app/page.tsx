@@ -701,7 +701,7 @@ export default function Home() {
     <>
       <AntiExtension />
       <div className="min-h-screen bg-black">
-      <div className="mx-auto px-6 sm:px-10 lg:px-[120px] py-8">
+      <div className="mx-auto px-10 lg:px-[120px] py-8">
         {/* localStorage Mode Notice */}
         {!isSupabaseConfigured() && (
           <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-2xl">
@@ -1089,7 +1089,7 @@ export default function Home() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Active Days Card */}
-              <div className="glass-card rounded-xl p-4 text-center relative overflow-hidden bg-gradient-to-r from-blue-500/10 to-purple-500/10" style={{ cursor: 'default', pointerEvents: 'none' }}>
+              <div className="glass-card rounded-xl p-4 text-center relative overflow-hidden" style={{ cursor: 'default', pointerEvents: 'none' }}>
                 <div className="text-2xl font-semibold text-white mb-1">
                   {(() => {
                     const currentDate = new Date();
@@ -1121,7 +1121,7 @@ export default function Home() {
               </div>
               
               {/* Total Links Card */}
-              <div className="glass-card rounded-xl p-4 text-center relative overflow-hidden bg-gradient-to-r from-blue-500/10 to-purple-500/10" style={{ cursor: 'default', pointerEvents: 'none' }}>
+              <div className="glass-card rounded-xl p-4 text-center relative overflow-hidden" style={{ cursor: 'default', pointerEvents: 'none' }}>
                 <div className="text-2xl font-semibold text-white mb-1">
                   {results.length}
                 </div>
@@ -1130,7 +1130,7 @@ export default function Home() {
               </div>
               
               {/* Read Percentage Card */}
-              <div className="glass-card rounded-xl p-4 text-center relative overflow-hidden bg-gradient-to-r from-blue-500/10 to-purple-500/10" style={{ cursor: 'default', pointerEvents: 'none' }}>
+              <div className="glass-card rounded-xl p-4 text-center relative overflow-hidden" style={{ cursor: 'default', pointerEvents: 'none' }}>
                 <div className="text-2xl font-semibold text-white mb-1">
                   {results.length > 0 ? Math.round((results.filter(r => r.isRead).length / results.length) * 100) : 0}%
                 </div>
