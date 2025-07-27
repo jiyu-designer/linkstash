@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { storage } from '@/lib/storage';
+import { CategorizedLink, Category, Tag } from '@/types';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { CategorizedLink, Category, Tag } from '@/types';
-import { storage } from '@/lib/storage';
+import { useEffect, useState } from 'react';
 
 export default function TagDetailPage() {
   const params = useParams();
@@ -232,12 +232,7 @@ export default function TagDetailPage() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Link
                           href={`/categories/${encodeURIComponent(link.category)}`}
-                          className="inline-flex px-2 py-1 text-xs font-semibold rounded-full hover:opacity-80 transition-opacity"
-                          style={{
-                            backgroundColor: getCategoryColor(link.category) + '20',
-                            color: getCategoryColor(link.category),
-                            border: `1px solid ${getCategoryColor(link.category)}40`
-                          }}
+                          className="text-sm text-blue-600 hover:text-blue-800 transition-colors"
                         >
                           {link.category}
                         </Link>
@@ -247,22 +242,16 @@ export default function TagDetailPage() {
                           {link.title}
                         </div>
                         {link.tags && link.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1">
+                          <div className="flex flex-wrap gap-2">
                             {link.tags.map((t, tagIndex) => (
                               <Link
                                 key={tagIndex}
                                 href={`/tags/${encodeURIComponent(t)}`}
-                                className={`inline-flex px-2 py-1 text-xs rounded-full hover:opacity-80 transition-opacity ${
-                                  t === tagName ? 'ring-2 ring-offset-1' : ''
+                                className={`text-sm transition-colors ${
+                                  t === tagName 
+                                    ? 'text-green-700 font-semibold' 
+                                    : 'text-green-600 hover:text-green-800'
                                 }`}
-                                style={{ 
-                                  backgroundColor: getTagColor(t) + '20',
-                                  color: getTagColor(t),
-                                  border: `1px solid ${getTagColor(t)}40`,
-                                  ...(t === tagName && { 
-                                    ringColor: getTagColor(t)
-                                  })
-                                }}
                               >
                                 #{t}
                               </Link>

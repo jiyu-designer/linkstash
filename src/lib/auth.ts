@@ -1,5 +1,4 @@
-import { supabase } from './supabase';
-import { isSupabaseConfigured } from './supabase';
+import { isSupabaseConfigured, supabase } from './supabase';
 // import { authGuard } from './auth-guard';
 
 export interface User {
@@ -14,6 +13,8 @@ export interface User {
  */
 export const signUpWithEmail = async (email: string, password: string, fullName?: string) => {
   console.log('🔧 이메일 회원가입 시작:', { email, fullName });
+  console.log('🌐 현재 도메인:', window.location.origin);
+  console.log('📧 이메일 리다이렉트 URL:', `${window.location.origin}/auth/callback`);
   
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -26,19 +27,28 @@ export const signUpWithEmail = async (email: string, password: string, fullName?
     }
   });
 
-  console.log('📧 회원가입 응답:', { data, error });
-  console.log('📧 사용자 정보:', data?.user);
-  console.log('📧 세션 정보:', data?.session);
+  console.log('📧 Supabase 회원가입 전체 응답:', JSON.stringify(data, null, 2));
+  console.log('❌ Supabase 에러 정보:', error);
+  
+  if (data?.user) {
+    console.log('👤 생성된 사용자 ID:', data.user.id);
+    console.log('📧 사용자 이메일:', data.user.email);
+    console.log('✅ 이메일 확인 상태:', data.user.email_confirmed_at ? '확인됨' : '확인 필요');
+    console.log('📩 이메일 발송 여부:', data.user.confirmation_sent_at ? '발송됨' : '발송 안됨');
+  }
 
   if (error) {
     console.error('❌ 이메일 회원가입 오류:', error);
+    console.error('❌ 에러 코드:', error.status);
+    console.error('❌ 에러 메시지:', error.message);
     throw error;
   }
 
   // 회원가입 성공했지만 이메일 확인이 필요한 경우
   if (data?.user && !data?.session) {
     console.log('✅ 회원가입 성공 - 이메일 확인 필요');
-    console.log('📩 확인 이메일 발송됨:', email);
+    console.log('📩 확인 이메일 발송 대상:', email);
+    console.log('⏰ 확인 이메일 발송 시간:', data.user.confirmation_sent_at);
   } else if (data?.session) {
     console.log('✅ 회원가입 및 자동 로그인 완료');
   }
@@ -115,6 +125,7 @@ export const signInWithKakao = async () => {
  */
 export const resendConfirmation = async (email: string) => {
   console.log('🔧 이메일 확인 재전송 시작:', email);
+  console.log('📧 재전송 리다이렉트 URL:', `${window.location.origin}/auth/callback`);
   
   const { data, error } = await supabase.auth.resend({
     type: 'signup',
@@ -124,10 +135,13 @@ export const resendConfirmation = async (email: string) => {
     }
   });
 
-  console.log('📧 이메일 재전송 응답:', { data, error });
+  console.log('📧 이메일 재전송 전체 응답:', JSON.stringify(data, null, 2));
+  console.log('❌ 재전송 에러:', error);
 
   if (error) {
     console.error('❌ 이메일 확인 재전송 오류:', error);
+    console.error('❌ 재전송 에러 코드:', error.status);
+    console.error('❌ 재전송 에러 메시지:', error.message);
     throw error;
   }
 

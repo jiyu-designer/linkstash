@@ -8,13 +8,13 @@ Vercel Dashboard > Project > Settings > Environment Variables에서 다음 변�
 
 #### **NEXT_PUBLIC_SUPABASE_URL**
 ```
-Value: https://ifoaupbxyrwtuluaayfz.supabase.co
+Value: [YOUR_SUPABASE_PROJECT_URL]
 Environments: Production, Preview, Development (모두 체크)
 ```
 
 #### **NEXT_PUBLIC_SUPABASE_ANON_KEY**
 ```
-Value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlmb2F1cGJ4eXJ3dHVsdWFheWZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM0Mzc1MTQsImV4cCI6MjA2OTAxMzUxNH0.qJW_N2ClFJej0-5qAnzv5xhAW8ihSOFssyx
+Value: [YOUR_SUPABASE_ANON_KEY]
 Environments: Production, Preview, Development (모두 체크)
 ```
 
@@ -112,4 +112,14 @@ Environments: Production, Preview, Development (모두 체크)
 ### **AI 카테고리 분류가 안 되는 경우:**
 1. **Google AI Studio**에서 API Key 확인
 2. **API Key**에 권한이 있는지 확인
-3. **Quota** 초과 여부 확인 
+3. **Quota** 초과 여부 확인
+
+---
+
+## 🔒 **보안 주의사항**
+
+⚠️ **중요**: 실제 API 키나 토큰을 이 문서나 Git 저장소에 직접 기록하지 마세요!
+
+- 모든 민감한 정보는 Vercel Environment Variables에만 저장
+- `.env.local` 파일은 Git에 커밋하지 않음
+- API 키가 노출된 경우 즉시 새로 발급 

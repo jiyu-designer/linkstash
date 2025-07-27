@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { CategorizedLink } from '@/types';
 import { storage } from '@/lib/storage';
+import { CategorizedLink } from '@/types';
+import { useEffect, useState } from 'react';
 
 export default function ReadingCalendar() {
   const today = new Date();
@@ -247,33 +247,28 @@ export default function ReadingCalendar() {
       <div className="rounded-2xl overflow-hidden">
         {/* Header matching calendar height */}
         <div className="px-4 py-3">
-          {/* Selected Date Display and Stats - Center aligned */}
-          <div className="flex flex-col items-center mb-4 gap-2">
-            <div className="text-center">
-              <h2 className="text-base font-semibold text-white tracking-tight">
-                {monthNames[selectedDate.getMonth()]} {selectedDate.getDate()}
-                {(() => {
-                  const day = selectedDate.getDate();
-                  if (day === 1 || day === 21 || day === 31) return 'st';
-                  if (day === 2 || day === 22) return 'nd';
-                  if (day === 3 || day === 23) return 'rd';
-                  return 'th';
-                })()}
-              </h2>
-            </div>
-            <div className="text-center">
+          {/* Selected Date Display and Stats - Horizontal aligned */}
+          <div className="mb-4">
+            <h2 className="text-base font-semibold text-white tracking-tight">
+              {monthNames[selectedDate.getMonth()]} {selectedDate.getDate()}
               {(() => {
+                const day = selectedDate.getDate();
+                if (day === 1 || day === 21 || day === 31) return 'st';
+                if (day === 2 || day === 22) return 'nd';
+                if (day === 3 || day === 23) return 'rd';
+                return 'th';
+              })()} {(() => {
                 const selectedDateKey = selectedDate.toDateString();
                 const savedLinksForDate = monthSavedLinks.get(selectedDateKey) || [];
                 const readLinksForDate = monthReadLinks.get(selectedDateKey) || [];
                 
                 return (
-                  <p className="text-sm text-gray-300">
+                  <span className="text-sm text-gray-300 font-normal">
                     {savedLinksForDate.length} Saved, {readLinksForDate.length} Read
-                  </p>
+                  </span>
                 );
               })()}
-            </div>
+            </h2>
           </div>
         </div>
         
@@ -285,7 +280,7 @@ export default function ReadingCalendar() {
                 {readLinksForDate.map((link) => (
                   <div
                     key={link.id}
-                    className="rounded-lg px-4 py-2 bg-white/3 hover:bg-white/6 transition-colors border-l-2 border-gray-600"
+                    className="rounded-lg px-4 py-2 bg-white/3"
                   >
                     <h4 className="font-medium text-white text-base line-clamp-2 mb-1">
                       <a

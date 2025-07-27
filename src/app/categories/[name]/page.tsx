@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { storage } from '@/lib/storage';
+import { CategorizedLink, Category, Tag } from '@/types';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { CategorizedLink, Category, Tag } from '@/types';
-import { storage } from '@/lib/storage';
+import { useEffect, useState } from 'react';
 
 export default function CategoryDetailPage() {
   const params = useParams();
@@ -225,17 +225,12 @@ export default function CategoryDetailPage() {
                           {link.title}
                         </div>
                         {link.tags && link.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1">
+                          <div className="flex flex-wrap gap-2">
                             {link.tags.map((tag, tagIndex) => (
                               <Link
                                 key={tagIndex}
                                 href={`/tags/${encodeURIComponent(tag)}`}
-                                className="inline-flex px-2 py-1 text-xs rounded-full hover:opacity-80 transition-opacity"
-                                style={{ 
-                                  backgroundColor: getTagColor(tag) + '20',
-                                  color: getTagColor(tag),
-                                  border: `1px solid ${getTagColor(tag)}40`
-                                }}
+                                className="text-sm text-green-600 hover:text-green-800 transition-colors"
                               >
                                 #{tag}
                               </Link>

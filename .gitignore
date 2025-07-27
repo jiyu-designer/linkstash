@@ -10,10 +10,12 @@ out/
 build/
 
 # Environment variables
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.*
 
 # Vercel
 .vercel
@@ -82,3 +84,52 @@ jspm_packages/
 # Temporary folders
 tmp/
 temp/
+
+# ================================
+# 🔒 SECURITY - 민감한 정보 차단
+# ================================
+
+# 환경변수 백업 파일
+config/env-backup.txt
+config/*-backup.*
+config/*.env
+config/secrets.*
+
+# API 키가 포함된 설정 파일
+config/*-config.json
+config/api-keys.*
+config/credentials.*
+
+# 실제 환경변수 파일들
+*.env.production
+*.env.staging
+.env.real
+.env.actual
+
+# 키 파일들
+keys/
+secrets/
+credentials/
+*.key
+*.pem
+*.p12
+*.pfx
+
+# 서비스 계정 파일
+service-account*.json
+*-service-account.json
+firebase-adminsdk*.json
+
+# JWT 토큰 파일
+*.jwt
+jwt-*
+tokens/
+
+# OAuth 설정 파일  
+oauth-config.*
+client-secrets.*
+
+# 데이터베이스 설정
+database-config.*
+db-credentials.*
+connection-strings.*

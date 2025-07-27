@@ -1,10 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { Category, Tag } from '@/types';
 import { storage } from '@/lib/storage';
-import { Button, ButtonDanger } from '@/components/sds';
+import { Category, Tag } from '@/types';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function ManagePage() {
   const [activeTab, setActiveTab] = useState<'categories' | 'tags'>('categories');
@@ -121,7 +120,7 @@ export default function ManagePage() {
             <nav className="-mb-px flex space-x-8">
               <button
                 onClick={() => setActiveTab('categories')}
-                className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                className={`py-6 px-6 border-b-2 font-medium text-lg transition-colors ${
                   activeTab === 'categories'
                     ? 'border-white text-white'
                     : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-400'
@@ -131,7 +130,7 @@ export default function ManagePage() {
               </button>
               <button
                 onClick={() => setActiveTab('tags')}
-                className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                className={`py-6 px-6 border-b-2 font-medium text-lg transition-colors ${
                   activeTab === 'tags'
                     ? 'border-white text-white'
                     : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-400'

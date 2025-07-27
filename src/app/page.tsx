@@ -1,17 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { CategorizedLink, Category, Tag } from '@/types';
-import { storage } from '@/lib/storage';
-import { getCurrentUser, onAuthStateChange, signInWithGoogle, signInWithKakao, type User } from '@/lib/auth';
-import { isSupabaseConfigured, supabase } from '@/lib/supabase';
-import { clearAuthData, forceAuthReset } from '@/lib/clear-auth';
-import ReadingCalendar from '@/components/ReadingCalendar';
 import AuthButton from '@/components/AuthButton';
 import EmailAuthForm from '@/components/EmailAuthForm';
+import ReadingCalendar from '@/components/ReadingCalendar';
+import { Input } from '@/components/sds';
+import { getCurrentUser, onAuthStateChange, signInWithGoogle, signInWithKakao, type User } from '@/lib/auth';
+import { clearAuthData, forceAuthReset } from '@/lib/clear-auth';
+import { storage } from '@/lib/storage';
+import { isSupabaseConfigured, supabase } from '@/lib/supabase';
+import { CategorizedLink, Category, Tag } from '@/types';
+import { useEffect, useState } from 'react';
 import AntiExtension from './anti-extension';
-import { Button, ButtonDanger, Input } from '@/components/sds';
 
 
 export default function Home() {
@@ -522,7 +521,7 @@ export default function Home() {
             <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">
               LinkStash
             </h1>
-            <p className="text-gray-300 text-lg font-medium">
+            <p className="text-gray-300 text-lg font-semibold">
               Save smartly. Learn deeply
             </p>
           </div>
@@ -681,7 +680,7 @@ export default function Home() {
               <h1 className="text-2xl font-semibold text-white tracking-tight leading-tight">
                 LinkStash
               </h1>
-              <p className="text-sm text-gray-400 font-normal tracking-wide mt-0.5">
+              <p className="text-sm text-gray-400 font-medium tracking-wide mt-0.5">
                 Save smartly. Learn deeply
               </p>
             </div>
@@ -742,7 +741,7 @@ export default function Home() {
         </div>
 
         {/* Main Content: All Links, Summary, Reading Calendar (Vertical Stack) */}
-        <div className="space-y-20">
+        <div className="flex flex-col gap-20">
           
           {/* All Links Section */}
           <div className="section-container p-6 lg:p-8">
@@ -891,7 +890,7 @@ export default function Home() {
                             </div>
                           </td>
                           <td className="sds-table-cell">
-                            <div className="space-y-3">
+                            <div className="space-y-2">
                               {/* Title */}
                               <div>
                                 <a
@@ -905,10 +904,10 @@ export default function Home() {
                               </div>
                               
                               {/* Category + Tags */}
-                              <div className="flex flex-wrap gap-2">
+                              <div className="flex flex-wrap gap-3">
                                 <span 
                                   onClick={() => setSelectedCategory(result.category)}
-                                  className="sds-chip sds-chip-category cursor-pointer"
+                                  className="text-sm text-blue-300 hover:text-blue-200 cursor-pointer transition-colors"
                                 >
                                   {result.category}
                                 </span>
@@ -916,29 +915,19 @@ export default function Home() {
                                   <span 
                                     key={index} 
                                     onClick={() => setSelectedTag(tag)}
-                                    className="sds-chip sds-chip-tag cursor-pointer"
+                                    className="text-sm text-green-300 hover:text-green-200 cursor-pointer transition-colors"
                                   >
                                     #{tag}
                                   </span>
                                 ))}
                               </div>
                               
-                              {/* Memo and Date - Side by side */}
-                              <div className="flex justify-between items-start gap-3">
-                                {/* Memo */}
-                                <div className="text-gray-400 text-sm leading-relaxed line-clamp-2 italic flex-1">
-                                  {result.memo || ''}
+                              {/* Memo */}
+                              {result.memo && (
+                                <div className="text-gray-400 text-sm leading-relaxed line-clamp-2 italic">
+                                  {result.memo}
                                 </div>
-                                
-                                {/* Date - Always shown */}
-                                <div className="text-xs text-gray-500 font-normal whitespace-nowrap">
-                                  {new Date(result.createdAt).toLocaleDateString('en-US', {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric'
-                                  })}
-                                </div>
-                              </div>
+                              )}
                             </div>
                           </td>
                           <td className="sds-table-cell w-24">
@@ -948,7 +937,9 @@ export default function Home() {
                                 className="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-white transition-all duration-200 rounded-lg hover:bg-white/10 hover:scale-110"
                                 title="Edit link"
                               >
-                                <span className="text-sm">✏️</span>
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487 18.549 2.8a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931z" />
+                                </svg>
                               </button>
                               <button
                                 onClick={() => handleDeleteLink(result.id)}
@@ -1047,7 +1038,7 @@ export default function Home() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Active Days Card */}
-              <div className="glassmorphism-card glassmorphism-card-blue rounded-xl p-4 text-center relative overflow-hidden cursor-pointer">
+              <div className="glass-card rounded-xl p-4 text-center relative overflow-hidden" style={{ cursor: 'default', pointerEvents: 'none' }}>
                 <div className="text-2xl font-semibold text-white mb-1">
                   {(() => {
                     const currentDate = new Date();
@@ -1079,7 +1070,7 @@ export default function Home() {
               </div>
               
               {/* Total Links Card */}
-              <div className="glassmorphism-card glassmorphism-card-pink rounded-xl p-4 text-center relative overflow-hidden cursor-pointer">
+              <div className="glass-card rounded-xl p-4 text-center relative overflow-hidden" style={{ cursor: 'default', pointerEvents: 'none' }}>
                 <div className="text-2xl font-semibold text-white mb-1">
                   {results.length}
                 </div>
@@ -1088,7 +1079,7 @@ export default function Home() {
               </div>
               
               {/* Read Percentage Card */}
-              <div className="glassmorphism-card glassmorphism-card-green rounded-xl p-4 text-center relative overflow-hidden cursor-pointer">
+              <div className="glass-card rounded-xl p-4 text-center relative overflow-hidden" style={{ cursor: 'default', pointerEvents: 'none' }}>
                 <div className="text-2xl font-semibold text-white mb-1">
                   {results.length > 0 ? Math.round((results.filter(r => r.isRead).length / results.length) * 100) : 0}%
                 </div>
