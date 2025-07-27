@@ -9,13 +9,12 @@ import { clearAuthData, forceAuthReset } from '@/lib/clear-auth';
 import { storage } from '@/lib/storage';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 import { CategorizedLink, Category, Tag } from '@/types';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import AntiExtension from './anti-extension';
 
 
 export default function Home() {
-  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [showEmailAuth, setShowEmailAuth] = useState(false);
@@ -63,7 +62,7 @@ export default function Home() {
   };
 
   const isExemptUser = (userEmail: string): boolean => {
-    return userEmail === 'jiyu0719@gmail.com';
+    return false; // Removed exempt user status for jiyu0719@gmail.com
   };
 
   const showToastNotification = (message: string) => {
@@ -833,20 +832,31 @@ export default function Home() {
                 />
               </div>
                
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="cta-button h-12 px-8 rounded-xl text-white font-medium disabled:opacity-50 transition-all duration-200 lg:w-auto w-full"
-              >
-                {isLoading ? (
-                  <span className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white mr-3"></div>
-                    <span className="text-sm font-medium">Analyzing</span>
-                  </span>
-                ) : (
-                  <span className="text-sm font-medium tracking-wide">AutoStash</span>
-                )}
-              </button>
+              <div className="flex gap-3 lg:w-auto w-full">
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="cta-button h-12 px-8 rounded-xl text-white font-medium disabled:opacity-50 transition-all duration-200 flex-1"
+                >
+                  {isLoading ? (
+                    <span className="flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white mr-3"></div>
+                      <span className="text-sm font-medium">Analyzing</span>
+                    </span>
+                  ) : (
+                    <span className="text-sm font-medium tracking-wide">AutoStash</span>
+                  )}
+                </button>
+                
+                <Link
+                  href="/onboarding"
+                  className="h-12 px-4 rounded-xl text-white font-medium transition-all duration-200 flex items-center justify-center glass-button border border-white/20 hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                  </svg>
+                </Link>
+              </div>
             </div>
             
             {/* 일일 사용량 표시 */}
@@ -884,7 +894,7 @@ export default function Home() {
           
           {/* All Links Section */}
           <div className="section-container p-6 lg:p-8">
-            <div className="mb-6">
+            <div className="mb-10">
               <h2 className="text-xl font-semibold text-white tracking-tight" style={{ fontSize: 'calc(1.25rem + 1px)' }}>All Links</h2>
             </div>
             

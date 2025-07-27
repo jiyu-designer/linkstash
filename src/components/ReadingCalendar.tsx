@@ -264,7 +264,7 @@ export default function ReadingCalendar() {
                 
                 return (
                   <span className="text-sm text-gray-300 font-normal">
-                    {savedLinksForDate.length} Saved<span style={{ marginLeft: '12px' }}>, {readLinksForDate.length} Read</span>
+                    {savedLinksForDate.length} Saved<span style={{ marginLeft: '12px' }}> {readLinksForDate.length} Read</span>
                   </span>
                 );
               })()}
@@ -312,7 +312,7 @@ export default function ReadingCalendar() {
               )}
             </div>
           ) : (
-            <div className="text-center py-8">
+            <div className="text-center py-8 flex items-center justify-center min-h-80">
               <div className="text-gray-500">
                 {selectedDate.toDateString() === new Date().toDateString() 
                   ? 'Feel like reading something you saved?' 
