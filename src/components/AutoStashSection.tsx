@@ -57,7 +57,7 @@ export default function AutoStashSection({
           <button
             type="submit"
             disabled={isLoading}
-            className="h-12 px-4 rounded-xl text-white font-medium transition-all duration-200 flex items-center justify-center glass-button border border-white/20 hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-blue-500 lg:w-auto w-full"
+            className="h-16 px-4 text-white font-medium transition-all duration-200 flex items-center justify-center hover:text-gray-300 lg:w-auto w-full glass-button border border-white/20 hover:bg-white/15"
           >
             {isLoading ? (
               <span className="flex items-center justify-center">

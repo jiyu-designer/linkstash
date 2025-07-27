@@ -9,7 +9,7 @@ export default function SummaryAndCalendarSection({ results }: SummaryAndCalenda
   return (
     <div className="space-y-10">
       {/* Summary Section */}
-      <div className="section-container p-6 lg:p-8">
+      <div className="section-container p-6 lg:p-8" style={{ marginTop: '40px' }}>
         <div className="mb-4">
           <h2 className="text-xl font-semibold text-white tracking-tight">Summary</h2>
         </div>
