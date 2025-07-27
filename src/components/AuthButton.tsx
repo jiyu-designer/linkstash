@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { signInWithGoogle, signOut, getCurrentUser, onAuthStateChange, type User } from '@/lib/auth';
+import { getCurrentUser, onAuthStateChange, signInWithGoogle, signOut, type User } from '@/lib/auth';
+import { useEffect, useState } from 'react';
 
 export default function AuthButton() {
   const [user, setUser] = useState<User | null>(null);
@@ -56,7 +56,7 @@ export default function AuthButton() {
 
   if (user) {
     return (
-      <div className="flex items-center gap-4 -ml-6">
+      <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
           {user.avatar_url ? (
             <img
@@ -76,7 +76,7 @@ export default function AuthButton() {
         </div>
         <button
           onClick={handleSignOut}
-          className="text-sm text-gray-300 hover:text-white transition-colors"
+          className="glass-button px-4 py-2 rounded-xl text-white font-medium transition-all duration-200 border border-white/20 hover:bg-white/15"
         >
           Logout
         </button>
