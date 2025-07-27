@@ -341,9 +341,9 @@ export default function OnboardingPage() {
                         : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
                     }`}
                     style={index <= currentStep ? {
-                      backgroundColor: 'rgba(219, 30, 255, 0.4)',
+                      backgroundColor: 'rgba(59, 130, 246, 0.4)',
                       backdropFilter: 'blur(12px) saturate(180%)',
-                      border: '1px solid rgba(219, 30, 255, 0.3)'
+                      border: '1px solid rgba(59, 130, 246, 0.3)'
                     } : {}}>
                     {index + 1}
                   </button>
