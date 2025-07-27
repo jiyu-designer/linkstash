@@ -335,7 +335,8 @@ export default function Home() {
           }
           
           // 저장된 링크가 없을 때 온보딩 체크 (데이터 로딩 완료 후)
-          if (results.length === 0) {
+          // 단, 온보딩을 완료한 사용자는 제외
+          if (results.length === 0 && userData?.firstLogin !== false) {
             console.log('📝 저장된 링크가 없어서 온보딩 시작');
             router.push('/onboarding');
             return;
@@ -395,8 +396,9 @@ export default function Home() {
       }
       
       // 저장된 링크가 없을 때도 온보딩 체크
+      // 단, 온보딩을 완료한 사용자는 제외
       const userLinks = await storage.getLinks();
-      if (userLinks.length === 0) {
+      if (userLinks.length === 0 && authUser?.user_metadata?.firstLogin !== false) {
         console.log('📝 저장된 링크가 없어서 온보딩으로 이동');
         router.push('/onboarding');
         return;

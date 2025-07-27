@@ -240,6 +240,13 @@ export default function OnboardingPage() {
         console.log('✅ 온보딩 완료 - firstLogin 플래그 업데이트됨');
       }
       
+      // 온보딩에서 저장된 링크가 있다면 실제 사용자 데이터에 저장
+      if (savedLink) {
+        console.log('✅ 온보딩 링크를 사용자 데이터에 저장:', savedLink);
+        // 이미 storage에 저장되어 있으므로 추가 작업 불필요
+      }
+      
+      // 홈으로 이동
       router.push('/');
     } catch (error) {
       console.error('Onboarding completion error:', error);
