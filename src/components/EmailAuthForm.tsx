@@ -2,6 +2,7 @@
 
 import { resendConfirmation, resetPassword, signInWithEmail, signUpWithEmail } from '@/lib/auth';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 type AuthMode = 'signin' | 'signup' | 'reset' | 'confirm';
@@ -12,6 +13,7 @@ interface EmailAuthFormProps {
 }
 
 export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProps) {
+  const router = useRouter();
   const [mode, setMode] = useState<AuthMode>('signin');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -114,7 +116,9 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
             });
             
             setSuccess('Welcome to LinkStash! Let\'s get you started.');
-            onSuccess?.();
+            // 온보딩 페이지로 리다이렉션
+            router.push('/onboarding');
+            return;
           } else if (signUpData?.user) {
             console.log('✅ 회원가입 완료 (세션 없음)');
             
@@ -124,7 +128,9 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
             });
             
             setSuccess('Sign up completed successfully! You are now logged in.');
-            onSuccess?.();
+            // 온보딩 페이지로 리다이렉션
+            router.push('/onboarding');
+            return;
           } else {
             console.warn('⚠️ 예상치 못한 회원가입 응답:', signUpData);
             setError('Sign up failed. Please try again.');
@@ -212,7 +218,7 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="glass-card rounded-lg p-6 border border-white/20">
+      <div className="rounded-lg p-6">
         {/* Header */}
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-white mb-2">{getTitle()}</h2>
@@ -325,7 +331,7 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center py-2 px-4 glass-button border border-white/20 rounded-lg text-sm font-medium text-white hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors mt-6"
+            className="w-full flex justify-center py-3 px-6 glass-button rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 mt-6 font-medium text-white"
           >
             {loading && (
               <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
@@ -390,13 +396,16 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
 
           {/* Cancel Button */}
           {onCancel && (
-            <div className="text-center pt-2">
+            <div className="flex justify-center pt-2">
               <button
                 type="button"
                 onClick={onCancel}
-                className="text-sm text-gray-500 hover:text-gray-300 transition-colors"
+                className="text-sm text-gray-500 hover:text-gray-300 transition-colors flex items-center gap-1"
               >
-                Cancel
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                Back
               </button>
             </div>
           )}
