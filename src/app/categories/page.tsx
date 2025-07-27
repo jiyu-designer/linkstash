@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { Category, CategoryFormData } from '@/types';
 import { storage } from '@/lib/storage';
+import { Category, CategoryFormData } from '@/types';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 const DEFAULT_COLORS = [
   '#3B82F6', '#EF4444', '#10B981', '#F59E0B', 
@@ -132,7 +132,7 @@ export default function CategoriesPage() {
 
   return (
     <div className="min-h-screen bg-black py-8">
-      <div className="mx-auto px-10 lg:px-[120px]">
+      <div className="mx-auto px-6 sm:px-10 lg:px-[120px]">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>

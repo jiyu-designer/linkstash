@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { getCurrentUser, type User } from '@/lib/auth';
 import UserProfileComponent from '@/components/UserProfile';
+import { getCurrentUser, type User } from '@/lib/auth';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -51,7 +51,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-gray-50 py-8 px-6 sm:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Navigation */}
         <div className="mb-8">

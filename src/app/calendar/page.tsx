@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { CategorizedLink } from '@/types';
 import { storage } from '@/lib/storage';
+import { CategorizedLink } from '@/types';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -130,7 +130,7 @@ export default function CalendarPage() {
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-gray-50 py-8 px-6 sm:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <header className="text-center mb-8">
