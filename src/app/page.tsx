@@ -304,7 +304,7 @@ export default function Home() {
     };
   }, []);
 
-  // 신규 사용자 온보딩 체크 및 저장된 링크 없을 때 온보딩 체크
+  // 신규 사용자 온보딩 체크
   useEffect(() => {
     const checkOnboarding = async () => {
       if (!user || authLoading) return;
@@ -332,19 +332,6 @@ export default function Home() {
             console.log('🎉 신규 사용자 온보딩 시작');
             router.push('/onboarding');
             return;
-          }
-          
-          // 저장된 링크가 없을 때 온보딩 체크 (실제 저장된 링크 확인)
-          // 단, 온보딩을 완료한 사용자는 제외
-          if (userData?.firstLogin !== false) {
-            const userLinks = await storage.getLinks();
-            console.log('🔍 저장된 링크 확인:', { count: userLinks.length, firstLogin: userData?.firstLogin });
-            
-            if (userLinks.length === 0) {
-              console.log('📝 저장된 링크가 없어서 온보딩 시작');
-              router.push('/onboarding');
-              return;
-            }
           }
         }
       } catch (error) {
@@ -391,26 +378,17 @@ export default function Home() {
     console.log('🎉 이메일 인증 성공');
     setShowEmailAuth(false);
     
-    // 신규 사용자 체크 및 온보딩 리디렉션
-    try {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (authUser?.user_metadata?.firstLogin === true) {
-        console.log('🎉 신규 사용자 온보딩으로 이동');
-        router.push('/onboarding');
-        return;
+          // 신규 사용자 체크 및 온보딩 리디렉션
+      try {
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        if (authUser?.user_metadata?.firstLogin === true) {
+          console.log('🎉 신규 사용자 온보딩으로 이동');
+          router.push('/onboarding');
+          return;
+        }
+      } catch (error) {
+        console.error('사용자 정보 확인 오류:', error);
       }
-      
-      // 저장된 링크가 없을 때도 온보딩 체크
-      // 단, 온보딩을 완료한 사용자는 제외
-      const userLinks = await storage.getLinks();
-      if (userLinks.length === 0 && authUser?.user_metadata?.firstLogin !== false) {
-        console.log('📝 저장된 링크가 없어서 온보딩으로 이동');
-        router.push('/onboarding');
-        return;
-      }
-    } catch (error) {
-      console.error('사용자 정보 확인 오류:', error);
-    }
     
     // 기존 사용자는 페이지 새로고침
     window.location.reload();
