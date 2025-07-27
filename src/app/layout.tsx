@@ -37,8 +37,27 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Linkstash",
+  title: "LinkStash",
   description: "Smart link management and organization tool",
+  openGraph: {
+    title: "LinkStash",
+    description: "Save smartly. Learn deeply",
+    images: [
+      {
+        url: "/og",
+        width: 1200,
+        height: 630,
+        alt: "LinkStash - Smart link management and organization tool",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "LinkStash",
+    description: "Save smartly. Learn deeply",
+    images: ["/og"],
+  },
   icons: {
     icon: [
       {

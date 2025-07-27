@@ -551,33 +551,33 @@ export default function Home() {
             </div>
           </div>
           
-          {/* Login Card */}
-          <div className="section-container p-8">
-            {/* Features */}
-            <div className="glass-card rounded-2xl p-6 mb-8">
-              <div className="flex items-center mb-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mr-3"></div>
-                <h3 className="font-semibold text-white text-sm">Key Features</h3>
+          {/* Key Features Section */}
+          <div className="section-container p-6 mb-8">
+            <div className="flex items-center mb-4">
+              <h3 className="font-semibold text-white text-lg">Key Features</h3>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-start">
+                <div className="w-1 h-1 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                <span className="text-sm text-gray-300">Automatic URL categorization and tag generation</span>
               </div>
-              <div className="space-y-3">
-                <div className="flex items-start">
-                  <div className="w-1 h-1 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                  <span className="text-sm text-gray-300">Automatic URL categorization and tag generation</span>
-                </div>
-                <div className="flex items-start">
-                  <div className="w-1 h-1 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                  <span className="text-sm text-gray-300">Read status management and calendar view</span>
-                </div>
-                <div className="flex items-start">
-                  <div className="w-1 h-1 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                  <span className="text-sm text-gray-300">Organize by categories and tags</span>
-                </div>
-                <div className="flex items-start">
-                  <div className="w-1 h-1 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                  <span className="text-sm text-gray-300">Personal notes and bookmark management</span>
-                </div>
+              <div className="flex items-start">
+                <div className="w-1 h-1 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                <span className="text-sm text-gray-300">Read status management and calendar view</span>
+              </div>
+              <div className="flex items-start">
+                <div className="w-1 h-1 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                <span className="text-sm text-gray-300">Organize by categories and tags</span>
+              </div>
+              <div className="flex items-start">
+                <div className="w-1 h-1 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                <span className="text-sm text-gray-300">Personal notes and bookmark management</span>
               </div>
             </div>
+          </div>
+
+          {/* Login Card */}
+          <div className="section-container p-8">
 
             {/* Error Message */}
             {error && (
@@ -661,6 +661,21 @@ export default function Home() {
                 Your data is securely protected by our privacy policy
               </p>
             )}
+          </div>
+          
+          {/* Developer Credit */}
+          <div className="mt-8 text-center">
+            <p className="text-sm text-gray-200">
+              Designed and Developed by{' '}
+              <a 
+                href="https://www.linkedin.com/in/jiyuhan-designer/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                Jiyu Han
+              </a>
+            </p>
           </div>
         </div>
       </div>
