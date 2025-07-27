@@ -237,52 +237,58 @@ export default function CalendarPage() {
               <div className="p-6">
                 {selectedDate ? (
                   readLinksForDate.length > 0 ? (
-                    <div className="space-y-4">
+                    <div className="space-y-4 -mt-4">
                       {readLinksForDate.map((link) => (
                         <div
                           key={link.id}
                           className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50"
                         >
-                          <h4 className="font-medium text-gray-900 mb-2">
-                            <a
-                              href={link.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="hover:text-blue-600"
-                            >
-                              {link.title}
-                            </a>
-                          </h4>
-                          
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                              {link.category}
-                            </span>
-                            {link.readAt && (
-                              <span className="text-xs text-gray-500">
-                                {link.readAt.toLocaleTimeString()}
+                          <div className="flex flex-col h-full">
+                            <h4 className="font-medium text-gray-900 mb-2">
+                              <a
+                                href={link.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="hover:text-blue-600"
+                              >
+                                {link.title}
+                              </a>
+                            </h4>
+                            
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                {link.category}
                               </span>
+                              {link.readAt && (
+                                <span className="text-xs text-gray-500">
+                                  {link.readAt.toLocaleTimeString()}
+                                </span>
+                              )}
+                            </div>
+                            
+                            {link.tags && link.tags.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mb-2">
+                                {link.tags.map((tag, tagIndex) => (
+                                  <span
+                                    key={tagIndex}
+                                    className="inline-flex px-2 py-1 text-xs rounded-full bg-green-100 text-green-800"
+                                  >
+                                    #{tag}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                            
+                            {link.memo ? (
+                              <p className="text-sm text-gray-600 mt-2">
+                                {link.memo}
+                              </p>
+                            ) : (
+                              <div className="flex-1 flex items-center justify-center min-h-[2rem]">
+                                <span className="text-xs text-gray-400">메모 없음</span>
+                              </div>
                             )}
                           </div>
-                          
-                          {link.tags && link.tags.length > 0 && (
-                            <div className="flex flex-wrap gap-1 mb-2">
-                              {link.tags.map((tag, tagIndex) => (
-                                <span
-                                  key={tagIndex}
-                                  className="inline-flex px-2 py-1 text-xs rounded-full bg-green-100 text-green-800"
-                                >
-                                  #{tag}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-                          
-                          {link.memo && (
-                            <p className="text-sm text-gray-600 mt-2">
-                              {link.memo}
-                            </p>
-                          )}
                         </div>
                       ))}
                     </div>
