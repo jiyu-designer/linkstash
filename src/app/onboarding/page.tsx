@@ -223,7 +223,7 @@ export default function OnboardingPage() {
                       
                       {link.memo && (
                         <p className="text-sm text-gray-300 italic">
-                          "{link.memo}"
+                          &ldquo;{link.memo}&rdquo;
                         </p>
                       )}
                       
