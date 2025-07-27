@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import * as cheerio from 'cheerio';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { database } from '@/lib/database';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import * as cheerio from 'cheerio';
+import { NextRequest, NextResponse } from 'next/server';
 
 // Google Gemini 클라이언트 초기화
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
@@ -190,17 +190,25 @@ CATEGORY OPTIONS (choose the most specific):
 - Other (everything else)
 
 TAG REQUIREMENTS:
-- Extract 1-3 SPECIFIC, USEFUL keywords from the content
-- Use concrete terms like: "react", "javascript", "marketing", "figma", "startup"
-- Focus on technologies, tools, skills, or specific topics mentioned
+- Extract 1-3 BROAD, USEFUL keywords from the content
+- Use GENERAL terms instead of overly specific ones
+- AVOID over-segmentation: group similar concepts under one tag
+- Examples of GOOD general tags:
+  * "coding" (instead of "ai-assisted-coding", "coding-workflow", "pair-programming")
+  * "frontend" (instead of "react-hooks", "component-architecture", "state-management")
+  * "design" (instead of "ui-design", "design-systems", "color-theory")
+  * "business" (instead of "startup-funding", "growth-hacking", "market-research")
+- Focus on main topics, technologies, or domains mentioned
 - NO generic words like: "general", "article", "content", "guide", "tips", "best"
 - Make tags searchable and meaningful for organizing bookmarks
 - Use lowercase, replace spaces with hyphens (e.g., "machine-learning")
 
-Examples of good tags:
-- Technology: ["javascript", "react", "api-design"]
-- Design: ["figma", "ui-design", "typography"] 
-- Business: ["startup", "marketing", "product-management"]
+Examples of good general tags:
+- Technology: ["javascript", "backend", "database"]
+- Design: ["figma", "branding", "typography"] 
+- Business: ["startup", "marketing", "analytics"]
+
+Keep tags broad enough to group related content together, not over-specific.
 
 Respond with valid JSON only.`;
 
