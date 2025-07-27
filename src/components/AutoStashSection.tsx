@@ -57,7 +57,7 @@ export default function AutoStashSection({
           <button
             type="submit"
             disabled={isLoading}
-            className="smartsort-button h-12 px-8 rounded-xl text-white font-medium disabled:opacity-50 transition-all duration-200 lg:w-auto w-full"
+            className="cta-button h-12 px-8 rounded-xl text-white font-medium disabled:opacity-50 transition-all duration-200 lg:w-auto w-full"
           >
             {isLoading ? (
               <span className="flex items-center justify-center">

@@ -281,9 +281,9 @@ export default function OnboardingPage() {
                         : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
                     }`}
                     style={index <= currentStep ? {
-                      backgroundColor: 'rgba(219, 30, 255, 0.4)',
+                      backgroundColor: 'rgba(59, 130, 246, 0.4)',
                       backdropFilter: 'blur(12px) saturate(180%)',
-                      border: '1px solid rgba(219, 30, 255, 0.3)'
+                      border: '1px solid rgba(59, 130, 246, 0.3)'
                     } : {}}>
                     {index + 1}
                   </button>
@@ -406,51 +406,55 @@ export default function OnboardingPage() {
       )}
 
       {currentStep === 2 && (
-        <div className="min-h-screen flex flex-col items-center justify-center px-6">
-          {/* Progress Steps for other steps */}
-          <div className="flex justify-center mb-20">
-            <div className="flex items-center">
-              {steps.map((step, index) => (
-                <div key={index} className="flex items-center">
-                  <button
-                    onClick={() => setCurrentStep(index)}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors cursor-pointer hover:scale-105 ${
-                      index <= currentStep
-                        ? 'text-white'
-                        : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
-                    }`}
-                    style={index <= currentStep ? {
-                      backgroundColor: 'rgba(219, 30, 255, 0.4)',
-                      backdropFilter: 'blur(12px) saturate(180%)',
-                      border: '1px solid rgba(219, 30, 255, 0.3)'
-                    } : {}}>
-                    {index + 1}
-                  </button>
-                  {index < steps.length - 1 && (
-                    <div className={`w-16 h-0.5 mx-6 transition-colors ${
-                      index < currentStep
-                        ? 'bg-gray-600'
-                        : 'bg-gray-700'
-                    }`} />
-                  )}
-                </div>
-              ))}
+        <div className="min-h-screen bg-black flex items-center justify-center">
+          <div className="mx-auto px-10 lg:px-[120px] py-8 w-full max-w-6xl">
+            {/* Progress Steps */}
+            <div className="flex justify-center mb-20">
+              <div className="flex items-center">
+                {steps.map((step, index) => (
+                  <div key={index} className="flex items-center">
+                    <button
+                      onClick={() => setCurrentStep(index)}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors cursor-pointer hover:scale-105 ${
+                        index <= currentStep
+                          ? 'text-white'
+                          : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
+                      }`}
+                      style={index <= currentStep ? {
+                        backgroundColor: 'rgba(59, 130, 246, 0.4)',
+                        backdropFilter: 'blur(12px) saturate(180%)',
+                        border: '1px solid rgba(59, 130, 246, 0.3)'
+                      } : {}}>
+                      {index + 1}
+                    </button>
+                    {index < steps.length - 1 && (
+                      <div className={`w-16 h-0.5 mx-6 transition-colors ${
+                        index < currentStep
+                          ? 'bg-gray-600'
+                          : 'bg-gray-700'
+                      }`} />
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div className="w-full max-w-6xl text-center">
-            <div className="text-center mb-10">
+            {/* Header */}
+            <div className="mb-16 text-center">
               <h3 className="text-3xl font-bold text-white mb-3">{steps[currentStep].title}</h3>
             </div>
 
-            {/* Summary Section */}
-            <SummaryAndCalendarSection results={results} />
+            {/* Main Content */}
+            <div className="space-y-20">
+              {/* Summary and Calendar Sections */}
+              <SummaryAndCalendarSection results={results} />
+            </div>
 
             {/* Start Button */}
-            <div className="flex justify-center mt-12">
+            <div className="mt-16 flex justify-center">
               <button 
                 onClick={() => router.push('/')}
-                className="smartsort-button h-12 px-8 rounded-xl text-white font-medium transition-all duration-200 lg:w-auto w-full"
+                className="cta-button h-12 px-8 rounded-xl text-white font-medium disabled:opacity-50 transition-all duration-200 lg:w-auto w-full"
               >
                 Start
               </button>

@@ -776,7 +776,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="smartsort-button h-12 px-8 rounded-xl text-white font-medium disabled:opacity-50 transition-all duration-200 lg:w-auto w-full"
+                className="cta-button h-12 px-8 rounded-xl text-white font-medium disabled:opacity-50 transition-all duration-200 lg:w-auto w-full"
               >
                 {isLoading ? (
                   <span className="flex items-center justify-center">
@@ -784,7 +784,7 @@ export default function Home() {
                     <span className="text-sm font-medium">Analyzing</span>
                   </span>
                 ) : (
-                  <span className="text-sm font-medium tracking-wide">SmartSort</span>
+                  <span className="text-sm font-medium tracking-wide">AutoStash</span>
                 )}
               </button>
             </div>

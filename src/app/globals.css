@@ -579,6 +579,65 @@ select.glass-input {
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
+/* CTA Button - Unified Call-to-Action Button Style */
+.cta-button {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.25) 0%,
+    rgba(37, 99, 235, 0.15) 50%,
+    rgba(96, 165, 250, 0.12) 100%
+  );
+  backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  box-shadow: 
+    0 4px 16px rgba(59, 130, 246, 0.15),
+    0 2px 8px rgba(37, 99, 235, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(96, 165, 250, 0.2) 0%,
+    transparent 50%,
+    rgba(59, 130, 246, 0.1) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cta-button:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+.cta-button:hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.35) 0%,
+    rgba(37, 99, 235, 0.25) 50%,
+    rgba(96, 165, 250, 0.20) 100%
+  );
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 
+    0 6px 20px rgba(59, 130, 246, 0.25),
+    0 3px 12px rgba(37, 99, 235, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.cta-button:active:not(:disabled) {
+  transform: translateY(0px);
+  box-shadow: 
+    0 2px 8px rgba(59, 130, 246, 0.2),
+    0 1px 4px rgba(37, 99, 235, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
 /* Premium SDS Chip System - Apple/Linear Inspired */
 .sds-chip {
   display: inline-flex;

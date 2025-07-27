@@ -7,7 +7,7 @@ interface SummaryAndCalendarSectionProps {
 
 export default function SummaryAndCalendarSection({ results }: SummaryAndCalendarSectionProps) {
   return (
-    <>
+    <div className="space-y-10">
       {/* Summary Section */}
       <div className="section-container p-6 lg:p-8">
         <div className="mb-4">
@@ -74,6 +74,6 @@ export default function SummaryAndCalendarSection({ results }: SummaryAndCalenda
         </div>
         <ReadingCalendar />
       </div>
-    </>
+    </div>
   );
 } 
