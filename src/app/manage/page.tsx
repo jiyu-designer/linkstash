@@ -11,6 +11,8 @@ export default function ManagePage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingName, setEditingName] = useState('');
 
   useEffect(() => {
     loadData();
@@ -51,6 +53,33 @@ export default function ManagePage() {
       } catch (error) {
         console.error('Error deleting tag:', error);
       }
+    }
+  };
+
+  const handleEditStart = (id: string, name: string) => {
+    setEditingId(id);
+    setEditingName(name);
+  };
+
+  const handleEditCancel = () => {
+    setEditingId(null);
+    setEditingName('');
+  };
+
+  const handleEditSave = async () => {
+    if (!editingId || !editingName.trim()) return;
+
+    try {
+      if (activeTab === 'categories') {
+        await storage.updateCategory(editingId, { name: editingName.trim() });
+      } else {
+        await storage.updateTag(editingId, { name: editingName.trim() });
+      }
+      await loadData();
+      setEditingId(null);
+      setEditingName('');
+    } catch (error) {
+      console.error('Error updating:', error);
     }
   };
 
@@ -128,28 +157,75 @@ export default function ManagePage() {
                   <p className="text-gray-300">No categories found</p>
                 </div>
               ) : (
-                <div className="flex flex-wrap gap-2">
+                <div className="space-y-4">
                   {categories.map((category) => (
-                    <div
-                      key={category.id}
-                      className="sds-chip sds-chip-category relative group cursor-pointer"
-                    >
-                      <div className="flex items-center">
-                        <div
-                          className="w-2 h-2 rounded-full mr-2"
-                          style={{ backgroundColor: category.color }}
-                        ></div>
-                        <span>{category.name}</span>
+                    <div key={category.id} className="glass-card rounded-xl p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          {editingId === category.id ? (
+                            <div className="flex items-center gap-2">
+                              <div
+                                className="w-2 h-2 rounded-full flex-shrink-0"
+                                style={{ backgroundColor: category.color }}
+                              ></div>
+                              <input
+                                type="text"
+                                value={editingName}
+                                onChange={(e) => setEditingName(e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') handleEditSave();
+                                  if (e.key === 'Escape') handleEditCancel();
+                                }}
+                                className="flex-1 bg-white/10 rounded-lg px-2 py-1 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-400"
+                                autoFocus
+                              />
+                              <button
+                                onClick={handleEditSave}
+                                className="p-1 text-green-400 hover:text-green-300 transition-colors"
+                                title="Save"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                              </button>
+                              <button
+                                onClick={handleEditCancel}
+                                className="p-1 text-gray-400 hover:text-gray-300 transition-colors"
+                                title="Cancel"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                              </button>
+                            </div>
+                          ) : (
+                            <div
+                              className="sds-chip sds-chip-category cursor-pointer"
+                              onClick={() => handleEditStart(category.id, category.name)}
+                            >
+                              <div className="flex items-center">
+                                <div
+                                  className="w-2 h-2 rounded-full mr-2"
+                                  style={{ backgroundColor: category.color }}
+                                ></div>
+                                <span>{category.name}</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {editingId !== category.id && (
+                          <button
+                            onClick={() => handleDeleteCategory(category.id)}
+                            className="ml-3 p-1 text-red-400 hover:text-red-300 transition-colors"
+                            title="Delete category"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        )}
                       </div>
-                      
-                      {/* Delete button - only visible on hover */}
-                      <button
-                        onClick={() => handleDeleteCategory(category.id)}
-                        className="absolute -top-2 -right-2 w-5 h-5 bg-red-400 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center hover:bg-red-500"
-                        title="Delete category"
-                      >
-                        ×
-                      </button>
                     </div>
                   ))}
                 </div>
@@ -167,22 +243,66 @@ export default function ManagePage() {
                   <p className="text-gray-300">No tags found</p>
                 </div>
               ) : (
-                <div className="flex flex-wrap gap-2">
+                <div className="space-y-4">
                   {tags.map((tag) => (
-                    <div
-                      key={tag.id}
-                      className="sds-chip sds-chip-tag relative group cursor-pointer"
-                    >
-                      <span>#{tag.name}</span>
-                      
-                      {/* Delete button - only visible on hover */}
-                      <button
-                        onClick={() => handleDeleteTag(tag.id)}
-                        className="absolute -top-2 -right-2 w-5 h-5 bg-red-400 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center hover:bg-red-500"
-                        title="Delete tag"
-                      >
-                        ×
-                      </button>
+                    <div key={tag.id} className="glass-card rounded-xl p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          {editingId === tag.id ? (
+                            <div className="flex items-center gap-2">
+                              <span className="text-gray-400 flex-shrink-0">#</span>
+                              <input
+                                type="text"
+                                value={editingName}
+                                onChange={(e) => setEditingName(e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') handleEditSave();
+                                  if (e.key === 'Escape') handleEditCancel();
+                                }}
+                                className="flex-1 bg-white/10 rounded-lg px-2 py-1 text-white text-sm border border-white/20 focus:outline-none focus:border-blue-400"
+                                autoFocus
+                              />
+                              <button
+                                onClick={handleEditSave}
+                                className="p-1 text-green-400 hover:text-green-300 transition-colors"
+                                title="Save"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                              </button>
+                              <button
+                                onClick={handleEditCancel}
+                                className="p-1 text-gray-400 hover:text-gray-300 transition-colors"
+                                title="Cancel"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                              </button>
+                            </div>
+                          ) : (
+                            <div
+                              className="sds-chip sds-chip-tag cursor-pointer"
+                              onClick={() => handleEditStart(tag.id, tag.name)}
+                            >
+                              <span>#{tag.name}</span>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {editingId !== tag.id && (
+                          <button
+                            onClick={() => handleDeleteTag(tag.id)}
+                            className="ml-3 p-1 text-red-400 hover:text-red-300 transition-colors"
+                            title="Delete tag"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>

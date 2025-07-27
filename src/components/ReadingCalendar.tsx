@@ -165,7 +165,7 @@ export default function ReadingCalendar() {
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-4 lg:gap-4">
       {/* Calendar */}
       <div>
-                      <div className="rounded-2xl overflow-hidden">
+                      <div className="glass-card rounded-2xl overflow-hidden">
           {/* Header with Navigation and Statistics */}
           <div className="px-4 py-3">
             {/* Month Navigation */}
@@ -223,9 +223,9 @@ export default function ReadingCalendar() {
                     ${
                       dayData 
                         ? dayData.hasReadLinks && dayData.hasSavedLinks 
-                          ? `bg-[#4ade80] text-green-900 ${dayData.isToday ? 'font-bold' : ''}` // 둘 다 있는 날 - green 400
+                          ? `bg-green-400/20 border border-green-400/30 text-green-300 ${dayData.isToday ? 'font-bold' : ''}` // 둘 다 있는 날
                           : dayData.hasReadLinks || dayData.hasSavedLinks 
-                            ? `bg-[#86efac] text-green-800 ${dayData.isToday ? 'font-bold' : ''}` // 저장 또는 읽은 날 - green 300
+                            ? `bg-green-400/10 border border-green-400/20 text-green-300 ${dayData.isToday ? 'font-bold' : ''}` // 저장 또는 읽은 날
                             : `bg-white/10 hover:bg-white/20 text-white ${dayData.isToday ? 'font-bold' : ''}` // 아무것도 없는 날
                         : ''
                     }
@@ -247,70 +247,90 @@ export default function ReadingCalendar() {
       </div>
 
       {/* Selected Date Content */}
-      <div>
+      <div className="glass-card rounded-2xl overflow-hidden">
+        {/* Header matching calendar height */}
+        <div className="px-4 py-3">
+          {/* Selected Date Display - matching calendar navigation height */}
+          <div className="flex items-center justify-center mb-4 gap-4 h-8">
+            <div className="text-center">
+              <h2 className="text-xl font-semibold text-white tracking-tight">
+                {monthNames[selectedDate.getMonth()]} {selectedDate.getDate()}
+                {(() => {
+                  const day = selectedDate.getDate();
+                  if (day === 1 || day === 21 || day === 31) return 'st';
+                  if (day === 2 || day === 22) return 'nd';
+                  if (day === 3 || day === 23) return 'rd';
+                  return 'th';
+                })()}
+              </h2>
+            </div>
+          </div>
+        </div>
+
         {/* Stats for selected date */}
-        {(() => {
-          const selectedDateKey = selectedDate.getDate().toString();
-          const savedLinksForDate = monthSavedLinks.get(selectedDateKey) || [];
-          const readLinksForDate = monthReadLinks.get(selectedDateKey) || [];
-          
-          if (savedLinksForDate.length > 0 || readLinksForDate.length > 0) {
+        <div className="px-4 pb-3">
+          {(() => {
+            const selectedDateKey = selectedDate.getDate().toString();
+            const savedLinksForDate = monthSavedLinks.get(selectedDateKey) || [];
+            const readLinksForDate = monthReadLinks.get(selectedDateKey) || [];
+            
             return (
-              <div className="mb-4 text-center">
+              <div className="text-center">
                 <p className="text-sm text-gray-300">
                   {savedLinksForDate.length} Saved, {readLinksForDate.length} Read
                 </p>
               </div>
             );
-          }
-          return null;
-        })()}
+          })()}
+        </div>
         
-            {/* Content List */}
-            {readLinksForDate.length > 0 ? (
-              <div className="relative">
-                <div className="space-y-2 max-h-80 overflow-y-auto scrollbar-hide">
-                  {readLinksForDate.map((link) => (
-                    <div
-                      key={link.id}
-                      className="bg-white/3 rounded-lg px-4 py-2 hover:bg-white/8 transition-colors border border-white/8"
-                    >
-                      <h4 className="font-medium text-white text-base line-clamp-2 mb-1">
-                        <a
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-blue-300 transition-colors"
-                        >
-                          {link.title}
-                        </a>
-                      </h4>
+        {/* Content List - aligned with calendar grid */}
+        <div className="p-4">
+          {readLinksForDate.length > 0 ? (
+            <div className="relative">
+              <div className="space-y-2 max-h-80 overflow-y-auto scrollbar-hide">
+                {readLinksForDate.map((link) => (
+                  <div
+                    key={link.id}
+                    className="glass-card rounded-lg px-4 py-2 hover:bg-white/10 transition-colors"
+                  >
+                    <h4 className="font-medium text-white text-base line-clamp-2 mb-1">
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-blue-300 transition-colors"
+                      >
+                        {link.title}
+                      </a>
+                    </h4>
 
-                      {link.memo && (
-                        <p className="text-sm text-gray-300 line-clamp-1">
-                          {link.memo}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                {/* Scroll affordance gradient - only show if content exceeds container height */}
-                {readLinksForDate.length > 4 && (
-                  <div 
-                    className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none" 
-                    style={{
-                      background: 'linear-gradient(to top, rgba(255, 255, 255, 0.08), transparent)'
-                    }}
-                  ></div>
-                )}
+                    {link.memo && (
+                      <p className="text-sm text-gray-300 line-clamp-1">
+                        {link.memo}
+                      </p>
+                    )}
+                  </div>
+                ))}
               </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-80 text-center">
-                <p className="text-gray-300 text-sm text-center">
-                  Looks a little empty in here.
-                </p>
-              </div>
-            )}
+              {/* Scroll affordance gradient - only show if content exceeds container height */}
+              {readLinksForDate.length > 4 && (
+                <div 
+                  className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none" 
+                  style={{
+                    background: 'linear-gradient(to top, rgba(255, 255, 255, 0.08), transparent)'
+                  }}
+                ></div>
+              )}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-80 text-center">
+              <p className="text-gray-300 text-sm text-center">
+                Looks a little empty in here.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -34,7 +34,29 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedTag, setSelectedTag] = useState<string>('all');
   const [readFilter, setReadFilter] = useState<string>('all'); // 'all', 'read', 'unread'
+  
+  // Card hover effects
+  const [cardHoverStates, setCardHoverStates] = useState<{[key: string]: {x: number, y: number, isHovering: boolean}}>({});
   const [sortBy, setSortBy] = useState<string>('newest-added'); // 'newest-added', 'oldest-added', 'newest', 'oldest', 'title'
+
+  // Handle card hover effects
+  const handleCardMouseMove = (cardId: string, event: React.MouseEvent<HTMLDivElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
+    
+    setCardHoverStates(prev => ({
+      ...prev,
+      [cardId]: { x, y, isHovering: true }
+    }));
+  };
+
+  const handleCardMouseLeave = (cardId: string) => {
+    setCardHoverStates(prev => ({
+      ...prev,
+      [cardId]: { x: 50, y: 50, isHovering: false }
+    }));
+  };
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -689,7 +711,7 @@ export default function Home() {
         </header>
 
         {/* URL Input Form - Premium Design */}
-        <div className="section-container p-8 mb-[60px]">
+        <div className="section-container p-8 mb-9">
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col lg:flex-row gap-5">
               <div className="flex-1">
@@ -743,7 +765,7 @@ export default function Home() {
         </div>
 
         {/* Main Content: All Links, Summary, Reading Calendar (Vertical Stack) */}
-        <div className="space-y-[60px]">
+        <div className="space-y-20">
           
           {/* All Links Section */}
           <div className="section-container p-6 lg:p-8">
@@ -962,7 +984,7 @@ export default function Home() {
                     {filteredResults.length > itemsPerPage && (
                       <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/8">
                         <div className="text-sm text-gray-400 font-normal">
-                          Showing <span className="font-medium text-gray-300">{((currentPage - 1) * itemsPerPage) + 1}</span> to <span className="font-medium text-gray-300">{Math.min(currentPage * itemsPerPage, filteredResults.length)}</span> of <span className="font-medium text-gray-300">{filteredResults.length}</span> results
+                          <span className="font-medium text-gray-300">{((currentPage - 1) * itemsPerPage) + 1}</span>-<span className="font-medium text-gray-300">{Math.min(currentPage * itemsPerPage, filteredResults.length)}</span> / <span className="font-medium text-gray-300">{filteredResults.length}</span>
                         </div>
                         <div className="flex items-center space-x-1">
                           <button
@@ -987,8 +1009,8 @@ export default function Home() {
                                   onClick={() => setCurrentPage(i)}
                                   className={`h-9 w-9 rounded-lg text-sm font-medium transition-all duration-200 ${
                                     i === currentPage
-                                      ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
-                                      : 'glass-card text-gray-300 hover:text-white hover:bg-white/10'
+                                      ? 'text-blue-400'
+                                      : 'text-gray-300 hover:text-white'
                                   }`}
                                 >
                                   {i}
@@ -1001,7 +1023,7 @@ export default function Home() {
                           <button
                             onClick={() => setCurrentPage(Math.min(Math.ceil(filteredResults.length / itemsPerPage), currentPage + 1))}
                             disabled={currentPage === Math.ceil(filteredResults.length / itemsPerPage)}
-                            className="px-3 py-1 glass-button border border-white/20 rounded-md text-sm text-white hover:bg-white/15 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="h-9 px-4 glass-card rounded-lg text-sm text-white hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 font-medium"
                           >
                             Next
                           </button>
@@ -1038,7 +1060,16 @@ export default function Home() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Active Days Card */}
-              <div className="glass-card rounded-xl p-4 text-center">
+              <div 
+                className="glass-card rounded-xl p-4 text-center relative overflow-hidden transition-all duration-300 cursor-pointer"
+                onMouseMove={(e) => handleCardMouseMove('active-days', e)}
+                onMouseLeave={() => handleCardMouseLeave('active-days')}
+                style={{
+                  background: cardHoverStates['active-days']?.isHovering 
+                    ? `radial-gradient(circle at ${cardHoverStates['active-days'].x}% ${cardHoverStates['active-days'].y}%, rgba(59, 130, 246, 0.15) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.02) 100%)`
+                    : undefined
+                }}
+              >
                 <div className="text-2xl font-semibold text-white mb-1">
                   {(() => {
                     const currentDate = new Date();
@@ -1070,7 +1101,16 @@ export default function Home() {
               </div>
               
               {/* Total Links Card */}
-              <div className="glass-card rounded-xl p-4 text-center">
+              <div 
+                className="glass-card rounded-xl p-4 text-center relative overflow-hidden transition-all duration-300 cursor-pointer"
+                onMouseMove={(e) => handleCardMouseMove('total-links', e)}
+                onMouseLeave={() => handleCardMouseLeave('total-links')}
+                style={{
+                  background: cardHoverStates['total-links']?.isHovering 
+                    ? `radial-gradient(circle at ${cardHoverStates['total-links'].x}% ${cardHoverStates['total-links'].y}%, rgba(236, 72, 153, 0.15) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.02) 100%)`
+                    : undefined
+                }}
+              >
                 <div className="text-2xl font-semibold text-white mb-1">
                   {results.length}
                 </div>
@@ -1079,7 +1119,16 @@ export default function Home() {
               </div>
               
               {/* Read Percentage Card */}
-              <div className="glass-card rounded-xl p-4 text-center">
+              <div 
+                className="glass-card rounded-xl p-4 text-center relative overflow-hidden transition-all duration-300 cursor-pointer"
+                onMouseMove={(e) => handleCardMouseMove('read-percentage', e)}
+                onMouseLeave={() => handleCardMouseLeave('read-percentage')}
+                style={{
+                  background: cardHoverStates['read-percentage']?.isHovering 
+                    ? `radial-gradient(circle at ${cardHoverStates['read-percentage'].x}% ${cardHoverStates['read-percentage'].y}%, rgba(34, 197, 94, 0.15) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.02) 100%)`
+                    : undefined
+                }}
+              >
                 <div className="text-2xl font-semibold text-white mb-1">
                   {results.length > 0 ? Math.round((results.filter(r => r.isRead).length / results.length) * 100) : 0}%
                 </div>
