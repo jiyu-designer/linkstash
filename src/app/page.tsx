@@ -513,17 +513,19 @@ export default function Home() {
         <div className="max-w-md w-full">
           {/* Header */}
           <div className="text-center mb-10">
-            <div className="w-14 h-14 glass-card rounded-2xl flex items-center justify-center backdrop-blur-20 bg-white/10 border border-white/20 mb-6">
-              <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-              </svg>
+            <div className="flex flex-col items-center">
+              <div className="w-14 h-14 glass-card rounded-2xl flex items-center justify-center backdrop-blur-20 bg-white/10 border border-white/20 mb-6">
+                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                </svg>
+              </div>
+              <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">
+                LinkStash
+              </h1>
+              <p className="text-gray-300 text-lg font-semibold">
+                Save smartly. Learn deeply
+              </p>
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">
-              LinkStash
-            </h1>
-            <p className="text-gray-300 text-lg font-semibold">
-              Save smartly. Learn deeply
-            </p>
           </div>
           
           {/* Login Card */}
@@ -607,9 +609,9 @@ export default function Home() {
                 )}
                 
                 {/* Divider */}
-                <div className="relative my-6">
+                <div className="relative my-4">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-white/20" />
+                    <div className="w-1/2 border-t border-white/20" />
                   </div>
                   <div className="relative flex justify-center text-sm">
                     <span className="px-4 text-gray-400 font-medium">or</span>
