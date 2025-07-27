@@ -295,7 +295,7 @@ export default function Home() {
     
     // Get current user on mount (only if Supabase is configured)
     console.log('🚀 초기 사용자 세션 확인 시작...');
-    getCurrentUser().then((currentUser) => {
+    getCurrentUser().then(async (currentUser) => {
       console.log('👤 사용자 세션 결과:', currentUser ? `로그인됨: ${currentUser.email}` : '로그인되지 않음');
       setUser(currentUser);
       setAuthLoading(false);
@@ -304,20 +304,24 @@ export default function Home() {
       if (currentUser) {
         console.log('📊 사용자 데이터 로딩 시작...');
         
-        // AI 사용량 조회
-        await getAiUsage(currentUser.email);
-        
-        // jiyu0719@kyonggi.ac.kr 사용자의 오늘 사용량 리셋 (7월 28일 한 번만)
-        if (currentUser.email === 'jiyu0719@kyonggi.ac.kr') {
-          const today = new Date().toDateString();
-          const resetKey = `jiyu0719_reset_${today}`;
-          const hasResetToday = localStorage.getItem(resetKey);
+        try {
+          // AI 사용량 조회
+          await getAiUsage(currentUser.email);
           
-          if (!hasResetToday) {
-            console.log('🎉 jiyu0719@kyonggi.ac.kr 사용자 - 오늘 사용량 리셋');
-            await resetAiUsage(currentUser.email);
-            localStorage.setItem(resetKey, 'true');
+          // jiyu0719@kyonggi.ac.kr 사용자의 오늘 사용량 리셋 (7월 28일 한 번만)
+          if (currentUser.email === 'jiyu0719@kyonggi.ac.kr') {
+            const today = new Date().toDateString();
+            const resetKey = `jiyu0719_reset_${today}`;
+            const hasResetToday = localStorage.getItem(resetKey);
+            
+            if (!hasResetToday) {
+              console.log('🎉 jiyu0719@kyonggi.ac.kr 사용자 - 오늘 사용량 리셋');
+              await resetAiUsage(currentUser.email);
+              localStorage.setItem(resetKey, 'true');
+            }
           }
+        } catch (error) {
+          console.error('❌ AI 사용량 조회/리셋 오류:', error);
         }
         
         loadData();
