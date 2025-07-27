@@ -16,7 +16,14 @@ export default function SummaryAndCalendarSection({ results }: SummaryAndCalenda
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Active Days Card */}
-          <div className="glass-card rounded-xl p-4 text-center relative overflow-hidden" style={{ cursor: 'default', pointerEvents: 'none' }}>
+          <div className="rounded-xl p-4 text-center relative overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl" 
+               style={{ 
+                 background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 50%, rgba(255, 255, 255, 0.01) 100%)',
+                 backdropFilter: 'blur(20px)',
+                 border: '1px solid rgba(255, 255, 255, 0.08)',
+                 cursor: 'default', 
+                 pointerEvents: 'none' 
+               }}>
             <div className="text-2xl font-semibold text-white mb-1">
               {(() => {
                 const currentDate = new Date();
@@ -48,7 +55,14 @@ export default function SummaryAndCalendarSection({ results }: SummaryAndCalenda
           </div>
           
           {/* Total Links Card */}
-          <div className="glass-card rounded-xl p-4 text-center relative overflow-hidden" style={{ cursor: 'default', pointerEvents: 'none' }}>
+          <div className="rounded-xl p-4 text-center relative overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl" 
+               style={{ 
+                 background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 50%, rgba(255, 255, 255, 0.01) 100%)',
+                 backdropFilter: 'blur(20px)',
+                 border: '1px solid rgba(255, 255, 255, 0.08)',
+                 cursor: 'default', 
+                 pointerEvents: 'none' 
+               }}>
             <div className="text-2xl font-semibold text-white mb-1">
               {results.length}
             </div>
@@ -57,7 +71,14 @@ export default function SummaryAndCalendarSection({ results }: SummaryAndCalenda
           </div>
           
           {/* Read Percentage Card */}
-          <div className="glass-card rounded-xl p-4 text-center relative overflow-hidden" style={{ cursor: 'default', pointerEvents: 'none' }}>
+          <div className="rounded-xl p-4 text-center relative overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl" 
+               style={{ 
+                 background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 50%, rgba(255, 255, 255, 0.01) 100%)',
+                 backdropFilter: 'blur(20px)',
+                 border: '1px solid rgba(255, 255, 255, 0.08)',
+                 cursor: 'default', 
+                 pointerEvents: 'none' 
+               }}>
             <div className="text-2xl font-semibold text-white mb-1">
               {results.length > 0 ? Math.round((results.filter(r => r.isRead).length / results.length) * 100) : 0}%
             </div>

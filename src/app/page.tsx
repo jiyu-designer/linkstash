@@ -792,7 +792,7 @@ export default function Home() {
         </div>
 
         {/* Main Content: All Links, Summary, Reading Calendar (Vertical Stack) */}
-        <div className="flex flex-col gap-20">
+        <div className="flex flex-col gap-10">
           
           {/* All Links Section */}
           <div className="section-container p-6 lg:p-8">
