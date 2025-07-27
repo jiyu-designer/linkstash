@@ -72,6 +72,17 @@ export default function Home() {
     setTimeout(() => setShowToast(false), 3000);
   };
 
+  // 하루에 한 번만 노티 표시하는 함수
+  const showLimitNotification = (userEmail: string) => {
+    const notificationKey = `limit_notification_${userEmail}_${new Date().toDateString()}`;
+    const hasShownToday = localStorage.getItem(notificationKey);
+    
+    if (!hasShownToday) {
+      showToastNotification('Auto-tagging is limited to 5 links a day.');
+      localStorage.setItem(notificationKey, 'true');
+    }
+  };
+
   // Filter and sort results
   const getFilteredAndSortedResults = () => {
     let filtered = [...results];
@@ -527,8 +538,8 @@ export default function Home() {
       setUrl(''); // 입력 필드 초기화
       setMemo(''); // 메모 필드 초기화
       
-      // 성공 메시지 표시
-      showToastNotification('Link saved without AI tagging (daily limit reached)');
+      // 노티 표시 (하루에 한 번만)
+      showLimitNotification(user!.email);
       
     } catch (error) {
       console.error('기본 저장 오류:', error);
@@ -621,6 +632,11 @@ export default function Home() {
           incrementDailyUsage(user.id);
           const newUsage = getDailyUsage(user.id);
           console.log(`✅ AutoStash 사용량 증가: ${newUsage}/5 (${user.email})`);
+          
+          // 6개 이상부터 노티 표시 (하루에 한 번만)
+          if (newUsage >= 6) {
+            showLimitNotification(user.email);
+          }
         } else {
           console.log(`✅ 면제 사용자 - 사용량 증가 없음: ${user.email}`);
         }
