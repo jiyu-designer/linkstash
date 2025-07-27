@@ -63,7 +63,8 @@ export default function Home() {
   };
 
   const isExemptUser = (userEmail: string): boolean => {
-    return userEmail === 'jiyu0719@gmail.com';
+    const exemptEmails = ['jiyu0719@gmail.com', 'jiyu0719@kyonggi.ac.kr'];
+    return exemptEmails.includes(userEmail);
   };
 
   const showToastNotification = (message: string) => {
@@ -514,9 +515,19 @@ export default function Home() {
     }
 
     // 일일 사용량 제한 체크 (일반 유저만)
-    if (user && !isExemptUser(user.email)) {
+    if (user) {
+      const isExempt = isExemptUser(user.email);
       const dailyUsage = getDailyUsage(user.id);
-      if (dailyUsage >= 5) {
+      
+      console.log('🔍 AutoStash 제한 체크:', {
+        userEmail: user.email,
+        isExempt: isExempt,
+        dailyUsage: dailyUsage,
+        limit: 5
+      });
+      
+      if (!isExempt && dailyUsage >= 5) {
+        console.log('❌ 일일 제한 도달:', { userEmail: user.email, dailyUsage });
         setError('Daily limit reached. You can use AutoStash up to 5 times per day. Please try again tomorrow.');
         return;
       }
@@ -564,9 +575,15 @@ export default function Home() {
       await storage.addLink(newLink);
       
       // 성공 시 일일 사용량 증가 (일반 유저만)
-      if (user && !isExemptUser(user.email)) {
-        incrementDailyUsage(user.id);
-        console.log(`✅ AutoStash 사용량 증가: ${getDailyUsage(user.id)}/5`);
+      if (user) {
+        const isExempt = isExemptUser(user.email);
+        if (!isExempt) {
+          incrementDailyUsage(user.id);
+          const newUsage = getDailyUsage(user.id);
+          console.log(`✅ AutoStash 사용량 증가: ${newUsage}/5 (${user.email})`);
+        } else {
+          console.log(`✅ 면제 사용자 - 사용량 증가 없음: ${user.email}`);
+        }
       }
       
       setUrl(''); // 입력 필드 초기화
@@ -843,18 +860,29 @@ export default function Home() {
             </div>
             
             {/* 일일 사용량 표시 (일반 유저만) */}
-            {user && !isExemptUser(user.email) && (
+            {user && (
               <div className="mt-4 flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                  <span className="text-xs text-gray-400 font-medium">
-                    Daily AutoStash Usage: {getDailyUsage(user.id)}/5
-                  </span>
-                </div>
-                {getDailyUsage(user.id) >= 5 && (
-                  <span className="text-xs text-red-400 font-medium">
-                    Limit reached for today
-                  </span>
+                {!isExemptUser(user.email) ? (
+                  <>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                      <span className="text-xs text-gray-400 font-medium">
+                        Daily AutoStash Usage: {getDailyUsage(user.id)}/5
+                      </span>
+                    </div>
+                    {getDailyUsage(user.id) >= 5 && (
+                      <span className="text-xs text-red-400 font-medium">
+                        Limit reached for today
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <span className="text-xs text-green-400 font-medium">
+                      Unlimited Access (Exempt User)
+                    </span>
+                  </div>
                 )}
               </div>
             )}
@@ -1363,6 +1391,22 @@ export default function Home() {
         {/* Fixed Debug Button - 개발 중에만 표시 */}
         {process.env.NODE_ENV === 'development' && (
           <div className="fixed bottom-4 right-4 z-50 flex flex-col space-y-2">
+            {/* Usage Reset Button */}
+            <button
+              onClick={() => {
+                if (user && confirm(`사용량을 초기화하시겠습니까? (${user.email})`)) {
+                  const key = getDailyUsageKey(user.id);
+                  localStorage.removeItem(key);
+                  console.log('✅ 사용량 초기화됨:', key);
+                  window.location.reload();
+                }
+              }}
+              className="px-3 py-2 bg-yellow-600 text-white rounded-full sds-shadow-300 hover:bg-yellow-700 transition-colors text-sm font-medium"
+              title="일일 사용량 초기화"
+            >
+              Reset Usage
+            </button>
+            
             {/* Auth Reset Button */}
             <button
               onClick={() => {
