@@ -3,6 +3,7 @@
 import AllLinksSection from '@/components/AllLinksSection'; // Added import for AllLinksSection
 import AutoStashSection from '@/components/AutoStashSection'; // Added import for AutoStashSection
 import SummaryAndCalendarSection from '@/components/SummaryAndCalendarSection';
+import { database } from '@/lib/database'; // Added import for database
 import { storage } from '@/lib/storage'; // Added import for storage
 import { supabase } from '@/lib/supabase';
 import { CategorizedLink } from '@/types';
@@ -180,7 +181,7 @@ export default function OnboardingPage() {
       // AI 사용량 체크
       let aiUsage = null;
       try {
-        aiUsage = await database.aiLimits.getUserLimit(user.email);
+        aiUsage = await database.aiLimits.getUserLimit(user.email || '');
         console.log('🔍 온보딩 AI 제한 체크:', {
           userEmail: user.email,
           isExempt: aiUsage?.is_exempt,
@@ -216,7 +217,7 @@ export default function OnboardingPage() {
         // AI 사용량 증가
         if (aiUsage) {
           try {
-            await database.aiLimits.incrementUsage(user.email);
+            await database.aiLimits.incrementUsage(user.email || '');
             console.log(`✅ 온보딩 AI 사용량 증가 완료: ${user.email}`);
           } catch (error) {
             console.error('❌ 온보딩 AI 사용량 증가 오류:', error);
