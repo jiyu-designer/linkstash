@@ -669,6 +669,30 @@ export const database = {
       }
 
       return data;
+    },
+
+    async setTodayDailyLimit(userEmail: string, limit: number): Promise<boolean> {
+      const { data, error } = await supabase
+        .rpc('set_today_daily_limit', { user_email: userEmail, new_limit: limit });
+
+      if (error) {
+        console.error('Error setting today daily limit:', error);
+        throw new Error('Failed to set today daily limit');
+      }
+
+      return data;
+    },
+
+    async setCanResetToday(userEmail: string, canReset: boolean): Promise<boolean> {
+      const { data, error } = await supabase
+        .rpc('set_can_reset_today', { user_email: userEmail, can_reset: canReset });
+
+      if (error) {
+        console.error('Error setting can reset today:', error);
+        throw new Error('Failed to set can reset today');
+      }
+
+      return data;
     }
   }
 }; 

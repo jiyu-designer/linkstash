@@ -940,16 +940,17 @@ export default function Home() {
                   <>
                     <div className="flex items-center space-x-2">
                       <div className={`w-2 h-2 rounded-full ${
-                        (aiUsage?.current_usage || 0) >= (aiUsage?.daily_limit || 5) 
+                        (aiUsage?.current_usage || 0) >= (aiUsage?.today_daily_limit || 5) 
                           ? 'bg-orange-400' 
                           : 'bg-blue-400'
                       }`}></div>
                       <span className="text-xs text-gray-400 font-medium">
-                        Daily AutoStash Usage: {aiUsage?.current_usage || 0}/{aiUsage?.daily_limit || 5}
-                        {aiUsage?.current_usage >= aiUsage?.daily_limit ? ' (Basic save only)' : ''}
+                        Daily AutoStash Usage: {aiUsage?.current_usage || 0}/{aiUsage?.today_daily_limit || 5}
+                        {aiUsage?.current_usage >= aiUsage?.today_daily_limit ? ' (Basic save only)' : ''}
                       </span>
                     </div>
-                    {user.email === 'jiyu0719@kyonggi.ac.kr' && (
+                    {/* 모든 사용자에게 리셋 버튼 표시 */}
+                    {aiUsage?.can_reset_today && (
                       <button
                         onClick={() => resetAiUsage(user.email)}
                         className="text-xs text-yellow-400 hover:text-yellow-300 font-medium transition-colors"
