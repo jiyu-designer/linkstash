@@ -63,8 +63,7 @@ export default function Home() {
   };
 
   const isExemptUser = (userEmail: string): boolean => {
-    const exemptEmails = ['jiyu0719@gmail.com', 'jiyu0719@kyonggi.ac.kr'];
-    return exemptEmails.includes(userEmail);
+    return userEmail === 'jiyu0719@gmail.com';
   };
 
   const showToastNotification = (message: string) => {
@@ -499,6 +498,46 @@ export default function Home() {
     }
   };
 
+  // AI 태깅 없이 기본 저장 처리
+  const handleBasicSave = async () => {
+    setIsLoading(true);
+    
+    try {
+      // 기본 링크 정보만으로 저장
+      const now = new Date();
+      const newLink: CategorizedLink = {
+        id: crypto.randomUUID(),
+        url: url,
+        title: url, // URL을 제목으로 사용
+        description: '',
+        category: 'Other', // 기본 카테고리
+        tags: [], // 빈 태그
+        memo: memo.trim() || undefined,
+        isRead: false,
+        readAt: undefined,
+        userId: user!.id,
+        createdAt: now,
+        updatedAt: now
+      };
+
+      // 링크 저장
+      await storage.addLink(newLink);
+      
+      console.log('✅ 기본 저장 완료 (AI 태깅 없음):', { userEmail: user!.email });
+      setUrl(''); // 입력 필드 초기화
+      setMemo(''); // 메모 필드 초기화
+      
+      // 성공 메시지 표시
+      showToastNotification('Link saved without AI tagging (daily limit reached)');
+      
+    } catch (error) {
+      console.error('기본 저장 오류:', error);
+      setError('Failed to save link. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -514,7 +553,7 @@ export default function Home() {
       return;
     }
 
-    // 일일 사용량 제한 체크 (일반 유저만)
+    // 일일 사용량 체크 (일반 유저만)
     if (user) {
       const isExempt = isExemptUser(user.email);
       const dailyUsage = getDailyUsage(user.id);
@@ -527,8 +566,9 @@ export default function Home() {
       });
       
       if (!isExempt && dailyUsage >= 5) {
-        console.log('❌ 일일 제한 도달:', { userEmail: user.email, dailyUsage });
-        setError('Daily limit reached. You can use AutoStash up to 5 times per day. Please try again tomorrow.');
+        console.log('⚠️ AI 태깅 제한 도달 - 기본 저장만 진행:', { userEmail: user.email, dailyUsage });
+        // AI 태깅 없이 기본 저장 진행
+        await handleBasicSave();
         return;
       }
     }
@@ -859,7 +899,7 @@ export default function Home() {
               </button>
             </div>
             
-            {/* 일일 사용량 표시 (일반 유저만) */}
+            {/* 일일 사용량 표시 */}
             {user && (
               <div className="mt-4 flex items-center justify-between">
                 {!isExemptUser(user.email) ? (
@@ -871,8 +911,8 @@ export default function Home() {
                       </span>
                     </div>
                     {getDailyUsage(user.id) >= 5 && (
-                      <span className="text-xs text-red-400 font-medium">
-                        Limit reached for today
+                      <span className="text-xs text-yellow-400 font-medium">
+                        AI tagging limit reached - basic save only
                       </span>
                     )}
                   </>
