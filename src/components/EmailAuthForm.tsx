@@ -91,7 +91,7 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
       switch (mode) {
         case 'signin':
           await signInWithEmail(formData.email, formData.password);
-          setSuccess('로그인되었습니다!');
+          setSuccess('Logged in successfully!');
           onSuccess?.();
           break;
 
@@ -133,14 +133,14 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
 
         case 'reset':
           await resetPassword(formData.email);
-          setSuccess('패스워드 리셋 이메일을 발송했습니다.');
+          setSuccess('Password reset email sent.');
           setMode('signin');
           break;
 
         case 'confirm':
           console.log('🔄 이메일 확인 재전송 요청:', formData.email);
           await resendConfirmation(formData.email);
-          setSuccess('확인 이메일을 다시 발송했습니다.');
+          setSuccess('Confirmation email resent.');
           break;
       }
     } catch (err: any) {
@@ -149,21 +149,21 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
       
       // Handle specific Supabase auth errors
       if (err.message?.includes('Email not confirmed')) {
-        setError('이메일 확인이 필요합니다. 이메일을 확인하거나 재전송 버튼을 클릭하세요.');
+        setError('Email confirmation required. Please check your email or click resend.');
         setMode('confirm');
       } else if (err.message?.includes('Invalid login credentials')) {
-        setError('이메일 또는 비밀번호가 올바르지 않습니다.');
+        setError('Invalid email or password.');
       } else if (err.message?.includes('User already registered')) {
-        setError('이미 가입된 이메일입니다. 로그인을 시도해보세요.');
+        setError('Email already registered. Please try signing in.');
         setMode('signin');
       } else if (err.message?.includes('Password should be at least')) {
-        setError('비밀번호는 최소 6자 이상이어야 합니다.');
+        setError('Password must be at least 6 characters.');
       } else if (err.message?.includes('Unable to validate email address')) {
-        setError('유효하지 않은 이메일 주소입니다.');
+        setError('Invalid email address.');
       } else if (err.message?.includes('Email rate limit exceeded')) {
-        setError('이메일 전송 한도를 초과했습니다. 잠시 후 다시 시도해주세요.');
+        setError('Email rate limit exceeded. Please try again later.');
       } else if (err.message?.includes('Signup disabled')) {
-        setError('현재 회원가입이 비활성화되어 있습니다.');
+        setError('Sign up is currently disabled.');
       } else {
         setError(err.message || 'Authentication failed. Please try again.');
       }

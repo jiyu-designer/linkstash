@@ -341,10 +341,24 @@ export default function Home() {
   };
 
   // Handle Email Auth Success
-  const handleEmailAuthSuccess = () => {
+  const handleEmailAuthSuccess = async () => {
+    console.log('🎉 이메일 인증 성공');
     setShowEmailAuth(false);
-    setError(''); // Clear any errors
-    // User state will be updated by the auth state change listener
+    
+    // 신규 사용자 체크 및 온보딩 리디렉션
+    try {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (authUser?.user_metadata?.firstLogin === true) {
+        console.log('🎉 신규 사용자 온보딩으로 이동');
+        router.push('/onboarding');
+        return;
+      }
+    } catch (error) {
+      console.error('사용자 정보 확인 오류:', error);
+    }
+    
+    // 기존 사용자는 페이지 새로고침
+    window.location.reload();
   };
 
   // Handle showing email auth form
@@ -577,7 +591,7 @@ export default function Home() {
           </div>
 
           {/* Login Card */}
-          <div className="section-container p-8">
+          <div className={showEmailAuth ? "p-8" : "section-container p-8"}>
 
             {/* Error Message */}
             {error && (
