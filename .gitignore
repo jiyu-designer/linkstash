@@ -133,3 +133,7 @@ client-secrets.*
 database-config.*
 db-credentials.*
 connection-strings.*
+
+# macOS system files
+._*
+.DS_Store
