@@ -845,6 +845,79 @@ export default function Home() {
   // Main application for authenticated users
   return (
     <>
+      {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "LinkStash",
+            "description": "AI-powered bookmark manager and URL organizer. Save links smartly with AI categorization, tags, and reading status. Perfect alternative to Pocket, Raindrop, Omnivore, and other bookmarking tools.",
+            "url": "https://linkstash.vercel.app",
+            "applicationCategory": "ProductivityApplication",
+            "operatingSystem": "Web Browser",
+            "author": {
+              "@type": "Person",
+              "name": "Jiyu Han",
+              "email": "jiyu0719@gmail.com"
+            },
+            "creator": {
+              "@type": "Person",
+              "name": "Jiyu Han"
+            },
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "featureList": [
+              "AI-powered link categorization",
+              "Smart bookmark organization",
+              "Reading status tracking",
+              "Tag-based organization",
+              "Category management",
+              "Reading calendar",
+              "AutoStash feature",
+              "Pocket alternative",
+              "Raindrop alternative",
+              "Omnivore alternative"
+            ],
+            "keywords": [
+              "bookmark manager",
+              "URL organizer",
+              "link saver",
+              "bookmarking tool",
+              "Pocket alternative",
+              "Raindrop alternative",
+              "Omnivore alternative",
+              "AI bookmarking",
+              "smart bookmarks",
+              "link management",
+              "URL storage",
+              "bookmark organizer",
+              "링크 저장",
+              "북마크 관리",
+              "URL 정리",
+              "북마크 도구",
+              "링크 관리자",
+              "스마트 북마크",
+              "AI 북마킹",
+              "URL 저장소",
+              "북마크 정리",
+              "링크 정리",
+              "URL 관리",
+              "북마크 저장",
+              "링크 저장소"
+            ],
+            "screenshot": "https://linkstash.vercel.app/og",
+            "softwareVersion": "1.0.0",
+            "datePublished": "2024-12-19",
+            "dateModified": "2024-12-19"
+          })
+        }}
+      />
+      
       <AntiExtension />
       <div className="min-h-screen bg-black">
       <div className="mx-auto px-10 lg:px-[120px] py-8">
