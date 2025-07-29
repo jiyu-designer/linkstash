@@ -57,7 +57,6 @@ export const database = {
     async getAll(): Promise<Category[]> {
       const userId = await getCurrentUserId();
       if (!userId) {
-        console.warn('No authenticated user, returning empty categories');
         return [];
       }
 
@@ -68,7 +67,6 @@ export const database = {
         .order('created_at', { ascending: false });
       
       if (error) {
-        console.error('Error fetching categories:', error);
         throw new Error('Failed to fetch categories');
       }
       
@@ -93,7 +91,6 @@ export const database = {
         .single();
       
       if (error) {
-        console.error('Error creating category:', error);
         throw new Error('Failed to create category');
       }
       
@@ -120,7 +117,6 @@ export const database = {
         .single();
       
       if (error) {
-        console.error('Error updating category:', error);
         throw new Error('Failed to update category');
       }
       
@@ -140,7 +136,6 @@ export const database = {
         .eq('user_id', userId);
       
       if (error) {
-        console.error('Error deleting category:', error);
         throw new Error('Failed to delete category');
       }
     },
@@ -148,7 +143,7 @@ export const database = {
     async findByName(name: string): Promise<Category | null> {
       const userId = await getCurrentUserId();
       if (!userId) {
-        return null; // No user, no category can be found
+        return null;
       }
 
       const { data, error } = await supabase
@@ -159,8 +154,7 @@ export const database = {
         .single();
       
       if (error) {
-        if (error.code === 'PGRST116') return null; // Not found
-        console.error('Error finding category by name:', error);
+        if (error.code === 'PGRST116') return null;
         throw new Error('Failed to find category');
       }
       
@@ -173,7 +167,6 @@ export const database = {
     async getAll(): Promise<Tag[]> {
       const userId = await getCurrentUserId();
       if (!userId) {
-        console.warn('No authenticated user, returning empty tags');
         return [];
       }
 
@@ -184,7 +177,6 @@ export const database = {
         .order('created_at', { ascending: false });
       
       if (error) {
-        console.error('Error fetching tags:', error);
         throw new Error('Failed to fetch tags');
       }
       
@@ -209,7 +201,6 @@ export const database = {
         .single();
       
       if (error) {
-        console.error('Error creating tag:', error);
         throw new Error('Failed to create tag');
       }
       
@@ -236,7 +227,6 @@ export const database = {
         .single();
       
       if (error) {
-        console.error('Error updating tag:', error);
         throw new Error('Failed to update tag');
       }
       
@@ -256,7 +246,6 @@ export const database = {
         .eq('user_id', userId);
       
       if (error) {
-        console.error('Error deleting tag:', error);
         throw new Error('Failed to delete tag');
       }
     },
@@ -264,7 +253,7 @@ export const database = {
     async findByName(name: string): Promise<Tag | null> {
       const userId = await getCurrentUserId();
       if (!userId) {
-        return null; // No user, no tag can be found
+        return null;
       }
 
       const { data, error } = await supabase
@@ -275,8 +264,7 @@ export const database = {
         .single();
       
       if (error) {
-        if (error.code === 'PGRST116') return null; // Not found
-        console.error('Error finding tag by name:', error);
+        if (error.code === 'PGRST116') return null;
         throw new Error('Failed to find tag');
       }
       
@@ -289,7 +277,6 @@ export const database = {
     async getAll(): Promise<CategorizedLink[]> {
       const userId = await getCurrentUserId();
       if (!userId) {
-        console.warn('No authenticated user, returning empty links');
         return [];
       }
 
@@ -300,7 +287,6 @@ export const database = {
         .order('created_at', { ascending: false });
       
       if (error) {
-        console.error('Error fetching links:', error);
         throw new Error('Failed to fetch links');
       }
       
@@ -330,7 +316,6 @@ export const database = {
         .single();
       
       if (error) {
-        console.error('Error creating link:', error);
         throw new Error('Failed to create link');
       }
       
@@ -363,7 +348,6 @@ export const database = {
         .single();
       
       if (error) {
-        console.error('Error updating link:', error);
         throw new Error('Failed to update link');
       }
       
@@ -383,7 +367,6 @@ export const database = {
         .eq('user_id', userId);
       
       if (error) {
-        console.error('Error deleting link:', error);
         throw new Error('Failed to delete link');
       }
     },
@@ -391,7 +374,6 @@ export const database = {
     async getByCategory(category: string): Promise<CategorizedLink[]> {
       const userId = await getCurrentUserId();
       if (!userId) {
-        console.warn('No authenticated user, returning empty links');
         return [];
       }
 
@@ -403,7 +385,6 @@ export const database = {
         .order('created_at', { ascending: false });
       
       if (error) {
-        console.error('Error fetching links by category:', error);
         throw new Error('Failed to fetch links by category');
       }
       
@@ -413,7 +394,6 @@ export const database = {
     async getByTag(tag: string): Promise<CategorizedLink[]> {
       const userId = await getCurrentUserId();
       if (!userId) {
-        console.warn('No authenticated user, returning empty links');
         return [];
       }
 
@@ -425,7 +405,6 @@ export const database = {
         .order('created_at', { ascending: false });
       
       if (error) {
-        console.error('Error fetching links by tag:', error);
         throw new Error('Failed to fetch links by tag');
       }
       
@@ -438,7 +417,6 @@ export const database = {
         throw new Error('User must be authenticated to toggle read status');
       }
 
-      // First get the current link to check its read status
       const { data: currentLink, error: fetchError } = await supabase
         .from('links')
         .select('*')
@@ -447,7 +425,6 @@ export const database = {
         .single();
 
       if (fetchError) {
-        console.error('Error fetching link:', fetchError);
         throw new Error('Failed to fetch link');
       }
 
@@ -466,7 +443,6 @@ export const database = {
         .single();
 
       if (error) {
-        console.error('Error toggling read status:', error);
         throw new Error('Failed to toggle read status');
       }
 
@@ -476,7 +452,6 @@ export const database = {
     async getReadLinksByDateRange(startDate: Date, endDate: Date): Promise<CategorizedLink[]> {
       const userId = await getCurrentUserId();
       if (!userId) {
-        console.warn('No authenticated user, returning empty links');
         return [];
       }
 
@@ -488,19 +463,22 @@ export const database = {
         .gte('read_at', startDate.toISOString())
         .lte('read_at', endDate.toISOString())
         .order('read_at', { ascending: false });
-
+      
       if (error) {
-        console.error('Error fetching read links by date range:', error);
         throw new Error('Failed to fetch read links by date range');
       }
-
+      
       return data.map(dbToLink);
     },
 
     async getReadLinksByDate(date: Date): Promise<CategorizedLink[]> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        return [];
+      }
+
       const startOfDay = new Date(date);
       startOfDay.setHours(0, 0, 0, 0);
-      
       const endOfDay = new Date(date);
       endOfDay.setHours(23, 59, 59, 999);
 

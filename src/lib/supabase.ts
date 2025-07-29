@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://localhost:3000';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy-key-for-development';
 
-// Debug environment variables (only in development)
+// 개발 환경에서만 환경 변수 체크 로그 출력
 if (process.env.NODE_ENV === 'development') {
   console.log('🔧 Environment Variables Check:');
   console.log('📍 Environment:', process.env.NODE_ENV);
