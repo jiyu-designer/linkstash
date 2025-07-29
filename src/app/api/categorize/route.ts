@@ -9,6 +9,87 @@ interface CategorizeResponse {
   url: string;
 }
 
+// 브런치 사이트 전용 메타데이터 추출 함수
+async function extractBrunchMetadata(url: string): Promise<{ title: string; description: string }> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000); // 브런치는 8초로 증가
+
+  try {
+    const response = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Connection': 'keep-alive',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Upgrade-Insecure-Requests': '1'
+      },
+      redirect: 'follow'
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const html = await response.text();
+    const $ = cheerio.load(html);
+    
+    // 브런치 사이트 전용 메타데이터 추출 순서
+    let title = '';
+    let description = '';
+    
+    // 1. OG 메타데이터 우선
+    title = $('meta[property="og:title"]').attr('content')?.trim() || 
+            $('meta[name="twitter:title"]').attr('content')?.trim() || '';
+    
+    description = $('meta[property="og:description"]').attr('content')?.trim() || 
+                 $('meta[name="twitter:description"]').attr('content')?.trim() || '';
+    
+    // 2. 브런치 전용 메타데이터 (og:title이 없을 경우)
+    if (!title) {
+      title = $('meta[name="title"]').attr('content')?.trim() || 
+              $('title').text().trim() || '';
+    }
+    
+    if (!description) {
+      description = $('meta[name="description"]').attr('content')?.trim() || '';
+    }
+    
+    // 3. 브런치 사이트의 특정 구조에서 추출
+    if (!title) {
+      // 브런치 글 제목이 있는 특정 선택자들
+      title = $('.post_title, .article_title, h1.title, .post-header h1').first().text().trim() || '';
+    }
+    
+    if (!description) {
+      // 브런치 글 요약이나 첫 번째 문단
+      description = $('.post_summary, .article_summary, .post-content p').first().text().trim() || '';
+    }
+    
+    // 4. 최종 fallback
+    if (!title) {
+      title = $('title').text().trim() || '';
+    }
+    
+    // 브런치 사이트에서 불필요한 접미사 제거
+    if (title.includes(' - 브런치')) {
+      title = title.replace(' - 브런치', '').trim();
+    }
+    
+    clearTimeout(timeoutId);
+    return { title, description };
+  } catch (error) {
+    clearTimeout(timeoutId);
+    throw error;
+  }
+}
+
 // OG 메타데이터를 활용한 향상된 fallback 태그 생성
 function generateFallbackTagsFromOG(title: string, description?: string, url?: string): string[] {
   const text = `${title} ${description || ''}`.toLowerCase();
@@ -136,10 +217,10 @@ function categorizeFromOG(title: string, description?: string, url?: string): st
   return 'Other';
 }
 
-// OG 메타데이터 추출 함수
+// 일반 사이트용 OG 메타데이터 추출 함수
 async function extractOGMetadata(url: string): Promise<{ title: string; description: string }> {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 5000); // 5초 타임아웃
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
 
   try {
     const response = await fetch(url, {
@@ -206,17 +287,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 2. OG 메타데이터 추출 시도
+    // 2. 사이트별 메타데이터 추출 시도
     let title = '';
     let description = '';
     let category = 'Other';
     let tags: string[] = [];
 
     try {
-      // OG 메타데이터 추출
-      const ogData = await extractOGMetadata(url);
-      title = ogData.title;
-      description = ogData.description;
+      // 브런치 사이트인 경우 전용 함수 사용
+      if (url.includes('brunch.co.kr')) {
+        const ogData = await extractBrunchMetadata(url);
+        title = ogData.title;
+        description = ogData.description;
+      } else {
+        // 일반 사이트는 기존 함수 사용
+        const ogData = await extractOGMetadata(url);
+        title = ogData.title;
+        description = ogData.description;
+      }
       
       // OG 메타데이터를 활용한 카테고리 및 태그 생성
       category = categorizeFromOG(title, description, url);
