@@ -15,7 +15,7 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- 2. 사용 예시:
--- SELECT reset_user_today_usage('jiyu0719@kyonggi.ac.kr');
+-- SELECT reset_user_today_usage('user@example.com');
 
 -- 3. 확인 메시지
 DO $$

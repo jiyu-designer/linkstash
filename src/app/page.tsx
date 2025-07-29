@@ -860,8 +860,7 @@ export default function Home() {
             "operatingSystem": "Web Browser",
             "author": {
               "@type": "Person",
-              "name": "Jiyu Han",
-              "email": "jiyu0719@gmail.com"
+              "name": "Jiyu Han"
             },
             "creator": {
               "@type": "Person",
@@ -1047,15 +1046,7 @@ export default function Home() {
                         {aiUsage?.current_usage >= aiUsage?.today_daily_limit ? ' (Basic save only)' : ''}
                       </span>
                     </div>
-                    {/* 관리자만 리셋 버튼 표시 */}
-                    {user.email === 'jiyu0719@kyonggi.ac.kr' && aiUsage?.can_reset_today && (
-                      <button
-                        onClick={() => resetAiUsage(user.email)}
-                        className="text-xs text-yellow-400 hover:text-yellow-300 font-medium transition-colors"
-                      >
-                        Reset Today
-                      </button>
-                    )}
+
                   </>
                 )}
               </div>

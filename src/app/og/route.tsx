@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
       
       <!-- 사용자 정보 -->
       <text x="60" y="20" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="white">Jiyu Han</text>
-      <text x="60" y="36" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#9ca3af">jiyu0719@gmail.com</text>
+
     </g>
   </g>
   

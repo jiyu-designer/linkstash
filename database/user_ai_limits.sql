@@ -45,7 +45,7 @@ ON user_ai_limits FOR ALL
 USING (
   auth.uid() IN (
     SELECT id FROM auth.users 
-    WHERE email IN ('admin@linkstash.com', 'jiyu0719@kyonggi.ac.kr')
+    WHERE email = 'admin@linkstash.com'
   )
 );
 
