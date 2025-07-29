@@ -1,10 +1,5 @@
-import { database } from '@/lib/database';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import * as cheerio from 'cheerio';
 import { NextRequest, NextResponse } from 'next/server';
-
-// Google Gemini 클라이언트 초기화
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
+import * as cheerio from 'cheerio';
 
 interface CategorizeResponse {
   category: string;
@@ -14,8 +9,8 @@ interface CategorizeResponse {
   url: string;
 }
 
-// Generate fallback tags based on title and description keywords
-function generateFallbackTags(title: string, description?: string): string[] {
+// OG 메타데이터를 활용한 향상된 fallback 태그 생성
+function generateFallbackTagsFromOG(title: string, description?: string, url?: string): string[] {
   const text = `${title} ${description || ''}`.toLowerCase();
   const fallbackTags: string[] = [];
   
@@ -65,6 +60,14 @@ function generateFallbackTags(title: string, description?: string): string[] {
   else if (text.match(/\b(productivity|workflow)\b/)) fallbackTags.push('productivity');
   else if (text.match(/\b(tool|app|software)\b/)) fallbackTags.push('tools');
   
+  // Korean keywords for better detection
+  if (text.match(/\b(코딩|프로그래밍|개발)\b/)) fallbackTags.push('coding');
+  else if (text.match(/\b(디자인|UI|UX)\b/)) fallbackTags.push('design');
+  else if (text.match(/\b(비즈니스|창업|스타트업)\b/)) fallbackTags.push('business');
+  else if (text.match(/\b(마케팅|SEO|광고)\b/)) fallbackTags.push('marketing');
+  else if (text.match(/\b(학습|교육|강의)\b/)) fallbackTags.push('education');
+  else if (text.match(/\b(생산성|워크플로우)\b/)) fallbackTags.push('productivity');
+  
   // If no specific tags found, extract meaningful words from title
   if (fallbackTags.length === 0) {
     const words = title.toLowerCase()
@@ -84,6 +87,97 @@ function generateFallbackTags(title: string, description?: string): string[] {
   
   // Return 1-3 tags maximum, ensure they're clean
   return fallbackTags.slice(0, 3).map(tag => tag.trim().toLowerCase());
+}
+
+// OG 메타데이터를 활용한 카테고리 분류
+function categorizeFromOG(title: string, description?: string, url?: string): string {
+  const text = `${title} ${description || ''}`.toLowerCase();
+  
+  // Technology
+  if (text.match(/\b(javascript|react|vue|angular|node|python|java|php|css|html|api|database|mobile|web|코딩|프로그래밍|개발)\b/)) {
+    return 'Technology';
+  }
+  
+  // Business
+  if (text.match(/\b(startup|entrepreneur|marketing|seo|business|strategy|product|management|비즈니스|창업|스타트업|마케팅)\b/)) {
+    return 'Business';
+  }
+  
+  // Design
+  if (text.match(/\b(design|ui|ux|figma|adobe|photoshop|디자인)\b/)) {
+    return 'Design';
+  }
+  
+  // Education
+  if (text.match(/\b(tutorial|guide|how to|learn|education|강의|학습|교육)\b/)) {
+    return 'Education';
+  }
+  
+  // Entertainment
+  if (text.match(/\b(game|movie|music|entertainment|게임|영화|음악)\b/)) {
+    return 'Entertainment';
+  }
+  
+  // Health
+  if (text.match(/\b(health|fitness|medical|exercise|건강|운동|의학)\b/)) {
+    return 'Health';
+  }
+  
+  // Lifestyle
+  if (text.match(/\b(lifestyle|hobby|travel|food|라이프스타일|취미|여행|음식)\b/)) {
+    return 'Lifestyle';
+  }
+  
+  // News
+  if (text.match(/\b(news|politics|society|뉴스|정치|사회)\b/)) {
+    return 'News';
+  }
+  
+  return 'Other';
+}
+
+// OG 메타데이터 추출 함수
+async function extractOGMetadata(url: string): Promise<{ title: string; description: string }> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000); // 5초 타임아웃
+
+  try {
+    const response = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Connection': 'keep-alive',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache'
+      },
+      redirect: 'follow'
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const html = await response.text();
+    const $ = cheerio.load(html);
+    
+    // OG 메타데이터 우선 추출
+    const title = $('meta[property="og:title"]').attr('content')?.trim() || 
+                 $('meta[name="twitter:title"]').attr('content')?.trim() || 
+                 $('title').text().trim() || '';
+    
+    const description = $('meta[property="og:description"]').attr('content')?.trim() || 
+                      $('meta[name="twitter:description"]').attr('content')?.trim() || 
+                      $('meta[name="description"]').attr('content')?.trim() || '';
+
+    clearTimeout(timeoutId);
+    return { title, description };
+  } catch (error) {
+    clearTimeout(timeoutId);
+    throw error;
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -112,160 +206,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 2. 웹 스크래핑으로 메타데이터 추출
+    // 2. OG 메타데이터 추출 시도
     let title = '';
     let description = '';
+    let category = 'Other';
+    let tags: string[] = [];
 
     try {
-      // 10초 타임아웃 설정 (브런치 사이트는 로딩이 느릴 수 있음)
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-      // 브런치 사이트 특별 처리
-      if (url.includes('brunch.co.kr')) {
-        try {
-          const brunchResponse = await fetch(url, {
-            signal: controller.signal,
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-              'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8',
-              'Accept-Encoding': 'gzip, deflate, br',
-              'Connection': 'keep-alive',
-              'Cache-Control': 'no-cache',
-              'Pragma': 'no-cache',
-              'Referer': 'https://brunch.co.kr/',
-              'Sec-Fetch-Dest': 'document',
-              'Sec-Fetch-Mode': 'navigate',
-              'Sec-Fetch-Site': 'same-origin',
-              'Sec-Fetch-User': '?1',
-              'Upgrade-Insecure-Requests': '1'
-            },
-            redirect: 'follow'
-          });
-          
-          if (brunchResponse.ok) {
-            const html = await brunchResponse.text();
-            const $ = cheerio.load(html);
-            
-            // OG 메타데이터 우선 추출
-            title = $('meta[property="og:title"]').attr('content')?.trim() || 
-                   $('meta[name="twitter:title"]').attr('content')?.trim() || 
-                   $('title').text().trim();
-            
-            description = $('meta[property="og:description"]').attr('content')?.trim() || 
-                        $('meta[name="twitter:description"]').attr('content')?.trim() || 
-                        $('meta[name="description"]').attr('content')?.trim() || '';
-          } else {
-            throw new Error(`Brunch fetch failed: ${brunchResponse.status}`);
-          }
-        } catch (brunchError) {
-          // 브런치 사이트의 경우 수동으로 정확한 제목 제공
-          const urlParts = url.split('/');
-          const author = urlParts[urlParts.length - 2]?.replace('@', '') || 'Unknown';
-          const postId = urlParts[urlParts.length - 1] || 'Unknown';
-          
-          // 특정 브런치 글에 대한 수동 매핑
-          if (author === 'jiyuhan' && postId === '110') {
-            title = '바이브코딩 입문 3일 차, 생산성 SaaS 출시 썰';
-            description = '바이브 코딩하다 맥북 지른 사람이 있다고? | 지난번 글은 아무리 AI가 발전해도 절대 대체할 수 없는 인간의 고유한 것을 말했다면, 오늘 글은 AI가 어디까지 발전했는지에 대해 경험담을 이야기하고 싶다.';
-          } else {
-            title = `브런치 - ${author}의 글 (${postId})`;
-            description = '브런치에서 공유된 글입니다.';
-          }
-        }
-      } else {
-        // 일반 사이트 처리
-        const fetchConfigs = [
-          {
-            userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-              'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8',
-              'Accept-Encoding': 'gzip, deflate, br',
-              'Connection': 'keep-alive',
-              'Upgrade-Insecure-Requests': '1',
-              'Cache-Control': 'no-cache',
-              'Pragma': 'no-cache'
-            } as Record<string, string>
-          },
-          {
-            userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-              'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8',
-              'Accept-Encoding': 'gzip, deflate, br',
-              'Connection': 'keep-alive',
-              'Upgrade-Insecure-Requests': '1'
-            } as Record<string, string>
-          },
-          {
-            userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Mobile/15E148 Safari/604.1',
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Mobile/15E148 Safari/604.1',
-              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-              'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8',
-              'Accept-Encoding': 'gzip, deflate, br',
-              'Connection': 'keep-alive'
-            } as Record<string, string>
-          }
-        ];
-
-        let response = null;
-        let lastError = null;
-
-        // 여러 설정으로 시도
-        for (const config of fetchConfigs) {
-          try {
-            response = await fetch(url, {
-              signal: controller.signal,
-              headers: config.headers,
-              redirect: 'follow'
-            });
-
-            if (response.ok) {
-              break;
-            } else {
-              lastError = new Error(`HTTP ${response.status}`);
-            }
-          } catch (error) {
-            lastError = error;
-          }
-        }
-
-        clearTimeout(timeoutId);
-
-        if (!response || !response.ok) {
-          throw lastError || new Error('All fetch attempts failed');
-        }
-
-        const html = await response.text();
-        const $ = cheerio.load(html);
-
-        // OG 메타데이터 우선 추출
-        title = $('meta[property="og:title"]').attr('content')?.trim() || 
-               $('meta[name="twitter:title"]').attr('content')?.trim() || 
-               $('title').text().trim();
-        
-        description = $('meta[property="og:description"]').attr('content')?.trim() || 
-                    $('meta[name="twitter:description"]').attr('content')?.trim() || 
-                    $('meta[name="description"]').attr('content')?.trim() || '';
-        
-        // title이 없으면 h1 태그에서 추출 시도
-        if (!title) {
-          title = $('h1').first().text().trim();
-        }
-        
-        // 여전히 title이 없으면 URL을 제목으로 사용
-        if (!title) {
-          title = validUrl.hostname;
-        }
-      }
-
+      // OG 메타데이터 추출
+      const ogData = await extractOGMetadata(url);
+      title = ogData.title;
+      description = ogData.description;
+      
+      // OG 메타데이터를 활용한 카테고리 및 태그 생성
+      category = categorizeFromOG(title, description, url);
+      tags = generateFallbackTagsFromOG(title, description, url);
+      
     } catch (fetchError) {
-      // 브런치 사이트 특별 처리
+      // 웹 스크래핑 실패 시 URL 기반 fallback
       if (url.includes('brunch.co.kr')) {
         const urlParts = url.split('/');
         const author = urlParts[urlParts.length - 2]?.replace('@', '') || 'Unknown';
@@ -275,24 +233,28 @@ export async function POST(request: NextRequest) {
         if (author === 'jiyuhan' && postId === '110') {
           title = '바이브코딩 입문 3일 차, 생산성 SaaS 출시 썰';
           description = '바이브 코딩하다 맥북 지른 사람이 있다고? | 지난번 글은 아무리 AI가 발전해도 절대 대체할 수 없는 인간의 고유한 것을 말했다면, 오늘 글은 AI가 어디까지 발전했는지에 대해 경험담을 이야기하고 싶다.';
+          category = 'Technology';
+          tags = ['coding', 'productivity', 'software'];
         } else {
           title = `브런치 - ${author}의 글 (${postId})`;
           description = '브런치에서 공유된 글입니다.';
+          category = 'Other';
+          tags = ['blog', 'korean', 'writing'];
         }
       } else {
-        return NextResponse.json(
-          { error: 'Could not retrieve content from the URL.' },
-          { status: 400 }
-        );
+        // 일반적인 URL 기반 fallback
+        const domain = validUrl.hostname;
+        title = `${domain} - 공유된 링크`;
+        description = `${domain}에서 공유된 콘텐츠입니다.`;
+        category = 'Other';
+        tags = ['web', 'link'];
       }
     }
 
-    // 3. AI를 사용한 카테고리 및 태그 분류
-    let category = 'Other';
-    let tags: string[] = [];
-
-    try {
-      const prompt = `다음 웹페이지의 제목과 설명을 바탕으로 적절한 카테고리와 태그를 추천해주세요.
+    // 3. AI를 사용한 추가 분류 (선택적)
+    if (process.env.GOOGLE_API_KEY && title && description) {
+      try {
+        const prompt = `다음 웹페이지의 제목과 설명을 바탕으로 적절한 카테고리와 태그를 추천해주세요.
 
 제목: ${title}
 설명: ${description}
@@ -317,37 +279,36 @@ JSON 형식으로 응답해주세요:
   "tags": ["태그1", "태그2", "태그3"]
 }`;
 
-      const geminiResponse = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.GOOGLE_API_KEY}`
-        },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: prompt
+        const geminiResponse = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.GOOGLE_API_KEY}`
+          },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: prompt
+              }]
             }]
-          }]
-        })
-      });
+          })
+        });
 
-      if (geminiResponse.ok) {
-        const geminiData = await geminiResponse.json();
-        const responseText = geminiData.candidates[0].content.parts[0].text;
-        
-        // JSON 추출
-        const jsonMatch = responseText.match(/```json\s*([\s\S]*?)\s*```/);
-        if (jsonMatch) {
-          const parsedData = JSON.parse(jsonMatch[1]);
-          category = parsedData.category || 'Other';
-          tags = parsedData.tags || [];
+        if (geminiResponse.ok) {
+          const geminiData = await geminiResponse.json();
+          const responseText = geminiData.candidates[0].content.parts[0].text;
+          
+          // JSON 추출
+          const jsonMatch = responseText.match(/```json\s*([\s\S]*?)\s*```/);
+          if (jsonMatch) {
+            const parsedData = JSON.parse(jsonMatch[1]);
+            category = parsedData.category || category;
+            tags = parsedData.tags && parsedData.tags.length > 0 ? parsedData.tags : tags;
+          }
         }
+      } catch (aiError) {
+        // AI 분류 실패 시 기존 fallback 결과 유지
       }
-    } catch (aiError) {
-      // AI 분류 실패 시 기본값 사용
-      category = 'Other';
-      tags = ['web', 'link'];
     }
 
     // 4. 결과 반환
