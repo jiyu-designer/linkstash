@@ -7,8 +7,6 @@ import type { User } from '@/types';
 export const signUpWithEmail = async (email: string, password: string, fullName?: string) => {
   if (process.env.NODE_ENV === 'development') {
     console.log('🔧 이메일 회원가입 시작:', { email, fullName });
-    console.log('🌐 현재 도메인:', window.location.origin);
-    console.log('📧 이메일 리다이렉트 URL:', `${window.location.origin}/auth/callback`);
   }
   
   const { data, error } = await supabase.auth.signUp({
@@ -18,8 +16,8 @@ export const signUpWithEmail = async (email: string, password: string, fullName?
       data: {
         full_name: fullName || '',
         firstLogin: true, // 신규 사용자 플래그 설정
-      },
-      emailRedirectTo: `${window.location.origin}/auth/callback`
+      }
+      // emailRedirectTo 제거 - 인증 과정 없음
     }
   });
 
@@ -64,9 +62,9 @@ export const signUpWithEmail = async (email: string, password: string, fullName?
         if (signInError) {
           if (process.env.NODE_ENV === 'development') {
             console.error('❌ 자동 로그인 실패:', signInError);
-            // 원래 데이터 반환 (이메일 확인 필요 상태)
-            return data;
           }
+          // 로그인 실패해도 회원가입은 성공으로 처리
+          return data;
         }
         
         if (process.env.NODE_ENV === 'development') {
@@ -195,43 +193,6 @@ export const signInWithKakao = async () => {
     throw error;
   }
 
-  return data;
-};
-
-/**
- * Resend email confirmation
- */
-export const resendConfirmation = async (email: string) => {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('🔧 이메일 확인 재전송 시작:', email);
-    console.log('📧 재전송 리다이렉트 URL:', `${window.location.origin}/auth/callback`);
-  }
-  
-  const { data, error } = await supabase.auth.resend({
-    type: 'signup',
-    email,
-    options: {
-      emailRedirectTo: `${window.location.origin}/auth/callback`
-    }
-  });
-
-  if (process.env.NODE_ENV === 'development') {
-    console.log('📧 이메일 재전송 전체 응답:', JSON.stringify(data, null, 2));
-    console.log('❌ 재전송 에러:', error);
-  }
-
-  if (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('❌ 이메일 확인 재전송 오류:', error);
-      console.error('❌ 재전송 에러 코드:', error.status);
-      console.error('❌ 재전송 에러 메시지:', error.message);
-    }
-    throw error;
-  }
-
-  if (process.env.NODE_ENV === 'development') {
-    console.log('✅ 확인 이메일 재전송 완료');
-  }
   return data;
 };
 

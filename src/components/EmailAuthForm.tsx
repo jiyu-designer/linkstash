@@ -1,11 +1,11 @@
 'use client';
 
-import { resendConfirmation, resetPassword, signInWithEmail, signUpWithEmail } from '@/lib/auth';
+import { resetPassword, signInWithEmail, signUpWithEmail } from '@/lib/auth';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-type AuthMode = 'signin' | 'signup' | 'reset' | 'confirm';
+type AuthMode = 'signin' | 'signup' | 'reset';
 
 interface EmailAuthFormProps {
   onSuccess?: () => void;
@@ -98,43 +98,9 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
           break;
 
         case 'signup':
-          console.log('📝 회원가입 요청 데이터:', { 
-            email: formData.email, 
-            hasPassword: !!formData.password,
-            fullName: formData.fullName 
-          });
-          
-          const signUpData = await signUpWithEmail(formData.email, formData.password, formData.fullName);
-          console.log('📧 회원가입 완료 데이터:', signUpData);
-          
-          if (signUpData?.session && signUpData?.user) {
-            console.log('🚀 회원가입 및 즉시 로그인 완료');
-            
-            // 신규 가입자에게 firstLogin 플래그 설정
-            await supabase.auth.updateUser({
-              data: { firstLogin: true }
-            });
-            
-            setSuccess('Welcome to LinkStash! Let\'s get you started.');
-            // 온보딩 페이지로 리다이렉션
-            router.push('/onboarding');
-            return;
-          } else if (signUpData?.user) {
-            console.log('✅ 회원가입 완료 (세션 없음)');
-            
-            // 신규 가입자에게 firstLogin 플래그 설정
-            await supabase.auth.updateUser({
-              data: { firstLogin: true }
-            });
-            
-            setSuccess('Sign up completed successfully! You are now logged in.');
-            // 온보딩 페이지로 리다이렉션
-            router.push('/onboarding');
-            return;
-          } else {
-            console.warn('⚠️ 예상치 못한 회원가입 응답:', signUpData);
-            setError('Sign up failed. Please try again.');
-          }
+          await signUpWithEmail(formData.email, formData.password, formData.fullName);
+          setSuccess('Account created successfully!');
+          onSuccess?.();
           break;
 
         case 'reset':
@@ -142,22 +108,13 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
           setSuccess('Password reset email sent.');
           setMode('signin');
           break;
-
-        case 'confirm':
-          console.log('🔄 이메일 확인 재전송 요청:', formData.email);
-          await resendConfirmation(formData.email);
-          setSuccess('Confirmation email resent.');
-          break;
       }
     } catch (err: any) {
       console.error('❌ Auth 전체 에러:', err);
       console.error('❌ 에러 스택:', err.stack);
       
       // Handle specific Supabase auth errors
-      if (err.message?.includes('Email not confirmed')) {
-        setError('Email confirmation required. Please check your email or click resend.');
-        setMode('confirm');
-      } else if (err.message?.includes('Invalid login credentials')) {
+      if (err.message?.includes('Invalid login credentials')) {
         setError('Invalid email or password.');
       } else if (err.message?.includes('User already registered')) {
         setError('Email already registered. Please try signing in.');
@@ -199,7 +156,6 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
       case 'signin': return 'Sign In with Email';
       case 'signup': return 'Sign Up with Email';
       case 'reset': return 'Reset Password';
-      case 'confirm': return 'Verify Email';
       default: return 'Sign In';
     }
   };
@@ -211,7 +167,6 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
       case 'signin': return 'Sign In';
       case 'signup': return 'Sign Up';
       case 'reset': return 'Send Reset Email';
-      case 'confirm': return 'Resend Confirmation';
       default: return 'Confirm';
     }
   };
@@ -222,15 +177,9 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
         {/* Header */}
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-white mb-2">{getTitle()}</h2>
-          {mode === 'confirm' ? (
-            <p className="text-sm text-gray-300">
-              A confirmation email has been sent to {formData.email}.
-            </p>
-          ) : (
-            <p className="text-sm text-gray-300">
-              Please enter your account information
-            </p>
-          )}
+          <p className="text-sm text-gray-300">
+            Please enter your account information
+          </p>
         </div>
 
         {/* Success Message */}
@@ -260,7 +209,7 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              disabled={loading || mode === 'confirm'}
+              disabled={loading}
               className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
               placeholder="your.email@example.com"
               required
@@ -288,7 +237,7 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
           )}
 
           {/* Password */}
-          {mode !== 'reset' && mode !== 'confirm' && (
+          {mode !== 'reset' && (
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1">
                 Password
@@ -382,7 +331,7 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
             </div>
           )}
 
-          {(mode === 'reset' || mode === 'confirm') && (
+          {mode === 'reset' && (
             <div className="text-center">
               <button
                 type="button"
