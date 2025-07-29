@@ -547,7 +547,6 @@ export const database = {
         email: email,
         full_name: fullName || null,
         avatar_url: null,
-        preferences: {},
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
