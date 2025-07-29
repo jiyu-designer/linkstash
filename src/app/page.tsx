@@ -14,6 +14,7 @@ import { CategorizedLink, Category, Tag } from '@/types';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import AntiExtension from './anti-extension';
+import { extractOGMetadataFromUrl } from '@/lib/og';
 
 
 export default function Home() {
@@ -584,7 +585,6 @@ export default function Home() {
       setError('Please enter a URL');
       return;
     }
-
     if (!isValidUrl(url)) {
       setError('Please enter a valid URL (e.g., https://example.com)');
       return;
@@ -592,17 +592,7 @@ export default function Home() {
 
     // AI 사용량 체크
     if (user && aiUsage) {
-      console.log('🔍 AI 제한 체크:', {
-        userEmail: user.email,
-        isExempt: aiUsage.is_exempt,
-        currentUsage: aiUsage.current_usage,
-        dailyLimit: aiUsage.daily_limit,
-        canUseAi: aiUsage.can_use_ai
-      });
-      
       if (!aiUsage.can_use_ai) {
-        console.log('⚠️ AI 태깅 제한 도달 - 기본 저장만 진행:', { userEmail: user.email });
-        // AI 태깅 없이 기본 저장 진행
         await handleBasicSave();
         return;
       }
@@ -611,17 +601,24 @@ export default function Home() {
     setIsLoading(true);
 
     try {
+      let meta: { title?: string; description?: string } = {};
+      if (url.includes('brunch.co.kr')) {
+        try {
+          meta = await extractOGMetadataFromUrl(url);
+        } catch (err) {
+          // 실패 시 무시하고 서버에 url만 보냄
+          meta = {};
+        }
+      }
+
       // 실제 API 호출
       const response = await fetch('/api/categorize', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ url }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url, ...meta }),
       });
 
       const data = await response.json();
-
       if (!response.ok) {
         throw new Error(data.error || 'Categorization failed');
       }
@@ -638,33 +635,17 @@ export default function Home() {
         memo: memo.trim() || undefined,
         isRead: false,
         readAt: undefined,
-        userId: user!.id, // Current user ID
+        userId: user!.id,
         createdAt: now,
         updatedAt: now
       };
-
-      // Auto-create category and tags using storage utility
       await storage.autoCreateCategoryAndTags(data.category, data.tags || []);
-
-      // Add the new link
       await storage.addLink(newLink);
-      
-      // 성공 시 AI 사용량 증가
       if (user) {
-        try {
-          const success = await incrementAiUsage(user.email);
-          if (success) {
-            console.log(`✅ AI 사용량 증가 완료: ${user.email}`);
-          } else {
-            console.log(`⚠️ AI 사용량 증가 실패: ${user.email}`);
-          }
-        } catch (error) {
-          console.error('❌ AI 사용량 증가 오류:', error);
-        }
+        try { await incrementAiUsage(user.email); } catch {}
       }
-      
-      setUrl(''); // 입력 필드 초기화
-      setMemo(''); // 메모 필드 초기화
+      setUrl('');
+      setMemo('');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Categorization service is temporarily unavailable. Please try again later.';
       setError(errorMessage);

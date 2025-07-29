@@ -9,21 +9,6 @@ interface CategorizeResponse {
   url: string;
 }
 
-// 브런치 사이트 전용 메타데이터 추출 함수
-async function extractBrunchMetadata(url: string): Promise<{ title: string; description: string }> {
-  // 브런치 사이트의 경우 외부에서 접근 가능한 공유용 메타데이터만 활용
-  // URL 패턴을 분석하여 제목과 설명을 생성
-  const urlParts = url.split('/');
-  const author = urlParts[urlParts.length - 2]?.replace('@', '') || 'Unknown';
-  const postId = urlParts[urlParts.length - 1] || 'Unknown';
-  
-  // 브런치 사이트의 공유 메타데이터를 활용한 제목 생성
-  const title = `브런치 - ${author}의 글`;
-  const description = `브런치에서 ${author}님이 작성한 글입니다.`;
-  
-  return { title, description };
-}
-
 // OG 메타데이터를 활용한 태그 생성
 function generateFallbackTagsFromOG(title: string, description?: string, url?: string): string[] {
   const fallbackTags: string[] = [];
@@ -220,7 +205,7 @@ async function extractOGMetadata(url: string): Promise<{ title: string; descript
 
 export async function POST(request: NextRequest) {
   try {
-    const { url } = await request.json();
+    const { url, title: clientTitle, description: clientDescription } = await request.json();
 
     // 1. URL 유효성 검사
     if (!url || typeof url !== 'string') {
@@ -245,31 +230,27 @@ export async function POST(request: NextRequest) {
     }
 
     // 2. 메타데이터 추출 시도
-    let title = '';
-    let description = '';
+    let title = clientTitle || '';
+    let description = clientDescription || '';
     let category = 'Other';
     let tags: string[] = [];
 
     try {
-      // 브런치 사이트인 경우 특별 처리
-      if (url.includes('brunch.co.kr')) {
-        const brunchData = await extractBrunchMetadata(url);
-        title = brunchData.title;
-        description = brunchData.description;
-      } else {
-        // 일반 사이트는 OG 메타데이터 추출
-        const ogData = await extractOGMetadata(url);
-        title = ogData.title;
-        description = ogData.description;
+      if (!title || !description) {
+        // 프론트에서 안 왔으면 서버에서 추출 시도
+        try {
+          const ogData = await extractOGMetadata(url);
+          title = title || ogData.title;
+          description = description || ogData.description;
+        } catch (ogError) {
+          // 브런치 fallback 제거 - 빈 값 유지
+          title = title || '';
+          description = description || '';
+        }
       }
-      
-      // OG 메타데이터를 활용한 카테고리 및 태그 생성
       category = categorizeFromOG(title, description, url);
       tags = generateFallbackTagsFromOG(title, description, url);
-      
     } catch (fetchError) {
-      console.log('❌ 메타데이터 추출 실패, 빈 결과 반환:', fetchError);
-      // 웹 스크래핑 실패 시 빈 결과 반환
       title = '';
       description = '';
       category = 'Other';
@@ -279,67 +260,34 @@ export async function POST(request: NextRequest) {
     // 3. AI를 사용한 추가 분류 (선택적)
     if (process.env.GOOGLE_API_KEY && title && description) {
       try {
-        const prompt = `다음 웹페이지의 제목과 설명을 바탕으로 적절한 카테고리와 태그를 추천해주세요.
-
-제목: ${title}
-설명: ${description}
-URL: ${url}
-
-다음 카테고리 중에서 선택해주세요:
-- Technology (기술, 프로그래밍, IT)
-- Business (비즈니스, 마케팅, 경제)
-- Design (디자인, UI/UX, 그래픽)
-- Education (교육, 학습, 강의)
-- Entertainment (엔터테인먼트, 게임, 영화)
-- Health (건강, 운동, 의학)
-- Lifestyle (라이프스타일, 취미, 여행)
-- News (뉴스, 정치, 사회)
-- Other (기타)
-
-태그는 3-5개의 관련 키워드를 영어로 제공해주세요.
-
-응답 형식:
-카테고리: [카테고리명]
-태그: [태그1, 태그2, 태그3]`;
-
+        const prompt = `다음 웹페이지의 제목과 설명을 바탕으로 적절한 카테고리와 태그를 추천해주세요.\n\n제목: ${title}\n설명: ${description}\nURL: ${url}\n\n다음 카테고리 중에서 선택해주세요:\n- Technology (기술, 프로그래밍, IT)\n- Business (비즈니스, 마케팅, 경제)\n- Design (디자인, UI/UX, 그래픽)\n- Education (교육, 학습, 강의)\n- Entertainment (엔터테인먼트, 게임, 영화)\n- Health (건강, 운동, 의학)\n- Lifestyle (라이프스타일, 취미, 여행)\n- News (뉴스, 정치, 사회)\n- Other (기타)\n\n태그는 3-5개의 관련 키워드를 영어로 제공해주세요.\n\n응답 형식:\n카테고리: [카테고리명]\n태그: [태그1, 태그2, 태그3]`;
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GOOGLE_API_KEY}`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: prompt
-              }]
-            }]
-          })
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
         });
-
         if (response.ok) {
           const data = await response.json();
           const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-          
-          // AI 응답에서 카테고리와 태그 추출
           const categoryMatch = aiResponse.match(/카테고리:\s*([^\n]+)/);
           const tagsMatch = aiResponse.match(/태그:\s*\[([^\]]+)\]/);
-          
           if (categoryMatch && categoryMatch[1]) {
             const aiCategory = categoryMatch[1].trim();
-            if (['Technology', 'Business', 'Design', 'Education', 'Entertainment', 'Health', 'Lifestyle', 'News', 'Other'].includes(aiCategory)) {
+            if ([
+              'Technology', 'Business', 'Design', 'Education', 'Entertainment',
+              'Health', 'Lifestyle', 'News', 'Other'
+            ].includes(aiCategory)) {
               category = aiCategory;
             }
           }
-          
           if (tagsMatch && tagsMatch[1]) {
             const aiTags = tagsMatch[1].split(',').map((tag: string) => tag.trim().toLowerCase());
             if (aiTags.length > 0) {
-              tags = aiTags.slice(0, 5); // 최대 5개 태그
+              tags = aiTags.slice(0, 5);
             }
           }
         }
       } catch (aiError) {
-        console.log('❌ AI 분류 실패:', aiError);
         // AI 분류 실패 시 기존 결과 유지
       }
     }
@@ -354,7 +302,6 @@ URL: ${url}
     } as CategorizeResponse);
 
   } catch (error) {
-    console.error('❌ categorize API 오류:', error);
     return NextResponse.json(
       { error: 'Failed to categorize URL' },
       { status: 500 }

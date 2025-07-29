@@ -3,29 +3,14 @@ import * as cheerio from 'cheerio';
 
 interface ExtractTitleResponse {
   title: string;
-  description: string;
+  description?: string;
   url: string;
-}
-
-// 브런치 사이트 전용 메타데이터 추출 함수
-async function extractBrunchMetadata(url: string): Promise<{ title: string; description: string }> {
-  // 브런치 사이트의 경우 외부에서 접근 가능한 공유용 메타데이터만 활용
-  // URL 패턴을 분석하여 제목과 설명을 생성
-  const urlParts = url.split('/');
-  const author = urlParts[urlParts.length - 2]?.replace('@', '') || 'Unknown';
-  const postId = urlParts[urlParts.length - 1] || 'Unknown';
-  
-  // 브런치 사이트의 공유 메타데이터를 활용한 제목 생성
-  const title = `브런치 - ${author}의 글`;
-  const description = `브런치에서 ${author}님이 작성한 글입니다.`;
-  
-  return { title, description };
 }
 
 // OG 메타데이터 추출 함수
 async function extractOGMetadata(url: string): Promise<{ title: string; description: string }> {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 10000);
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
 
   try {
     const response = await fetch(url, {
@@ -97,35 +82,28 @@ export async function POST(request: NextRequest) {
     let description = '';
 
     try {
-      // 브런치 사이트인 경우 특별 처리
-      if (url.includes('brunch.co.kr')) {
-        const brunchData = await extractBrunchMetadata(url);
-        title = brunchData.title;
-        description = brunchData.description;
-      } else {
-        // 일반 사이트는 OG 메타데이터 추출
-        const ogData = await extractOGMetadata(url);
-        title = ogData.title;
-        description = ogData.description;
-      }
+      const ogData = await extractOGMetadata(url);
+      title = ogData.title;
+      description = ogData.description;
     } catch (fetchError) {
-      console.log('❌ 메타데이터 추출 실패, 빈 결과 반환:', fetchError);
-      // 웹 스크래핑 실패 시 빈 결과 반환
-      title = '';
-      description = '';
+      // 웹 스크래핑 실패 시 URL 기반 fallback
+      const domain = validUrl.hostname;
+      title = `${domain} - 공유된 링크`;
+      description = `${domain}에서 공유된 콘텐츠입니다.`;
     }
 
-    // 3. 응답 반환
-    return NextResponse.json({
+    // 3. 결과 반환
+    const apiResponse: ExtractTitleResponse = {
       title,
       description,
       url
-    } as ExtractTitleResponse);
+    };
+
+    return NextResponse.json(apiResponse);
 
   } catch (error) {
-    console.error('❌ extract-title API 오류:', error);
     return NextResponse.json(
-      { error: 'Failed to extract title and description' },
+      { error: 'Failed to extract title from URL.' },
       { status: 500 }
     );
   }
