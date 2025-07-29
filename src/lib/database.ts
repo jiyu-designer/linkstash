@@ -522,19 +522,24 @@ export const database = {
     }
   },
 
-  // Users management
+  // User management
   users: {
     async getProfile(userId?: string): Promise<UserProfile | null> {
-      const targetUserId = userId || await getCurrentUserId();
-      if (!targetUserId) {
+      const currentUserId = await getCurrentUserId();
+      if (!currentUserId) {
         return null;
+      }
+
+      // 다른 사용자의 프로필에 접근할 수 없도록 제한
+      const targetUserId = userId || currentUserId;
+      if (targetUserId !== currentUserId) {
+        throw new Error('Cannot access other user profiles');
       }
 
       const { data, error } = await supabase
         .rpc('get_user_profile', { user_uuid: targetUserId });
 
       if (error) {
-        console.error('Error getting user profile:', error);
         throw new Error('Failed to get user profile');
       }
 
@@ -579,7 +584,6 @@ export const database = {
         .single();
 
       if (error) {
-        console.error('Error updating user profile:', error);
         throw new Error('Failed to update user profile');
       }
 
@@ -587,16 +591,21 @@ export const database = {
     },
 
     async getStats(userId?: string): Promise<UserStats> {
-      const targetUserId = userId || await getCurrentUserId();
-      if (!targetUserId) {
-        throw new Error('User ID required for stats');
+      const currentUserId = await getCurrentUserId();
+      if (!currentUserId) {
+        throw new Error('User must be authenticated to get stats');
+      }
+
+      // 다른 사용자의 통계에 접근할 수 없도록 제한
+      const targetUserId = userId || currentUserId;
+      if (targetUserId !== currentUserId) {
+        throw new Error('Cannot access other user stats');
       }
 
       const { data, error } = await supabase
         .rpc('get_user_stats', { user_uuid: targetUserId });
 
       if (error) {
-        console.error('Error getting user stats:', error);
         throw new Error('Failed to get user stats');
       }
 
@@ -614,11 +623,30 @@ export const database = {
   // AI Limits management
   aiLimits: {
     async getUserLimit(userEmail: string): Promise<any> {
+      const currentUserId = await getCurrentUserId();
+      if (!currentUserId) {
+        throw new Error('User must be authenticated to access AI limits');
+      }
+
+      // 현재 사용자의 이메일과 일치하는지 확인
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('email')
+        .eq('id', currentUserId)
+        .single();
+
+      if (userError || !userData) {
+        throw new Error('Failed to verify user identity');
+      }
+
+      if (userData.email !== userEmail) {
+        throw new Error('Cannot access other user AI limits');
+      }
+
       const { data, error } = await supabase
         .rpc('get_user_ai_limit', { user_email: userEmail });
 
       if (error) {
-        console.error('Error getting user AI limit:', error);
         throw new Error('Failed to get user AI limit');
       }
 
@@ -626,11 +654,30 @@ export const database = {
     },
 
     async incrementUsage(userEmail: string): Promise<boolean> {
+      const currentUserId = await getCurrentUserId();
+      if (!currentUserId) {
+        throw new Error('User must be authenticated to increment AI usage');
+      }
+
+      // 현재 사용자의 이메일과 일치하는지 확인
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('email')
+        .eq('id', currentUserId)
+        .single();
+
+      if (userError || !userData) {
+        throw new Error('Failed to verify user identity');
+      }
+
+      if (userData.email !== userEmail) {
+        throw new Error('Cannot modify other user AI usage');
+      }
+
       const { data, error } = await supabase
         .rpc('increment_user_ai_usage', { user_email: userEmail });
 
       if (error) {
-        console.error('Error incrementing AI usage:', error);
         throw new Error('Failed to increment AI usage');
       }
 
@@ -638,11 +685,30 @@ export const database = {
     },
 
     async resetUsage(userEmail: string): Promise<boolean> {
+      const currentUserId = await getCurrentUserId();
+      if (!currentUserId) {
+        throw new Error('User must be authenticated to reset AI usage');
+      }
+
+      // 현재 사용자의 이메일과 일치하는지 확인
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('email')
+        .eq('id', currentUserId)
+        .single();
+
+      if (userError || !userData) {
+        throw new Error('Failed to verify user identity');
+      }
+
+      if (userData.email !== userEmail) {
+        throw new Error('Cannot modify other user AI usage');
+      }
+
       const { data, error } = await supabase
         .rpc('reset_user_ai_usage', { user_email: userEmail });
 
       if (error) {
-        console.error('Error resetting AI usage:', error);
         throw new Error('Failed to reset AI usage');
       }
 
@@ -650,11 +716,30 @@ export const database = {
     },
 
     async setExempt(userEmail: string, exempt: boolean): Promise<boolean> {
+      const currentUserId = await getCurrentUserId();
+      if (!currentUserId) {
+        throw new Error('User must be authenticated to set exempt status');
+      }
+
+      // 현재 사용자의 이메일과 일치하는지 확인
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('email')
+        .eq('id', currentUserId)
+        .single();
+
+      if (userError || !userData) {
+        throw new Error('Failed to verify user identity');
+      }
+
+      if (userData.email !== userEmail) {
+        throw new Error('Cannot modify other user exempt status');
+      }
+
       const { data, error } = await supabase
         .rpc('set_user_exempt', { user_email: userEmail, exempt_status: exempt });
 
       if (error) {
-        console.error('Error setting user exempt status:', error);
         throw new Error('Failed to set user exempt status');
       }
 
@@ -662,11 +747,30 @@ export const database = {
     },
 
     async setTodayDailyLimit(userEmail: string, limit: number): Promise<boolean> {
+      const currentUserId = await getCurrentUserId();
+      if (!currentUserId) {
+        throw new Error('User must be authenticated to set daily limit');
+      }
+
+      // 현재 사용자의 이메일과 일치하는지 확인
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('email')
+        .eq('id', currentUserId)
+        .single();
+
+      if (userError || !userData) {
+        throw new Error('Failed to verify user identity');
+      }
+
+      if (userData.email !== userEmail) {
+        throw new Error('Cannot modify other user daily limit');
+      }
+
       const { data, error } = await supabase
         .rpc('set_today_daily_limit', { user_email: userEmail, new_limit: limit });
 
       if (error) {
-        console.error('Error setting today daily limit:', error);
         throw new Error('Failed to set today daily limit');
       }
 
@@ -674,11 +778,30 @@ export const database = {
     },
 
     async setCanResetToday(userEmail: string, canReset: boolean): Promise<boolean> {
+      const currentUserId = await getCurrentUserId();
+      if (!currentUserId) {
+        throw new Error('User must be authenticated to set reset status');
+      }
+
+      // 현재 사용자의 이메일과 일치하는지 확인
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('email')
+        .eq('id', currentUserId)
+        .single();
+
+      if (userError || !userData) {
+        throw new Error('Failed to verify user identity');
+      }
+
+      if (userData.email !== userEmail) {
+        throw new Error('Cannot modify other user reset status');
+      }
+
       const { data, error } = await supabase
         .rpc('set_can_reset_today', { user_email: userEmail, can_reset: canReset });
 
       if (error) {
-        console.error('Error setting can reset today:', error);
         throw new Error('Failed to set can reset today');
       }
 
