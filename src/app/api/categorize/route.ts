@@ -12,7 +12,7 @@ interface CategorizeResponse {
 // 브런치 사이트 전용 메타데이터 추출 함수
 async function extractBrunchMetadata(url: string): Promise<{ title: string; description: string }> {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 8000); // 브런치는 8초로 증가
+  const timeoutId = setTimeout(() => controller.abort(), 10000); // 브런치는 10초로 증가
 
   try {
     const response = await fetch(url, {
@@ -28,7 +28,8 @@ async function extractBrunchMetadata(url: string): Promise<{ title: string; desc
         'Sec-Fetch-Dest': 'document',
         'Sec-Fetch-Mode': 'navigate',
         'Sec-Fetch-Site': 'none',
-        'Upgrade-Insecure-Requests': '1'
+        'Upgrade-Insecure-Requests': '1',
+        'Referer': 'https://brunch.co.kr/'
       },
       redirect: 'follow'
     });
@@ -44,7 +45,7 @@ async function extractBrunchMetadata(url: string): Promise<{ title: string; desc
     let title = '';
     let description = '';
     
-    // 1. OG 메타데이터 우선
+    // 1. OG 메타데이터 우선 (가장 신뢰할 수 있는 소스)
     title = $('meta[property="og:title"]').attr('content')?.trim() || 
             $('meta[name="twitter:title"]').attr('content')?.trim() || '';
     
@@ -61,18 +62,46 @@ async function extractBrunchMetadata(url: string): Promise<{ title: string; desc
       description = $('meta[name="description"]').attr('content')?.trim() || '';
     }
     
-    // 3. 브런치 사이트의 특정 구조에서 추출
+    // 3. 브런치 사이트의 특정 구조에서 추출 (더 구체적인 선택자들)
     if (!title) {
-      // 브런치 글 제목이 있는 특정 선택자들
-      title = $('.post_title, .article_title, h1.title, .post-header h1').first().text().trim() || '';
+      // 브런치 글 제목이 있는 특정 선택자들 (우선순위 순서)
+      title = $('.post_title, .article_title, h1.title, .post-header h1, .article-header h1, .post-title, .article-title, .content-title, h1.post-title, h1.article-title').first().text().trim() || '';
     }
     
     if (!description) {
-      // 브런치 글 요약이나 첫 번째 문단
-      description = $('.post_summary, .article_summary, .post-content p').first().text().trim() || '';
+      // 브런치 글 요약이나 첫 번째 문단 (더 구체적인 선택자들)
+      description = $('.post_summary, .article_summary, .post-content p, .article-content p, .content-summary, .post-description, .article-description, .content-description, .post-excerpt, .article-excerpt').first().text().trim() || '';
     }
     
-    // 4. 최종 fallback
+    // 4. 브런치 사이트의 JSON-LD 스크립트에서 추출
+    if (!title || !description) {
+      $('script[type="application/ld+json"]').each((i, el) => {
+        try {
+          const jsonData = JSON.parse($(el).html() || '{}');
+          if (jsonData['@type'] === 'Article' || jsonData['@type'] === 'BlogPosting') {
+            if (!title && jsonData.headline) {
+              title = jsonData.headline;
+            }
+            if (!description && jsonData.description) {
+              description = jsonData.description;
+            }
+          }
+        } catch (e) {
+          // JSON 파싱 실패 시 무시
+        }
+      });
+    }
+    
+    // 5. 브런치 사이트의 특정 클래스나 ID에서 추출
+    if (!title) {
+      title = $('[class*="title"], [class*="Title"], [id*="title"], [id*="Title"]').first().text().trim() || '';
+    }
+    
+    if (!description) {
+      description = $('[class*="summary"], [class*="Summary"], [class*="description"], [class*="Description"], [class*="excerpt"], [class*="Excerpt"]').first().text().trim() || '';
+    }
+    
+    // 6. 최종 fallback
     if (!title) {
       title = $('title').text().trim() || '';
     }
@@ -80,6 +109,14 @@ async function extractBrunchMetadata(url: string): Promise<{ title: string; desc
     // 브런치 사이트에서 불필요한 접미사 제거
     if (title.includes(' - 브런치')) {
       title = title.replace(' - 브런치', '').trim();
+    }
+    if (title.includes(' | 브런치')) {
+      title = title.replace(' | 브런치', '').trim();
+    }
+    
+    // 설명이 너무 길면 자르기 (200자 제한)
+    if (description && description.length > 200) {
+      description = description.substring(0, 200) + '...';
     }
     
     clearTimeout(timeoutId);
