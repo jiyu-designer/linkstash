@@ -535,22 +535,46 @@ export const database = {
   // Users management
   users: {
     async createUser(userId: string, email: string, fullName?: string): Promise<User> {
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔄 createUser 함수 시작');
+        console.log('👤 userId:', userId);
+        console.log('📧 email:', email);
+        console.log('👤 fullName:', fullName);
+      }
+      
+      const insertData = {
+        id: userId,
+        email: email,
+        full_name: fullName || null,
+        avatar_url: null,
+        preferences: {},
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log('📝 삽입할 데이터:', insertData);
+      }
+      
       const { data, error } = await supabase
         .from('users')
-        .insert({
-          id: userId,
-          email: email,
-          full_name: fullName || null,
-          avatar_url: null,
-          preferences: {},
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        })
+        .upsert(insertData, { onConflict: 'id' })
         .select()
         .single();
 
       if (error) {
-        throw new Error('Failed to create user in database');
+        if (process.env.NODE_ENV === 'development') {
+          console.error('❌ createUser 에러:', error);
+          console.error('❌ 에러 코드:', error.code);
+          console.error('❌ 에러 메시지:', error.message);
+          console.error('❌ 에러 상세:', error.details);
+        }
+        throw new Error(`Failed to create user in database: ${error.message}`);
+      }
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ createUser 성공');
+        console.log('📊 반환된 데이터:', data);
       }
 
       return dbToUser(data);

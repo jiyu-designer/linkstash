@@ -47,18 +47,31 @@ export const signUpWithEmail = async (email: string, password: string, fullName?
   if (data?.user) {
     if (process.env.NODE_ENV === 'development') {
       console.log('✅ 회원가입 성공 - users 테이블에 데이터 저장');
+      console.log('👤 사용자 ID:', data.user.id);
+      console.log('📧 사용자 이메일:', email);
+      console.log('👤 사용자 이름:', fullName);
     }
     
     try {
-      // users 테이블에 사용자 데이터 저장
-      await database.users.createUser(data.user.id, email, fullName);
+      // users 테이블에 사용자 데이터 저장 (upsert로 중복 방지)
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔄 users 테이블에 데이터 저장 시도...');
+      }
+      
+      const createdUser = await database.users.createUser(data.user.id, email, fullName);
       
       if (process.env.NODE_ENV === 'development') {
         console.log('✅ users 테이블에 데이터 저장 완료');
+        console.log('📊 저장된 사용자 데이터:', createdUser);
       }
     } catch (dbError) {
       if (process.env.NODE_ENV === 'development') {
         console.error('❌ users 테이블 저장 실패:', dbError);
+        console.error('❌ 에러 타입:', typeof dbError);
+        console.error('❌ 에러 메시지:', dbError instanceof Error ? dbError.message : String(dbError));
+        if (dbError instanceof Error && dbError.stack) {
+          console.error('❌ 에러 스택:', dbError.stack);
+        }
       }
       // users 테이블 저장 실패해도 회원가입은 성공으로 처리
     }
