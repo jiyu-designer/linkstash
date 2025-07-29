@@ -1,3 +1,4 @@
+import { database } from './database';
 import { supabase, isSupabaseConfigured } from './supabase';
 import type { User } from '@/types';
 
@@ -42,10 +43,24 @@ export const signUpWithEmail = async (email: string, password: string, fullName?
     throw error;
   }
 
-  // 회원가입 성공 - 이메일 확인 없이 바로 로그인 처리
+  // 회원가입 성공 - users 테이블에 데이터 저장
   if (data?.user) {
     if (process.env.NODE_ENV === 'development') {
-      console.log('✅ 회원가입 성공 - 이메일 확인 없이 바로 로그인 처리');
+      console.log('✅ 회원가입 성공 - users 테이블에 데이터 저장');
+    }
+    
+    try {
+      // users 테이블에 사용자 데이터 저장
+      await database.users.createUser(data.user.id, email, fullName);
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ users 테이블에 데이터 저장 완료');
+      }
+    } catch (dbError) {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('❌ users 테이블 저장 실패:', dbError);
+      }
+      // users 테이블 저장 실패해도 회원가입은 성공으로 처리
     }
     
     // 이메일 확인 없이 바로 로그인

@@ -57,6 +57,7 @@ export const database = {
     async getAll(): Promise<Category[]> {
       const userId = await getCurrentUserId();
       if (!userId) {
+        console.warn('No authenticated user, returning empty categories');
         return [];
       }
 
@@ -67,6 +68,7 @@ export const database = {
         .order('created_at', { ascending: false });
       
       if (error) {
+        console.error('Error fetching categories:', error);
         throw new Error('Failed to fetch categories');
       }
       
@@ -91,6 +93,7 @@ export const database = {
         .single();
       
       if (error) {
+        console.error('Error creating category:', error);
         throw new Error('Failed to create category');
       }
       
@@ -117,6 +120,7 @@ export const database = {
         .single();
       
       if (error) {
+        console.error('Error updating category:', error);
         throw new Error('Failed to update category');
       }
       
@@ -124,18 +128,13 @@ export const database = {
     },
 
     async delete(id: string): Promise<void> {
-      const userId = await getCurrentUserId();
-      if (!userId) {
-        throw new Error('User must be authenticated to delete categories');
-      }
-
       const { error } = await supabase
         .from('categories')
         .delete()
-        .eq('id', id)
-        .eq('user_id', userId);
+        .eq('id', id);
       
       if (error) {
+        console.error('Error deleting category:', error);
         throw new Error('Failed to delete category');
       }
     },
@@ -143,7 +142,7 @@ export const database = {
     async findByName(name: string): Promise<Category | null> {
       const userId = await getCurrentUserId();
       if (!userId) {
-        return null;
+        return null; // No user, no category can be found
       }
 
       const { data, error } = await supabase
@@ -154,7 +153,8 @@ export const database = {
         .single();
       
       if (error) {
-        if (error.code === 'PGRST116') return null;
+        if (error.code === 'PGRST116') return null; // Not found
+        console.error('Error finding category by name:', error);
         throw new Error('Failed to find category');
       }
       
@@ -167,6 +167,7 @@ export const database = {
     async getAll(): Promise<Tag[]> {
       const userId = await getCurrentUserId();
       if (!userId) {
+        console.warn('No authenticated user, returning empty tags');
         return [];
       }
 
@@ -177,6 +178,7 @@ export const database = {
         .order('created_at', { ascending: false });
       
       if (error) {
+        console.error('Error fetching tags:', error);
         throw new Error('Failed to fetch tags');
       }
       
@@ -201,6 +203,7 @@ export const database = {
         .single();
       
       if (error) {
+        console.error('Error creating tag:', error);
         throw new Error('Failed to create tag');
       }
       
@@ -227,6 +230,7 @@ export const database = {
         .single();
       
       if (error) {
+        console.error('Error updating tag:', error);
         throw new Error('Failed to update tag');
       }
       
@@ -234,18 +238,13 @@ export const database = {
     },
 
     async delete(id: string): Promise<void> {
-      const userId = await getCurrentUserId();
-      if (!userId) {
-        throw new Error('User must be authenticated to delete tags');
-      }
-
       const { error } = await supabase
         .from('tags')
         .delete()
-        .eq('id', id)
-        .eq('user_id', userId);
+        .eq('id', id);
       
       if (error) {
+        console.error('Error deleting tag:', error);
         throw new Error('Failed to delete tag');
       }
     },
@@ -253,7 +252,7 @@ export const database = {
     async findByName(name: string): Promise<Tag | null> {
       const userId = await getCurrentUserId();
       if (!userId) {
-        return null;
+        return null; // No user, no tag can be found
       }
 
       const { data, error } = await supabase
@@ -264,7 +263,8 @@ export const database = {
         .single();
       
       if (error) {
-        if (error.code === 'PGRST116') return null;
+        if (error.code === 'PGRST116') return null; // Not found
+        console.error('Error finding tag by name:', error);
         throw new Error('Failed to find tag');
       }
       
@@ -277,6 +277,7 @@ export const database = {
     async getAll(): Promise<CategorizedLink[]> {
       const userId = await getCurrentUserId();
       if (!userId) {
+        console.warn('No authenticated user, returning empty links');
         return [];
       }
 
@@ -287,6 +288,7 @@ export const database = {
         .order('created_at', { ascending: false });
       
       if (error) {
+        console.error('Error fetching links:', error);
         throw new Error('Failed to fetch links');
       }
       
@@ -316,6 +318,7 @@ export const database = {
         .single();
       
       if (error) {
+        console.error('Error creating link:', error);
         throw new Error('Failed to create link');
       }
       
@@ -348,6 +351,7 @@ export const database = {
         .single();
       
       if (error) {
+        console.error('Error updating link:', error);
         throw new Error('Failed to update link');
       }
       
@@ -367,6 +371,7 @@ export const database = {
         .eq('user_id', userId);
       
       if (error) {
+        console.error('Error deleting link:', error);
         throw new Error('Failed to delete link');
       }
     },
@@ -374,6 +379,7 @@ export const database = {
     async getByCategory(category: string): Promise<CategorizedLink[]> {
       const userId = await getCurrentUserId();
       if (!userId) {
+        console.warn('No authenticated user, returning empty links');
         return [];
       }
 
@@ -385,6 +391,7 @@ export const database = {
         .order('created_at', { ascending: false });
       
       if (error) {
+        console.error('Error fetching links by category:', error);
         throw new Error('Failed to fetch links by category');
       }
       
@@ -394,6 +401,7 @@ export const database = {
     async getByTag(tag: string): Promise<CategorizedLink[]> {
       const userId = await getCurrentUserId();
       if (!userId) {
+        console.warn('No authenticated user, returning empty links');
         return [];
       }
 
@@ -405,6 +413,7 @@ export const database = {
         .order('created_at', { ascending: false });
       
       if (error) {
+        console.error('Error fetching links by tag:', error);
         throw new Error('Failed to fetch links by tag');
       }
       
@@ -417,6 +426,7 @@ export const database = {
         throw new Error('User must be authenticated to toggle read status');
       }
 
+      // First get the current link to check its read status
       const { data: currentLink, error: fetchError } = await supabase
         .from('links')
         .select('*')
@@ -425,6 +435,7 @@ export const database = {
         .single();
 
       if (fetchError) {
+        console.error('Error fetching link:', fetchError);
         throw new Error('Failed to fetch link');
       }
 
@@ -443,6 +454,7 @@ export const database = {
         .single();
 
       if (error) {
+        console.error('Error toggling read status:', error);
         throw new Error('Failed to toggle read status');
       }
 
@@ -452,6 +464,7 @@ export const database = {
     async getReadLinksByDateRange(startDate: Date, endDate: Date): Promise<CategorizedLink[]> {
       const userId = await getCurrentUserId();
       if (!userId) {
+        console.warn('No authenticated user, returning empty links');
         return [];
       }
 
@@ -463,22 +476,19 @@ export const database = {
         .gte('read_at', startDate.toISOString())
         .lte('read_at', endDate.toISOString())
         .order('read_at', { ascending: false });
-      
+
       if (error) {
+        console.error('Error fetching read links by date range:', error);
         throw new Error('Failed to fetch read links by date range');
       }
-      
+
       return data.map(dbToLink);
     },
 
     async getReadLinksByDate(date: Date): Promise<CategorizedLink[]> {
-      const userId = await getCurrentUserId();
-      if (!userId) {
-        return [];
-      }
-
       const startOfDay = new Date(date);
       startOfDay.setHours(0, 0, 0, 0);
+      
       const endOfDay = new Date(date);
       endOfDay.setHours(23, 59, 59, 999);
 
@@ -522,24 +532,41 @@ export const database = {
     }
   },
 
-  // User management
+  // Users management
   users: {
-    async getProfile(userId?: string): Promise<UserProfile | null> {
-      const currentUserId = await getCurrentUserId();
-      if (!currentUserId) {
-        return null;
+    async createUser(userId: string, email: string, fullName?: string): Promise<User> {
+      const { data, error } = await supabase
+        .from('users')
+        .insert({
+          id: userId,
+          email: email,
+          full_name: fullName || null,
+          avatar_url: null,
+          preferences: {},
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .select()
+        .single();
+
+      if (error) {
+        throw new Error('Failed to create user in database');
       }
 
-      // 다른 사용자의 프로필에 접근할 수 없도록 제한
-      const targetUserId = userId || currentUserId;
-      if (targetUserId !== currentUserId) {
-        throw new Error('Cannot access other user profiles');
+      return dbToUser(data);
+    },
+
+    async getProfile(userId?: string): Promise<UserProfile | null> {
+      const targetUserId = userId || await getCurrentUserId();
+      if (!targetUserId) {
+        return null;
       }
 
       const { data, error } = await supabase
         .rpc('get_user_profile', { user_uuid: targetUserId });
 
       if (error) {
+        console.error('Error getting user profile:', error);
         throw new Error('Failed to get user profile');
       }
 
@@ -584,6 +611,7 @@ export const database = {
         .single();
 
       if (error) {
+        console.error('Error updating user profile:', error);
         throw new Error('Failed to update user profile');
       }
 
@@ -591,21 +619,16 @@ export const database = {
     },
 
     async getStats(userId?: string): Promise<UserStats> {
-      const currentUserId = await getCurrentUserId();
-      if (!currentUserId) {
-        throw new Error('User must be authenticated to get stats');
-      }
-
-      // 다른 사용자의 통계에 접근할 수 없도록 제한
-      const targetUserId = userId || currentUserId;
-      if (targetUserId !== currentUserId) {
-        throw new Error('Cannot access other user stats');
+      const targetUserId = userId || await getCurrentUserId();
+      if (!targetUserId) {
+        throw new Error('User ID required for stats');
       }
 
       const { data, error } = await supabase
         .rpc('get_user_stats', { user_uuid: targetUserId });
 
       if (error) {
+        console.error('Error getting user stats:', error);
         throw new Error('Failed to get user stats');
       }
 
@@ -623,30 +646,11 @@ export const database = {
   // AI Limits management
   aiLimits: {
     async getUserLimit(userEmail: string): Promise<any> {
-      const currentUserId = await getCurrentUserId();
-      if (!currentUserId) {
-        throw new Error('User must be authenticated to access AI limits');
-      }
-
-      // 현재 사용자의 이메일과 일치하는지 확인
-      const { data: userData, error: userError } = await supabase
-        .from('users')
-        .select('email')
-        .eq('id', currentUserId)
-        .single();
-
-      if (userError || !userData) {
-        throw new Error('Failed to verify user identity');
-      }
-
-      if (userData.email !== userEmail) {
-        throw new Error('Cannot access other user AI limits');
-      }
-
       const { data, error } = await supabase
         .rpc('get_user_ai_limit', { user_email: userEmail });
 
       if (error) {
+        console.error('Error getting user AI limit:', error);
         throw new Error('Failed to get user AI limit');
       }
 
@@ -654,30 +658,11 @@ export const database = {
     },
 
     async incrementUsage(userEmail: string): Promise<boolean> {
-      const currentUserId = await getCurrentUserId();
-      if (!currentUserId) {
-        throw new Error('User must be authenticated to increment AI usage');
-      }
-
-      // 현재 사용자의 이메일과 일치하는지 확인
-      const { data: userData, error: userError } = await supabase
-        .from('users')
-        .select('email')
-        .eq('id', currentUserId)
-        .single();
-
-      if (userError || !userData) {
-        throw new Error('Failed to verify user identity');
-      }
-
-      if (userData.email !== userEmail) {
-        throw new Error('Cannot modify other user AI usage');
-      }
-
       const { data, error } = await supabase
         .rpc('increment_user_ai_usage', { user_email: userEmail });
 
       if (error) {
+        console.error('Error incrementing AI usage:', error);
         throw new Error('Failed to increment AI usage');
       }
 
@@ -685,30 +670,11 @@ export const database = {
     },
 
     async resetUsage(userEmail: string): Promise<boolean> {
-      const currentUserId = await getCurrentUserId();
-      if (!currentUserId) {
-        throw new Error('User must be authenticated to reset AI usage');
-      }
-
-      // 현재 사용자의 이메일과 일치하는지 확인
-      const { data: userData, error: userError } = await supabase
-        .from('users')
-        .select('email')
-        .eq('id', currentUserId)
-        .single();
-
-      if (userError || !userData) {
-        throw new Error('Failed to verify user identity');
-      }
-
-      if (userData.email !== userEmail) {
-        throw new Error('Cannot modify other user AI usage');
-      }
-
       const { data, error } = await supabase
         .rpc('reset_user_ai_usage', { user_email: userEmail });
 
       if (error) {
+        console.error('Error resetting AI usage:', error);
         throw new Error('Failed to reset AI usage');
       }
 
@@ -716,30 +682,11 @@ export const database = {
     },
 
     async setExempt(userEmail: string, exempt: boolean): Promise<boolean> {
-      const currentUserId = await getCurrentUserId();
-      if (!currentUserId) {
-        throw new Error('User must be authenticated to set exempt status');
-      }
-
-      // 현재 사용자의 이메일과 일치하는지 확인
-      const { data: userData, error: userError } = await supabase
-        .from('users')
-        .select('email')
-        .eq('id', currentUserId)
-        .single();
-
-      if (userError || !userData) {
-        throw new Error('Failed to verify user identity');
-      }
-
-      if (userData.email !== userEmail) {
-        throw new Error('Cannot modify other user exempt status');
-      }
-
       const { data, error } = await supabase
         .rpc('set_user_exempt', { user_email: userEmail, exempt_status: exempt });
 
       if (error) {
+        console.error('Error setting user exempt status:', error);
         throw new Error('Failed to set user exempt status');
       }
 
@@ -747,30 +694,11 @@ export const database = {
     },
 
     async setTodayDailyLimit(userEmail: string, limit: number): Promise<boolean> {
-      const currentUserId = await getCurrentUserId();
-      if (!currentUserId) {
-        throw new Error('User must be authenticated to set daily limit');
-      }
-
-      // 현재 사용자의 이메일과 일치하는지 확인
-      const { data: userData, error: userError } = await supabase
-        .from('users')
-        .select('email')
-        .eq('id', currentUserId)
-        .single();
-
-      if (userError || !userData) {
-        throw new Error('Failed to verify user identity');
-      }
-
-      if (userData.email !== userEmail) {
-        throw new Error('Cannot modify other user daily limit');
-      }
-
       const { data, error } = await supabase
         .rpc('set_today_daily_limit', { user_email: userEmail, new_limit: limit });
 
       if (error) {
+        console.error('Error setting today daily limit:', error);
         throw new Error('Failed to set today daily limit');
       }
 
@@ -778,30 +706,11 @@ export const database = {
     },
 
     async setCanResetToday(userEmail: string, canReset: boolean): Promise<boolean> {
-      const currentUserId = await getCurrentUserId();
-      if (!currentUserId) {
-        throw new Error('User must be authenticated to set reset status');
-      }
-
-      // 현재 사용자의 이메일과 일치하는지 확인
-      const { data: userData, error: userError } = await supabase
-        .from('users')
-        .select('email')
-        .eq('id', currentUserId)
-        .single();
-
-      if (userError || !userData) {
-        throw new Error('Failed to verify user identity');
-      }
-
-      if (userData.email !== userEmail) {
-        throw new Error('Cannot modify other user reset status');
-      }
-
       const { data, error } = await supabase
         .rpc('set_can_reset_today', { user_email: userEmail, can_reset: canReset });
 
       if (error) {
+        console.error('Error setting can reset today:', error);
         throw new Error('Failed to set can reset today');
       }
 
