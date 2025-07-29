@@ -9,8 +9,8 @@ interface ExtractTitleResponse {
 
 // 브런치 사이트 전용 메타데이터 추출 함수
 async function extractBrunchMetadata(url: string): Promise<{ title: string; description: string }> {
-  // 브런치 사이트의 경우 공유할 때 사용하는 메타데이터를 활용
-  // 브런치 글의 URL 패턴을 분석하여 제목과 설명을 생성
+  // 브런치 사이트의 경우 외부에서 접근 가능한 공유용 메타데이터만 활용
+  // URL 패턴을 분석하여 제목과 설명을 생성
   const urlParts = url.split('/');
   const author = urlParts[urlParts.length - 2]?.replace('@', '') || 'Unknown';
   const postId = urlParts[urlParts.length - 1] || 'Unknown';
