@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 
 export default function TagDetailPage() {
   const params = useParams();
-  const tagName = decodeURIComponent(params.name as string);
+  const tagName = params.name as string;
   
   const [links, setLinks] = useState<CategorizedLink[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -17,23 +17,24 @@ export default function TagDetailPage() {
   const [sortBy, setSortBy] = useState<'date' | 'title'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
+  // Load data function
+  const loadData = async () => {
+    try {
+      const [tagLinks, categories, tags] = await Promise.all([
+        storage.getLinksByTag(tagName),
+        storage.getCategories(),
+        storage.getTags()
+      ]);
+      setLinks(tagLinks);
+      setCategories(categories);
+      setTags(tags);
+    } catch (error) {
+      console.error('Error loading data:', error);
+    }
+  };
+
   useEffect(() => {
     // Load data from storage
-    const loadData = async () => {
-      try {
-        const [tagLinks, categories, tags] = await Promise.all([
-          storage.getLinksByTag(tagName),
-          storage.getCategories(),
-          storage.getTags()
-        ]);
-        setLinks(tagLinks);
-        setCategories(categories);
-        setTags(tags);
-      } catch (error) {
-        console.error('Error loading data:', error);
-      }
-    };
-    
     loadData();
   }, [tagName]);
 
@@ -73,11 +74,16 @@ export default function TagDetailPage() {
     return tag?.color || '#10B981';
   };
 
-  const handleDeleteLink = (linkId: string) => {
+  const handleDeleteLink = async (linkId: string) => {
     if (confirm('정말로 이 링크를 삭제하시겠습니까?')) {
-      const updatedLinks = links.filter(link => link.id !== linkId);
-      setLinks(updatedLinks);
-      localStorage.setItem('linkstash-links', JSON.stringify(updatedLinks));
+      try {
+        await storage.deleteLink(linkId);
+        // Refresh the data
+        await loadData();
+      } catch (error) {
+        console.error('Error deleting link:', error);
+        alert('링크 삭제에 실패했습니다.');
+      }
     }
   };
 

@@ -128,10 +128,16 @@ export const database = {
     },
 
     async delete(id: string): Promise<void> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        throw new Error('User must be authenticated to delete categories');
+      }
+
       const { error } = await supabase
         .from('categories')
         .delete()
-        .eq('id', id);
+        .eq('id', id)
+        .eq('user_id', userId);
       
       if (error) {
         console.error('Error deleting category:', error);
@@ -238,10 +244,16 @@ export const database = {
     },
 
     async delete(id: string): Promise<void> {
+      const userId = await getCurrentUserId();
+      if (!userId) {
+        throw new Error('User must be authenticated to delete tags');
+      }
+
       const { error } = await supabase
         .from('tags')
         .delete()
-        .eq('id', id);
+        .eq('id', id)
+        .eq('user_id', userId);
       
       if (error) {
         console.error('Error deleting tag:', error);
