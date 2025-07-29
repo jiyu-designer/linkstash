@@ -1,7 +1,8 @@
 'use client';
 
 import UserProfileComponent from '@/components/UserProfile';
-import { getCurrentUser, type User } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/auth';
+import type { User } from '@/types';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 

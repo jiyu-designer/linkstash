@@ -1,6 +1,7 @@
 'use client';
 
-import { getCurrentUser, onAuthStateChange, signInWithGoogle, signOut, type User } from '@/lib/auth';
+import { getCurrentUser, onAuthStateChange, signInWithGoogle, signOut } from '@/lib/auth';
+import type { User } from '@/types';
 import { useEffect, useState } from 'react';
 
 export default function AuthButton() {
@@ -58,19 +59,21 @@ export default function AuthButton() {
     return (
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
-          {user.avatar_url ? (
+          {user.avatarUrl ? (
             <img
-              src={user.avatar_url}
-              alt={user.name}
+              src={user.avatarUrl}
+              alt={user.fullName || user.email}
               className="w-8 h-8 rounded-full"
             />
           ) : (
-            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-medium">
-              {user.name.charAt(0).toUpperCase()}
+            <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+              <span className="text-sm font-medium text-gray-600">
+                {user.fullName ? user.fullName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
+              </span>
             </div>
           )}
           <div className="flex flex-col">
-            <span className="text-sm font-medium text-white">{user.name}</span>
+            <span className="text-sm font-medium text-white">{user.fullName || user.email}</span>
             <span className="text-xs text-gray-300">{user.email}</span>
           </div>
         </div>
