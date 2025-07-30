@@ -1,11 +1,11 @@
 'use client';
 
-import { resetPassword, signInWithEmail, signUpWithEmail } from '@/lib/auth';
+import { resetPassword, signInWithEmail } from '@/lib/auth';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-type AuthMode = 'signin' | 'signup' | 'reset';
+type AuthMode = 'signin' | 'reset';
 
 interface EmailAuthFormProps {
   onSuccess?: () => void;
@@ -21,9 +21,7 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
   
   const [formData, setFormData] = useState({
     email: '',
-    password: '',
-    confirmPassword: '',
-    fullName: ''
+    password: ''
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,23 +52,6 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
       return false;
     }
 
-    if (mode === 'signup') {
-      if (!formData.fullName) {
-        setError('Please enter your full name.');
-        return false;
-      }
-
-      if (formData.password.length < 6) {
-        setError('Password must be at least 6 characters long.');
-        return false;
-      }
-
-      if (formData.password !== formData.confirmPassword) {
-        setError('Passwords do not match.');
-        return false;
-      }
-    }
-
     return true;
   };
 
@@ -97,12 +78,6 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
           onSuccess?.();
           break;
 
-        case 'signup':
-          await signUpWithEmail(formData.email, formData.password, formData.fullName);
-          setSuccess('Account created successfully!');
-          onSuccess?.();
-          break;
-
         case 'reset':
           await resetPassword(formData.email);
           setSuccess('Password reset email sent.');
@@ -116,17 +91,12 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
       // Handle specific Supabase auth errors
       if (err.message?.includes('Invalid login credentials')) {
         setError('Invalid email or password.');
-      } else if (err.message?.includes('User already registered')) {
-        setError('Email already registered. Please try signing in.');
-        setMode('signin');
       } else if (err.message?.includes('Password should be at least')) {
         setError('Password must be at least 6 characters.');
       } else if (err.message?.includes('Unable to validate email address')) {
         setError('Invalid email address.');
       } else if (err.message?.includes('Email rate limit exceeded')) {
         setError('Email rate limit exceeded. Please try again later.');
-      } else if (err.message?.includes('Signup disabled')) {
-        setError('Sign up is currently disabled.');
       } else {
         setError(err.message || 'Authentication failed. Please try again.');
       }
@@ -138,9 +108,7 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
   const resetForm = () => {
     setFormData({
       email: '',
-      password: '',
-      confirmPassword: '',
-      fullName: ''
+      password: ''
     });
     setError(null);
     setSuccess(null);
@@ -154,7 +122,6 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
   const getTitle = () => {
     switch (mode) {
       case 'signin': return 'Sign In with Email';
-      case 'signup': return 'Sign Up with Email';
       case 'reset': return 'Reset Password';
       default: return 'Sign In';
     }
@@ -165,7 +132,6 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
     
     switch (mode) {
       case 'signin': return 'Sign In';
-      case 'signup': return 'Sign Up';
       case 'reset': return 'Send Reset Email';
       default: return 'Confirm';
     }
@@ -216,25 +182,7 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
             />
           </div>
 
-          {/* Full Name (Signup only) */}
-          {mode === 'signup' && (
-            <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-300 mb-1">
-                Full Name
-              </label>
-              <input
-                type="text"
-                id="fullName"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleInputChange}
-                disabled={loading}
-                className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Your full name"
-                required
-              />
-            </div>
-          )}
+
 
           {/* Password */}
           {mode !== 'reset' && (
@@ -256,25 +204,7 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
             </div>
           )}
 
-          {/* Confirm Password (Signup only) */}
-          {mode === 'signup' && (
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300 mb-1">
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-                disabled={loading}
-                className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Re-enter your password"
-                required
-              />
-            </div>
-          )}
+
 
           {/* Submit Button */}
           <button
@@ -295,41 +225,18 @@ export default function EmailAuthForm({ onSuccess, onCancel }: EmailAuthFormProp
         {/* Footer Links */}
         <div className="mt-6 space-y-2">
           {mode === 'signin' && (
-            <>
-              <div className="text-center">
-                <button
-                  type="button"
-                  onClick={() => switchMode('reset')}
-                  className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
-                >
-                  Forgot your password?
-                </button>
-              </div>
-              <div className="text-center">
-                <span className="text-sm text-gray-400">Don&apos;t have an account? </span>
-                <button
-                  type="button"
-                  onClick={() => switchMode('signup')}
-                  className="text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors"
-                >
-                  Sign up
-                </button>
-              </div>
-            </>
-          )}
-
-          {mode === 'signup' && (
             <div className="text-center">
-              <span className="text-sm text-gray-400">Already have an account? </span>
               <button
                 type="button"
-                onClick={() => switchMode('signin')}
-                className="text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                onClick={() => switchMode('reset')}
+                className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
               >
-                Sign in
+                Forgot your password?
               </button>
             </div>
           )}
+
+
 
           {mode === 'reset' && (
             <div className="text-center">
