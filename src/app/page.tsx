@@ -757,39 +757,7 @@ export default function Home() {
                   Continue with Google
                 </button>
 
-                {/* Kakao Login Button - 임시 숨김 (scope 에러 해결 중) */}
-                {false && (
-                  <button
-                    onClick={handleKakaoSignIn}
-                    className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-[#FEE500] border border-[#FEE500] rounded-2xl hover:bg-[#FDD835] focus:outline-none focus:ring-2 focus:ring-[#FEE500] transition-all duration-200 font-medium text-slate-900 group"
-                  >
-                    <svg className="w-5 h-5 group-hover:scale-105 transition-transform" viewBox="0 0 24 24">
-                      <path
-                        fill="#000000"
-                        d="M12 3C6.48 3 2 6.48 2 10.8c0 2.7 1.68 5.1 4.2 6.6L5.4 20.7c-.15.45.3.84.72.63L9.6 19.2c.72.12 1.56.18 2.4.18 5.52 0 10-3.48 10-7.8S17.52 3 12 3z"
-                      />
-                    </svg>
-                    Continue with Kakao
-                  </button>
-                )}
-                
-                {/* Divider */}
-                <div className="relative my-4">
-                  <div className="relative flex justify-center text-sm">
-                    <span className="px-4 text-gray-400 font-medium">or</span>
-                  </div>
-                </div>
-                
-                {/* Email Login Button */}
-                <button
-                  onClick={handleShowEmailAuth}
-                  className="w-full flex items-center justify-center gap-3 px-6 py-3.5 glass-button border border-white/20 rounded-2xl hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 font-medium text-white group"
-                >
-                  <svg className="w-5 h-5 group-hover:scale-105 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  Continue with Email
-                </button>
+
               </div>
             ) : (
               <EmailAuthForm 
